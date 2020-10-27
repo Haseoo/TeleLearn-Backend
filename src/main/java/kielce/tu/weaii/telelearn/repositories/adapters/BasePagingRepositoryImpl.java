@@ -37,4 +37,9 @@ public abstract class BasePagingRepositoryImpl<E> implements BasePagingRepositor
     public E save(E entity) {
         return repository.save(entity);
     }
+
+    @Override
+    public void delete(E entity) {
+        repository.delete(entity);
+    }
 }

@@ -1,22 +1,19 @@
 package kielce.tu.weaii.telelearn.controllers;
 
 import kielce.tu.weaii.telelearn.requests.LoginRequest;
-import kielce.tu.weaii.telelearn.requests.StudentRegisterRequest;
-import kielce.tu.weaii.telelearn.requests.TeacherRegisterRequest;
-import kielce.tu.weaii.telelearn.services.adapters.StudentServiceImpl;
-import kielce.tu.weaii.telelearn.services.adapters.TeacherServiceImpl;
-import kielce.tu.weaii.telelearn.services.adapters.UserServiceImpl;
+import kielce.tu.weaii.telelearn.requests.UserPasswordPatchRequest;
+import kielce.tu.weaii.telelearn.services.ports.UserService;
 import kielce.tu.weaii.telelearn.views.UserLoginResponse;
+import kielce.tu.weaii.telelearn.views.UserView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -24,26 +21,29 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-    private final UserServiceImpl userService;
-    private final StudentServiceImpl studentService;
-    private final TeacherServiceImpl teacherService;
+    private final UserService userService;
 
     @PostMapping(path = "/login")
     public ResponseEntity<Object> login(@RequestBody @Valid LoginRequest loginRequest) {
-        return new ResponseEntity<>(UserLoginResponse.of(userService.getJwt(loginRequest), userService.getUserByLoginOrEmail(loginRequest.getUserName())), OK);
+        return new ResponseEntity<>(UserLoginResponse.of(userService.getJwt(loginRequest),
+                userService.getUserByLoginOrEmail(loginRequest.getUserName())), OK);
     }
 
-    @PostMapping(path = "/register/student")
-    public ResponseEntity<Object> registerStudent(@RequestBody @Valid StudentRegisterRequest request) {
-        URI location = ServletUriComponentsBuilder.fromCurrentServletMapping().path("/api/user/student/{id}")
-                .buildAndExpand(studentService.add(request).getId()).toUri();
-        return ResponseEntity.created(location).build();
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserView>> getList() {
+        return new ResponseEntity<>(
+                userService.getList()
+                        .stream()
+                        .map(model -> UserView.from(model, true))
+                        .collect(Collectors.toList()),
+                OK);
     }
 
-    @PostMapping(path = "/register/teacher")
-    public ResponseEntity<Object> resisterTeacher(@RequestBody @Valid TeacherRegisterRequest request) {
-        URI location = ServletUriComponentsBuilder.fromCurrentServletMapping().path("/api/user/teacher/{id}")
-                .buildAndExpand(teacherService.add(request).getId()).toUri();
-        return ResponseEntity.created(location).build();
+    @PatchMapping(path = {"/{id}"})
+    public ResponseEntity<Object> changePassword(@PathVariable Long id, @RequestBody UserPasswordPatchRequest request) {
+        userService.updatePassword(id, request);
+        return ResponseEntity.noContent().build();
     }
+
 }

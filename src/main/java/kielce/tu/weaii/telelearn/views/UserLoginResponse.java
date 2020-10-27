@@ -8,6 +8,7 @@ import lombok.Value;
 @Value
 public class UserLoginResponse {
     String token;
+    Long id;
     String login;
     String name;
     String surname;
@@ -15,6 +16,7 @@ public class UserLoginResponse {
 
     public static UserLoginResponse of(JwtAuthenticationResponse jwtAuthenticationResponse, User user) {
         return new UserLoginResponse(jwtAuthenticationResponse.getTokenType() + " " + jwtAuthenticationResponse.getAccessToken(),
+                user.getId(),
                 user.getUsername(),
                 user.getName(),
                 user.getSurname(),

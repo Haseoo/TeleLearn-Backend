@@ -1,5 +1,6 @@
 package kielce.tu.weaii.telelearn.configuration;
 
+import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
 import kielce.tu.weaii.telelearn.exceptions.BusinessLogicException;
 import kielce.tu.weaii.telelearn.exceptions.NotFoundException;
 import lombok.Value;
@@ -30,6 +31,13 @@ public class CustomExceptionHandler extends DefaultHandlerExceptionResolver {
     public ResponseEntity<ErrorResponse> badCredentialsExceptionHandler(DisabledException ex) {
         ErrorResponse errors = new ErrorResponse(LocalDateTime.now(), "Konto zostało zablokowane");
         return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ErrorResponse> authorizationExceptionHandler(AuthorizationException ex) {
+        ErrorResponse errors = new ErrorResponse(LocalDateTime.now(), ex.getMessage());
+        log.error(String.format("User %s has not permission to resource %s with id %s", ex.getUserId(), ex.getResourceName(), ex.getResourceId()));
+        return new ResponseEntity<>(errors, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NotFoundException.class)

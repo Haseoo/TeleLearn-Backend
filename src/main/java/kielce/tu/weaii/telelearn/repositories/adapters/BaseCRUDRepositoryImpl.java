@@ -25,4 +25,9 @@ public abstract class BaseCRUDRepositoryImpl<E> implements BaseCRUDRepository<E>
     public E save(E entity) {
         return repository.saveAndFlush(entity);
     }
+
+    @Override
+    public void delete(E entity) {
+        repository.delete(entity);
+    }
 }

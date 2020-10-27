@@ -6,4 +6,6 @@ public interface BaseRepository<E> {
     Optional<E> getById(Long id);
 
     E save(E entity);
+
+    void delete(E entity);
 }

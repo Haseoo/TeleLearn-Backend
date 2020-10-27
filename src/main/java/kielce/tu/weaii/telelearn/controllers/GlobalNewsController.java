@@ -2,7 +2,7 @@ package kielce.tu.weaii.telelearn.controllers;
 
 import kielce.tu.weaii.telelearn.models.GlobalNews;
 import kielce.tu.weaii.telelearn.services.adapters.GlobalNewsService;
-import kielce.tu.weaii.telelearn.services.adapters.UserServiceImpl;
+import kielce.tu.weaii.telelearn.services.ports.UserService;
 import kielce.tu.weaii.telelearn.views.NewsBriefView;
 import kielce.tu.weaii.telelearn.views.PageView;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @RequestMapping("/api/news")
 public class GlobalNewsController {
     private final GlobalNewsService globalNewsService;
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private int i = 0;
 
     @GetMapping(path = "/get")
