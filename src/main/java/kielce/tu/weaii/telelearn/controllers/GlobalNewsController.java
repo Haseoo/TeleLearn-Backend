@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class GlobalNewsController {
     private final GlobalNewsService globalNewsService;
     private int i = 0;
-    @GetMapping
+    @GetMapping(path = "/get")
     public ResponseEntity<PageView<NewsBriefView>> getBriefPage(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize) {

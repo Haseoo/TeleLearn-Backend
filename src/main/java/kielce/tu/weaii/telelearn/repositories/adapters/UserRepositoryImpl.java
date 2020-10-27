@@ -1,0 +1,23 @@
+package kielce.tu.weaii.telelearn.repositories.adapters;
+
+import kielce.tu.weaii.telelearn.models.User;
+import kielce.tu.weaii.telelearn.repositories.jpa.UserJPARepository;
+import kielce.tu.weaii.telelearn.repositories.ports.UserRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public class UserRepositoryImpl extends BaseCRUDRepositoryImpl<User> implements UserRepository {
+    private final UserJPARepository userJPARepository;
+
+    public UserRepositoryImpl(UserJPARepository userJPARepository) {
+        super(userJPARepository);
+        this.userJPARepository = userJPARepository;
+    }
+
+    @Override
+    public Optional<User> getUserByLoginOrEmail(String loginOrEmail) {
+        return userJPARepository.findByUsernameOrEmail(loginOrEmail, loginOrEmail);
+    }
+}
