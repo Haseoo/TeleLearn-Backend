@@ -1,7 +1,6 @@
 package kielce.tu.weaii.telelearn.controllers;
 
 import kielce.tu.weaii.telelearn.models.GlobalNews;
-import kielce.tu.weaii.telelearn.repositories.jpa.GlobalNewsJPARepository;
 import kielce.tu.weaii.telelearn.services.adapters.GlobalNewsService;
 import kielce.tu.weaii.telelearn.views.NewsBriefView;
 import kielce.tu.weaii.telelearn.views.PageView;
@@ -20,6 +19,7 @@ import java.time.LocalDateTime;
 public class GlobalNewsController {
     private final GlobalNewsService globalNewsService;
     private int i = 0;
+
     @GetMapping(path = "/get")
     public ResponseEntity<PageView<NewsBriefView>> getBriefPage(
             @RequestParam(defaultValue = "0") Integer pageNo,

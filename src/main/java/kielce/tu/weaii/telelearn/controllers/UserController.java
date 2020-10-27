@@ -1,7 +1,6 @@
 package kielce.tu.weaii.telelearn.controllers;
 
 import kielce.tu.weaii.telelearn.requests.LoginRequest;
-import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.services.adapters.UserServiceImpl;
 import kielce.tu.weaii.telelearn.views.UserLoginResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +19,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/api/user")
 public class UserController {
     private final UserServiceImpl userService;
+
     @PostMapping(path = "/login")
     public ResponseEntity<Object> login(@RequestBody @Valid LoginRequest loginRequest) {
         return new ResponseEntity<>(UserLoginResponse.of(userService.getJwt(loginRequest), userService.getUserByLoginOrEmail(loginRequest.getUserName())), OK);

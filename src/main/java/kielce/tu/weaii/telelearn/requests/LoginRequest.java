@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import org.springframework.validation.annotation.Validated;
+
 import javax.validation.constraints.NotBlank;
 
 @Validated
@@ -15,7 +16,7 @@ public class LoginRequest {
 
     @JsonCreator
     public LoginRequest(@JsonProperty(value = "login", required = true) String userName,
-                            @JsonProperty(value = "password", required = true) char[] password) {
+                        @JsonProperty(value = "password", required = true) char[] password) {
         this.userName = userName;
         this.password = password;
     }

@@ -80,9 +80,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest()
                 .authenticated();
-              //  .and()
-              //  .exceptionHandling()
-              //  .authenticationEntryPoint(unauthorizedHandler);
+        //  .and()
+        //  .exceptionHandling()
+        //  .authenticationEntryPoint(unauthorizedHandler);
 
         http.csrf().disable();
         http.headers().frameOptions().disable();

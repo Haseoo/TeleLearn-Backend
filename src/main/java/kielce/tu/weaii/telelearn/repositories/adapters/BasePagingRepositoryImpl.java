@@ -12,6 +12,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public abstract class BasePagingRepositoryImpl<E> implements BasePagingRepository<E> {
     protected final PagingAndSortingRepository<E, Long> repository;
+
     @Override
     public Iterable<E> getAll() {
         return repository.findAll();

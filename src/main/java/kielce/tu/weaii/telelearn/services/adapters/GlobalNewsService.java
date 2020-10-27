@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GlobalNewsService {
     private final GlobalNewsRepositoryImpl repository;
+
     public Page<GlobalNews> getPage(int pageSize, int pageNo) {
         return repository.getPage(pageSize, pageNo, "publicationDate");
     }

@@ -3,7 +3,6 @@ package kielce.tu.weaii.telelearn.models;
 import lombok.Data;
 
 import javax.persistence.*;
-
 import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;

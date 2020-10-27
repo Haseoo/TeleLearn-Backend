@@ -1,7 +1,6 @@
 package kielce.tu.weaii.telelearn.configuration;
 
 import kielce.tu.weaii.telelearn.exceptions.NotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
