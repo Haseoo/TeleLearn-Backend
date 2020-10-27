@@ -79,10 +79,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/api/news/get/**")
                 .permitAll()
                 .anyRequest()
-                .authenticated();
-        //  .and()
-        //  .exceptionHandling()
-        //  .authenticationEntryPoint(unauthorizedHandler);
+                .authenticated()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthorizedHandler);
 
         http.csrf().disable();
         http.headers().frameOptions().disable();

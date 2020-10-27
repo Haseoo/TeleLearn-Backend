@@ -5,20 +5,23 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 
+import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.InheritanceType.JOINED;
+
 @Entity
 @Table(name = "USERS")
+@Inheritance(strategy = JOINED)
 @Data
 public class User implements UserDetails {
     @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String username;
-    private String password;
+    private char[] password;
     private String email;
     private String name;
     private String surname;
@@ -43,5 +46,10 @@ public class User implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    @Override
+    public String getPassword() {
+        return String.valueOf(password);
     }
 }

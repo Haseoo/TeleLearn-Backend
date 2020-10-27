@@ -1,6 +1,6 @@
 package kielce.tu.weaii.telelearn.security;
 
-import kielce.tu.weaii.telelearn.exceptions.UserNotFoundException;
+import kielce.tu.weaii.telelearn.exceptions.users.UserNotFoundException;
 import kielce.tu.weaii.telelearn.repositories.ports.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

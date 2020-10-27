@@ -17,7 +17,7 @@ public class NewsBriefView {
     public static NewsBriefView of(GlobalNews globalNews) {
         return new NewsBriefView(globalNews.getId(),
                 globalNews.getTitle(),
-                globalNews.getAuthor(),
+                globalNews.getAuthor().getName() + " " + globalNews.getAuthor().getSurname(),
                 globalNews.getBrief(),
                 globalNews.getPublicationDate(),
                 globalNews.getHtmlContent() != null);

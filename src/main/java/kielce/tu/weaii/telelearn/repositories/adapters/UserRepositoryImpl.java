@@ -20,4 +20,14 @@ public class UserRepositoryImpl extends BaseCRUDRepositoryImpl<User> implements 
     public Optional<User> getUserByLoginOrEmail(String loginOrEmail) {
         return userJPARepository.findByUsernameOrEmail(loginOrEmail, loginOrEmail);
     }
+
+    @Override
+    public Optional<User> getUserByLogin(String login) {
+        return userJPARepository.findByUsername(login);
+    }
+
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        return userJPARepository.findByEmail(email);
+    }
 }

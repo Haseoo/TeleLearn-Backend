@@ -5,11 +5,12 @@ import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Data
-@Table(name = "GlobalNews")
+@Table(name = "GLOBAL_NEWS")
 public class GlobalNews {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -17,8 +18,9 @@ public class GlobalNews {
     private Long id;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String title;
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String author;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(nullable = false, name = "authorId")
+    private User author;
     @Column(columnDefinition = "TEXT")
     private String brief;
     @Column(columnDefinition = "TEXT")

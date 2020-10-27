@@ -1,9 +1,12 @@
 package kielce.tu.weaii.telelearn.configuration;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
 @Configuration
 public class BeanConfiguration {
@@ -15,5 +18,12 @@ public class BeanConfiguration {
                 registry.addMapping("/**").allowedOrigins("*");
             }
         };
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setFieldAccessLevel(PRIVATE);
+        return modelMapper;
     }
 }

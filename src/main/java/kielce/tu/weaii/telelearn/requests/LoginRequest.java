@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Validated
 @Getter
 public class LoginRequest {
-    @NotBlank(message = "Login cannot be empty")
+    @NotBlank(message = "Należy podać login")
     private String userName;
     private char[] password;
 
