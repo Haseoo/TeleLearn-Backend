@@ -1,11 +1,8 @@
 package kielce.tu.weaii.telelearn.services.adapters;
 
-import kielce.tu.weaii.telelearn.models.Student;
 import kielce.tu.weaii.telelearn.models.Teacher;
 import kielce.tu.weaii.telelearn.models.UserRole;
-import kielce.tu.weaii.telelearn.repositories.ports.StudentRepository;
 import kielce.tu.weaii.telelearn.repositories.ports.TeacherRepository;
-import kielce.tu.weaii.telelearn.requests.StudentRegisterRequest;
 import kielce.tu.weaii.telelearn.requests.TeacherRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
