@@ -4,6 +4,6 @@ import kielce.tu.weaii.telelearn.exceptions.BusinessLogicException;
 
 public class InvalidPasswordException extends BusinessLogicException {
     public InvalidPasswordException() {
-        super("Podane hasło jest nieprawidłowe");
+        super("Obecne hasło jest nieprawidłowe");
     }
 }

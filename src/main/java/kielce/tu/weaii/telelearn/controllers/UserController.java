@@ -40,6 +40,11 @@ public class UserController {
                 OK);
     }
 
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<UserView> gteById(@PathVariable Long id) {
+        return new ResponseEntity<>(UserView.from(userService.getById(id), userService.isCurrentUserOrAdmin(id)), OK);
+    }
+
     @PatchMapping(path = {"/{id}"})
     public ResponseEntity<Object> changePassword(@PathVariable Long id, @RequestBody UserPasswordPatchRequest request) {
         userService.updatePassword(id, request);

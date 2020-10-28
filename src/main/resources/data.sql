@@ -1,1 +1,5 @@
 INSERT INTO public.users (id, enabled, password, username, name, surname, user_role, email) VALUES (1, true, '$2a$12$QOpC9AXqeKDBcNMWHFr/oOEjcJqxD1IkbZsvshHsTRvsIsLpVbji6', 'admin', 'Administrator', '', 0, '');
+INSERT INTO public.users (id, enabled, password, username, name, surname, user_role, email) VALUES (2, true, '$2a$10$9PxaMwJKB/aZllRiBYkM1ucSG55Gl1FdPMhipdw2CazKrEGpIipbq', 'nauczyciel', 'Anna', 'Nauczycielska', 1, 'anna@teach.com');
+INSERT INTO public.teachers(title, unit, id) VALUES ('dr inż.', 'taka sobie szkoła', 2);
+INSERT INTO public.users (id, enabled, password, username, name, surname, user_role, email) VALUES (3, true, '$2a$10$9PxaMwJKB/aZllRiBYkM1ucSG55Gl1FdPMhipdw2CazKrEGpIipbq', 'uczen', 'Piotr', 'Uczniowski', 2, 'piotr@student.com');
+INSERT INTO public.students( unit, id) VALUES ('taka sobie szkoła', 3);

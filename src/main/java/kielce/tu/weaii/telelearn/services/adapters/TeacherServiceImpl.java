@@ -1,5 +1,6 @@
 package kielce.tu.weaii.telelearn.services.adapters;
 
+import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
 import kielce.tu.weaii.telelearn.exceptions.users.UserNotFoundException;
 import kielce.tu.weaii.telelearn.models.Teacher;
 import kielce.tu.weaii.telelearn.models.UserRole;
@@ -40,6 +41,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Transactional
     public Teacher update(Long id, TeacherUpdateRequest request) {
+        if (!userService.isCurrentUserOrAdmin(id)) {
+            throw new AuthorizationException("użytkownik", null, id);
+        }
         Teacher teacher = getById(id);
         if (!teacher.getEmail().equals(request.getEmail())) {
             userService.checkAvailability(request.getEmail());
