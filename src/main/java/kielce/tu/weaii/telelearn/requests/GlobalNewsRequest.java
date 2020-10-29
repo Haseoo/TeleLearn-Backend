@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class GlobalNewsRequest {
     @NotBlank(message = "Artykuł musi mieć tytuł")
     private String title;
-    @NotBlank(message = "Artykuł musi mieć autora")
+    @NotNull(message = "Artykuł musi mieć autora")
     private Long authorId;
     private String brief;
     private String htmlContent;

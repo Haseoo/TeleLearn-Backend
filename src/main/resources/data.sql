@@ -3,3 +3,9 @@ INSERT INTO public.users (id, enabled, password, username, name, surname, user_r
 INSERT INTO public.teachers(title, unit, id) VALUES ('dr inż.', 'taka sobie szkoła', 2);
 INSERT INTO public.users (id, enabled, password, username, name, surname, user_role, email) VALUES (3, true, '$2a$10$9PxaMwJKB/aZllRiBYkM1ucSG55Gl1FdPMhipdw2CazKrEGpIipbq', 'uczen', 'Piotr', 'Uczniowski', 2, 'piotr@student.com');
 INSERT INTO public.students( unit, id) VALUES ('taka sobie szkoła', 3);
+INSERT INTO public .messages (id, content, read, send_time, receiver_id, sender_id) values (1, 'wiadomosc', false, {ts '2020-09-17 18:47:52.69'}, 2, 3);
+INSERT INTO public .messages (id, content, read, send_time, receiver_id, sender_id) values (2, 'wiadomosc2', false, {ts '2020-09-17 18:47:53.69'}, 3, 2);
+INSERT INTO public .messages (id, content, read, send_time, receiver_id, sender_id) values (3, 'wiadomosc3', false, {ts '2020-09-17 18:48:52.69'}, 2, 3);
+INSERT INTO public .messages (id, content, read, send_time, receiver_id, sender_id) values (4, 'wiadomosc4', false, {ts '2020-09-17 18:49:53.69'}, 3, 2);
+INSERT INTO public .messages (id, content, read, send_time, receiver_id, sender_id) values (5, 'wiadomosc5', false, {ts '2020-09-17 18:49:53.69'}, 2, 1);
+INSERT INTO public .messages (id, content, read, send_time, receiver_id, sender_id) values (6, 'wiadomosc6', false, {ts '2020-09-17 19:49:53.69'}, 1, 2);

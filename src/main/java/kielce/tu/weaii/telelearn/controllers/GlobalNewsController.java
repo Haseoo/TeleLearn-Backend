@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDateTime;
 
@@ -44,14 +45,14 @@ public class GlobalNewsController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Object> edit(@PathVariable Long id, @RequestBody GlobalNewsRequest request) {
+    public ResponseEntity<Object> edit(@PathVariable Long id,@Valid @RequestBody GlobalNewsRequest request) {
         globalNewsService.edit(id, request);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> add(@RequestBody GlobalNewsRequest request) {
+    public ResponseEntity<Object> add(@RequestBody @Valid GlobalNewsRequest request) {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/get/{id}")
                 .buildAndExpand(globalNewsService.add(request).getId()).toUri();
         return ResponseEntity.created(location).build();

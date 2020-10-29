@@ -8,7 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.InheritanceType.JOINED;
 
@@ -27,6 +30,10 @@ public class User implements UserDetails {
     private String surname;
     private UserRole userRole;
     private boolean enabled;
+    @OneToMany(fetch = LAZY, mappedBy = "sender", cascade = ALL)
+    private List<Message> sendMessages;
+    @OneToMany(fetch = LAZY, mappedBy = "receiver", cascade = ALL)
+    private List<Message> receivedMessages;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
