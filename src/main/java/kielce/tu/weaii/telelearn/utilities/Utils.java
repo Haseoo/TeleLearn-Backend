@@ -4,4 +4,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class Utils {
+    public static boolean isStringNullOrEmpty(String string) {
+        return string == null || string.equals("");
+    }
 }

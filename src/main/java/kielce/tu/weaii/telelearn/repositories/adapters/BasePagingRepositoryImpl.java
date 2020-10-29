@@ -19,8 +19,13 @@ public abstract class BasePagingRepositoryImpl<E> implements BasePagingRepositor
     }
 
     @Override
-    public Page<E> getPage(int pageSize, int pageNo, String sortBy) {
-        return repository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(sortBy)));
+    public Page<E> getPageSortDesc(int pageSize, int pageNo, String sortBy) {
+        return repository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending()));
+    }
+
+    @Override
+    public Page<E> getPageSortAsc(int pageSize, int pageNo, String sortBy) {
+        return repository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(sortBy).ascending()));
     }
 
     @Override

@@ -34,7 +34,6 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 
-
     @PostMapping
     public ResponseEntity<Object> resisterStudent(@RequestBody @Valid StudentRegisterRequest request) {
         URI location = ServletUriComponentsBuilder.fromCurrentServletMapping().path("/api/user/student/{id}")

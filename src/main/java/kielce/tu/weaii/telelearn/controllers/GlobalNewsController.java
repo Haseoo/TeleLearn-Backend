@@ -1,13 +1,14 @@
 package kielce.tu.weaii.telelearn.controllers;
 
-import kielce.tu.weaii.telelearn.models.GlobalNews;
-import kielce.tu.weaii.telelearn.services.adapters.GlobalNewsService;
+import kielce.tu.weaii.telelearn.requests.GlobalNewsRequest;
+import kielce.tu.weaii.telelearn.services.adapters.GlobalNewsServiceImpl;
 import kielce.tu.weaii.telelearn.services.ports.UserService;
-import kielce.tu.weaii.telelearn.views.NewsBriefView;
+import kielce.tu.weaii.telelearn.views.GlobalNewsView;
 import kielce.tu.weaii.telelearn.views.PageView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -18,29 +19,41 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/api/news")
 public class GlobalNewsController {
-    private final GlobalNewsService globalNewsService;
+    private final GlobalNewsServiceImpl globalNewsService;
     private final UserService userService;
     private int i = 0;
 
+    @GetMapping(path = "/get/{id}")
+    public ResponseEntity<GlobalNewsView> getById(@PathVariable Long id) {
+        return new ResponseEntity<>(GlobalNewsView.from(globalNewsService.getById(id)), HttpStatus.OK);
+    }
+
     @GetMapping(path = "/get")
-    public ResponseEntity<PageView<NewsBriefView>> getBriefPage(
+    public ResponseEntity<PageView<GlobalNewsView>> getBriefPage(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        return new ResponseEntity<>(PageView.of(globalNewsService.getPage(pageSize, pageNo), NewsBriefView::of), HttpStatus.OK);
+        return new ResponseEntity<>(PageView.of(globalNewsService.getPage(pageSize, pageNo), GlobalNewsView::from), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
+        globalNewsService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Object> edit(@PathVariable Long id, @RequestBody GlobalNewsRequest request) {
+        globalNewsService.edit(id, request);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
-    public ResponseEntity<Object> add() {
-        GlobalNews g = new GlobalNews();
-        g.setTitle("Artykuł" + ++i);
-        g.setAuthor(userService.getUserByLoginOrEmail("admin"));
-        g.setPublicationDate(LocalDateTime.now());
-        g.setBrief("Vestibulum ultrices neque vel ipsum commodo, vitae venenatis dolor interdum. Quisque cursus ante ac nisi varius, quis scelerisque lectus consequat. Ut consectetur est eu laoreet mattis. Ut fringilla iaculis mi quis rhoncus. Suspendisse scelerisque nisl sit amet purus facilisis malesuada. Aenean faucibus mauris sed neque elementum, ut suscipit ligula bibendum. Ut quis venenatis velit. Nulla luctus convallis suscipit. Aenean auctor iaculis odio in viverra. Donec justo metus, aliquet sit amet risus eu, tempor tincidunt metus. Mauris rhoncus ultrices urna, ac fringilla libero varius nec. Ut sem magna, rutrum sed aliquet non, vestibulum non mauris. In est nulla, hendrerit at nisl tempor, mattis aliquam mauris. Praesent dapibus sem orci, nec tincidunt purus fermentum eget. Vivamus eleifend dapibus magna sodales faucibus.");
-        g.setHtmlContent("<b> Vestibulum ultrices neque vel ipsum commodo </b>");
-        g = globalNewsService.add(g);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(g.getId()).toUri();
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> add(@RequestBody GlobalNewsRequest request) {
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/get/{id}")
+                .buildAndExpand(globalNewsService.add(request).getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 }
