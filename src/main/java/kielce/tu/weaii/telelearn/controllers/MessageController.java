@@ -1,9 +1,6 @@
 package kielce.tu.weaii.telelearn.controllers;
 
-import io.swagger.models.Response;
 import kielce.tu.weaii.telelearn.requests.SendMessageRequest;
-import kielce.tu.weaii.telelearn.servicedata.ConversationInfo;
-import kielce.tu.weaii.telelearn.services.adapters.MessageServiceImpl;
 import kielce.tu.weaii.telelearn.services.ports.MessageService;
 import kielce.tu.weaii.telelearn.views.ConversationInfoView;
 import kielce.tu.weaii.telelearn.views.MessageCountView;

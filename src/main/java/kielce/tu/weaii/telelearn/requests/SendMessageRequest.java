@@ -17,9 +17,9 @@ public class SendMessageRequest {
     @NotBlank(message = "Wiadomość nie może być pusta.")
     private String content;
 
-    public SendMessageRequest(@JsonProperty(value = "senderId")Long senderId,
-                              @JsonProperty(value = "receiverId")Long receiverId,
-                              @JsonProperty(value = "content")String content) {
+    public SendMessageRequest(@JsonProperty(value = "senderId") Long senderId,
+                              @JsonProperty(value = "receiverId") Long receiverId,
+                              @JsonProperty(value = "content") String content) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.content = content;

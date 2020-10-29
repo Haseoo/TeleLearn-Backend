@@ -14,7 +14,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @RestController
@@ -45,7 +44,7 @@ public class GlobalNewsController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Object> edit(@PathVariable Long id,@Valid @RequestBody GlobalNewsRequest request) {
+    public ResponseEntity<Object> edit(@PathVariable Long id, @Valid @RequestBody GlobalNewsRequest request) {
         globalNewsService.edit(id, request);
         return ResponseEntity.noContent().build();
     }

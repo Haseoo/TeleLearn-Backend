@@ -1,7 +1,6 @@
 package kielce.tu.weaii.telelearn.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kielce.tu.weaii.telelearn.models.User;
 import lombok.Getter;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,10 +21,10 @@ public class GlobalNewsRequest {
     private LocalDateTime publicationDate;
 
     public GlobalNewsRequest(@JsonProperty(value = "title", required = true) String title,
-                             @JsonProperty(value = "authorId", required = true)Long authorId,
-                             @JsonProperty(value = "brief")String brief,
-                             @JsonProperty(value = "htmlContent")String htmlContent,
-                             @JsonProperty(value = "publicationDate", required = true)LocalDateTime publicationDate) {
+                             @JsonProperty(value = "authorId", required = true) Long authorId,
+                             @JsonProperty(value = "brief") String brief,
+                             @JsonProperty(value = "htmlContent") String htmlContent,
+                             @JsonProperty(value = "publicationDate", required = true) LocalDateTime publicationDate) {
         this.title = title;
         this.authorId = authorId;
         this.brief = brief;

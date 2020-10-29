@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class MessageRepositoryImpl extends BaseCRUDRepositoryImpl<Message> implements MessageRepository{
+public class MessageRepositoryImpl extends BaseCRUDRepositoryImpl<Message> implements MessageRepository {
     private final MessageJPARepository messageJPARepository;
 
     public MessageRepositoryImpl(MessageJPARepository messageJPARepository) {

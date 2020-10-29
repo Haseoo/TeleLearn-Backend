@@ -5,7 +5,6 @@ import kielce.tu.weaii.telelearn.exceptions.InvalidSenderException;
 import kielce.tu.weaii.telelearn.models.Message;
 import kielce.tu.weaii.telelearn.models.User;
 import kielce.tu.weaii.telelearn.repositories.ports.MessageRepository;
-import kielce.tu.weaii.telelearn.repositories.ports.UserRepository;
 import kielce.tu.weaii.telelearn.requests.SendMessageRequest;
 import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.servicedata.ConversationInfo;
@@ -13,7 +12,6 @@ import kielce.tu.weaii.telelearn.services.ports.MessageService;
 import kielce.tu.weaii.telelearn.services.ports.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -102,7 +100,10 @@ public class MessageServiceImpl implements MessageService {
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
-                        (left, right) -> {left.addAll(right); return left;}));
+                        (left, right) -> {
+                            left.addAll(right);
+                            return left;
+                        }));
     }
 
     private Message prepareMessage(SendMessageRequest request) {
