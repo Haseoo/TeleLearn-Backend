@@ -3,7 +3,6 @@ package kielce.tu.weaii.telelearn.controllers;
 import kielce.tu.weaii.telelearn.requests.SendMessageRequest;
 import kielce.tu.weaii.telelearn.services.ports.MessageService;
 import kielce.tu.weaii.telelearn.views.ConversationInfoView;
-import kielce.tu.weaii.telelearn.views.MessageCountView;
 import kielce.tu.weaii.telelearn.views.MessageView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,12 +26,6 @@ public class MessageController {
                 .stream()
                 .map(ConversationInfoView::from)
                 .collect(Collectors.toList()), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/new/{userId}")
-    public ResponseEntity<MessageCountView> getNewMessages(@PathVariable Long userId) {
-        return new ResponseEntity<>(new MessageCountView(messageService.getUnreadMessagesCount(userId)),
-                HttpStatus.OK);
     }
 
     @PutMapping

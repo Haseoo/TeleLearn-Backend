@@ -55,19 +55,6 @@ public class MessageServiceImpl implements MessageService {
         return messageRepository.getConversation(participant1Id, participant2Id);
     }
 
-    @Override
-    public Long getUnreadMessagesCount(Long userId) {
-        if (!userDetailsService.getCurrentUser().getId().equals(userId)) {
-            throw new AuthorizationException("ilość nowych wiadomości",
-                    userDetailsService.getCurrentUser().getId(),
-                    userId);
-        }
-        return messageRepository.getUserMessages(userId)
-                .stream()
-                .filter(message -> message.getReceiver().getId().equals(userId))
-                .filter(message -> !message.isRead()).count();
-    }
-
     private List<ConversationInfo> prepareConversationInfo(Long userId) {
         List<ConversationInfo> conversationInfoList = new ArrayList<>();
         for (Map.Entry<User, List<Message>> entry : getConversationsMap(userId).entrySet()) {
@@ -76,9 +63,14 @@ public class MessageServiceImpl implements MessageService {
                     .filter(m -> m.getReceiver().getId().equals(userId))
                     .filter(m -> !m.isRead())
                     .count();
+            LocalDateTime lastMessageTime = entry.getValue()
+                    .stream()
+                    .map(Message::getSendTime)
+                    .max(LocalDateTime::compareTo)
+                    .orElse(LocalDateTime.MIN);
             conversationInfoList.add(new ConversationInfo(entry.getKey(),
                     entry.getValue().size(),
-                    unreadMessages));
+                    unreadMessages, lastMessageTime));
         }
         return conversationInfoList;
     }
