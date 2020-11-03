@@ -5,6 +5,8 @@ import kielce.tu.weaii.telelearn.requests.TeacherUpdateRequest;
 import kielce.tu.weaii.telelearn.services.ports.TeacherService;
 import kielce.tu.weaii.telelearn.services.ports.UserService;
 import kielce.tu.weaii.telelearn.views.TeacherView;
+import kielce.tu.weaii.telelearn.views.courses.CourseBriefView;
+import kielce.tu.weaii.telelearn.views.courses.CourseView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor
 @RestController
@@ -47,5 +52,17 @@ public class TeacherController {
     public ResponseEntity<Object> deleteTeacher(@PathVariable Long id) {
         teacherService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(path = "/{userId}/courses")
+    public ResponseEntity<List<Object>> getCourses(@PathVariable Long userId) {
+        if (userService.isCurrentUserOrAdmin(userId)) {
+            return new ResponseEntity<>(teacherService.getCourses(userId).stream()
+                    .map(CourseView::from)
+                    .collect(toList()), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(teacherService.getCourses(userId).stream()
+                .map(CourseBriefView::from)
+                .collect(toList()), HttpStatus.OK);
     }
 }

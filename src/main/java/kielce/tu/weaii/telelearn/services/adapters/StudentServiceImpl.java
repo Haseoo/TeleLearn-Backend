@@ -4,9 +4,12 @@ import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
 import kielce.tu.weaii.telelearn.exceptions.users.UserNotFoundException;
 import kielce.tu.weaii.telelearn.models.Student;
 import kielce.tu.weaii.telelearn.models.UserRole;
+import kielce.tu.weaii.telelearn.models.courses.Course;
+import kielce.tu.weaii.telelearn.models.courses.CourseStudent;
 import kielce.tu.weaii.telelearn.repositories.ports.StudentRepository;
 import kielce.tu.weaii.telelearn.requests.StudentRegisterRequest;
 import kielce.tu.weaii.telelearn.requests.StudentUpdateRequest;
+import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.services.ports.StudentService;
 import kielce.tu.weaii.telelearn.services.ports.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +19,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class StudentServiceImpl implements StudentService {
     private final UserService userService;
+    private final UserServiceDetailsImpl userServiceDetails;
     private final StudentRepository studentRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
@@ -55,6 +61,14 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     public void delete(Long id) {
         studentRepository.delete(getById(id));
+    }
+
+    @Override
+    public List<Course> getCourses(Long id) {
+        if (!userService.isCurrentUserOrAdmin(id)) {
+            throw new AuthorizationException("lista kursów użytkownnika", id, userServiceDetails.getCurrentUser().getId());
+        }
+        return getById(id).getCourses().stream().map(CourseStudent::getCourse).collect(Collectors.toList());
     }
 
 }

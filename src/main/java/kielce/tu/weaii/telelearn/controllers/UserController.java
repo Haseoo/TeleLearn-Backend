@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<UserView> gteById(@PathVariable Long id) {
+    public ResponseEntity<UserView> getById(@PathVariable Long id) {
         return new ResponseEntity<>(UserView.from(userService.getById(id), userService.isCurrentUserOrAdmin(id)), OK);
     }
 

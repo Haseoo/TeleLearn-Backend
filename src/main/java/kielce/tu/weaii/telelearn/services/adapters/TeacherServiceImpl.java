@@ -4,9 +4,11 @@ import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
 import kielce.tu.weaii.telelearn.exceptions.users.UserNotFoundException;
 import kielce.tu.weaii.telelearn.models.Teacher;
 import kielce.tu.weaii.telelearn.models.UserRole;
+import kielce.tu.weaii.telelearn.models.courses.Course;
 import kielce.tu.weaii.telelearn.repositories.ports.TeacherRepository;
 import kielce.tu.weaii.telelearn.requests.TeacherRegisterRequest;
 import kielce.tu.weaii.telelearn.requests.TeacherUpdateRequest;
+import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.services.ports.TeacherService;
 import kielce.tu.weaii.telelearn.services.ports.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +18,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class TeacherServiceImpl implements TeacherService {
     private final UserService userService;
+    private final UserServiceDetailsImpl userServiceDetails;
     private final TeacherRepository teacherRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
@@ -55,6 +60,14 @@ public class TeacherServiceImpl implements TeacherService {
     @Transactional
     public void delete(Long id) {
         teacherRepository.delete(getById(id));
+    }
+
+    @Override
+    public List<Course> getCourses(Long id) {
+        if (userService.isCurrentUserOrAdmin(id)) {
+            return getById(id).getCourses();
+        }
+        return getById(id).getCourses().stream().filter(Course::isPublicCourse).collect(Collectors.toList());
     }
 
 }
