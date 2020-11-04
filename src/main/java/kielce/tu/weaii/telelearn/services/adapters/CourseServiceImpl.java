@@ -2,6 +2,7 @@ package kielce.tu.weaii.telelearn.services.adapters;
 
 import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
 import kielce.tu.weaii.telelearn.exceptions.courses.CourseNotFoundException;
+import kielce.tu.weaii.telelearn.exceptions.courses.StudentAlreadyEnrolled;
 import kielce.tu.weaii.telelearn.exceptions.courses.StudentOnListNotFound;
 import kielce.tu.weaii.telelearn.models.User;
 import kielce.tu.weaii.telelearn.models.UserRole;
@@ -78,7 +79,11 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public boolean signUpStudent(Long courseId, Long studentId) {
         checkUserAuthorization(studentId);
-        CourseStudent courseStudent = prepareStudentOnCourseEntry(courseId, studentId);
+        Course course = getCourse(courseId);
+        if (course.getStudents().stream().anyMatch(entry -> entry.getStudent().getId().equals(studentId))) {
+            throw new StudentAlreadyEnrolled();
+        }
+        CourseStudent courseStudent = prepareStudentOnCourseEntry(course, studentId);
         return courseStudent.isAccepted();
     }
 
@@ -103,6 +108,11 @@ public class CourseServiceImpl implements CourseService {
 
     }
 
+    @Override
+    public Course getCourse(Long id) {
+        return repository.getById(id).orElseThrow(() -> new CourseNotFoundException(id));
+    }
+
     private void checkAuthorization(CourseRequest request) {
         if (!userService.isCurrentUserOrAdmin(request.getOwnerId())) {
             throw new AuthorizationException("dodawanie/edycja kursu",
@@ -125,8 +135,7 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
-    private CourseStudent prepareStudentOnCourseEntry(Long courseId, Long studentId) {
-        Course course = getCourse(courseId);
+    private CourseStudent prepareStudentOnCourseEntry(Course course, Long studentId) {
         CourseStudent courseStudent = new CourseStudent();
         courseStudent.setStudent(studentService.getById(studentId));
         courseStudent.setCourse(course);
@@ -149,9 +158,5 @@ public class CourseServiceImpl implements CourseService {
                 !currentUser.getId().equals(studentId)) {
             throw new AuthorizationException("usuwanie użytkownika z kursu", currentUser.getId(), courseId);
         }
-    }
-
-    private Course getCourse(Long id) {
-        return repository.getById(id).orElseThrow(() -> new CourseNotFoundException(id));
     }
 }

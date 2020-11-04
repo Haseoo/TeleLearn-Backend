@@ -33,7 +33,7 @@ public class CourseRequest {
                          @JsonProperty(value = "welcomePageHtmlContent") String welcomePageHtmlContent,
                          @JsonProperty(value = "isPublicCourse", required = true) boolean publicCourse,
                          @JsonProperty(value = "isAutoAccept", required = true) boolean autoAccept,
-                         @JsonProperty(value = "isStudentsAllowedToPost", required = true) boolean studentsAllowedToPost) {
+                         @JsonProperty(value = "areStudentsAllowedToPost", required = true) boolean studentsAllowedToPost) {
         this.ownerId = ownerId;
         this.name = name;
         this.welcomePageHtmlContent = welcomePageHtmlContent;

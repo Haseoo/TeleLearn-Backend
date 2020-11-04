@@ -68,7 +68,10 @@ public class StudentServiceImpl implements StudentService {
         if (!userService.isCurrentUserOrAdmin(id)) {
             throw new AuthorizationException("lista kursów użytkownnika", id, userServiceDetails.getCurrentUser().getId());
         }
-        return getById(id).getCourses().stream().map(CourseStudent::getCourse).collect(Collectors.toList());
+        return getById(id).getCourses().stream().
+                filter(CourseStudent::isAccepted)
+                .map(CourseStudent::getCourse)
+                .collect(Collectors.toList());
     }
 
 }

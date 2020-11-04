@@ -17,4 +17,6 @@ public interface CourseService {
     void acceptStudent(Long courseId, Long studentId);
 
     void signOutStudent(Long courseId, Long studentId);
+
+    Course getCourse(Long id);
 }

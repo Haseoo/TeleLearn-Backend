@@ -3,6 +3,7 @@ package kielce.tu.weaii.telelearn.controllers;
 import kielce.tu.weaii.telelearn.requests.courses.CourseRequest;
 import kielce.tu.weaii.telelearn.requests.courses.CourseStudentRequest;
 import kielce.tu.weaii.telelearn.services.ports.CourseService;
+import kielce.tu.weaii.telelearn.views.courses.CourseBriefView;
 import kielce.tu.weaii.telelearn.views.courses.CourseSignUpResponse;
 import kielce.tu.weaii.telelearn.views.courses.CourseView;
 import lombok.RequiredArgsConstructor;
@@ -65,5 +66,10 @@ public class CourseController {
     public ResponseEntity<Object> signOutStudent(@PathVariable Long courseId, @Valid @RequestBody CourseStudentRequest request) {
         courseService.signOutStudent(courseId, request.getStudentId());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(path = "/{id}/brief")
+    public ResponseEntity<CourseBriefView> getBriefById(@PathVariable Long id) {
+        return new ResponseEntity<>(CourseBriefView.from(courseService.getCourse(id)), HttpStatus.OK);
     }
 }

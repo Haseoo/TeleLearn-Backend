@@ -21,6 +21,9 @@ public class CourseView extends CourseBriefView {
 
     private final List<StudentView> requestedStudents;
 
+    @JsonProperty("isPublicCourse")
+    private final boolean publicCourse;
+
     private CourseView(Long id,
                        String name,
                        TeacherView owner,
@@ -28,12 +31,14 @@ public class CourseView extends CourseBriefView {
                        String welcomePageHtmlContent,
                        boolean studentsAllowedToPost,
                        List<StudentView> allowedStudents,
-                       List<StudentView> requestedStudents) {
+                       List<StudentView> requestedStudents,
+                       boolean publicCourse) {
         super(id, name, owner, autoAccept);
         this.welcomePageHtmlContent = welcomePageHtmlContent;
         this.studentsAllowedToPost = studentsAllowedToPost;
         this.allowedStudents = allowedStudents;
         this.requestedStudents = requestedStudents;
+        this.publicCourse = publicCourse;
     }
 
     public static CourseView from(Course model) {
@@ -52,8 +57,8 @@ public class CourseView extends CourseBriefView {
                         .filter(entry -> !entry.isAccepted())
                         .map(CourseStudent::getStudent)
                         .map(student -> StudentView.from(student, false))
-                        .collect(Collectors.toList())
-        );
+                        .collect(Collectors.toList()),
+                model.isPublicCourse());
     }
 
 }
