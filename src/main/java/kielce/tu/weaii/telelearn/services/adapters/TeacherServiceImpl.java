@@ -25,10 +25,13 @@ import java.util.stream.Collectors;
 @Service
 public class TeacherServiceImpl implements TeacherService {
     private final UserService userService;
-    private final UserServiceDetailsImpl userServiceDetails;
     private final TeacherRepository teacherRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+
+    public List<Teacher> getAll() {
+        return teacherRepository.getAll();
+    }
 
     public Teacher getById(Long id) {
         return teacherRepository.getById(id).orElseThrow(() -> new UserNotFoundException(id, UserRole.TEACHER));

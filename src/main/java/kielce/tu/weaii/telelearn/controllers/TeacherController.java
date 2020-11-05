@@ -17,6 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,6 +27,13 @@ import static java.util.stream.Collectors.toList;
 public class TeacherController {
     public final TeacherService teacherService;
     public final UserService userService;
+
+    @GetMapping
+    public ResponseEntity<List<TeacherView>> getAll() {
+        return new ResponseEntity<>(teacherService.getAll().stream()
+                .map(teacher -> TeacherView.from(teacher, false))
+                .collect(Collectors.toList()), HttpStatus.OK);
+    }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<TeacherView> getById(@PathVariable Long id) {

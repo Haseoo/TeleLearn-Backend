@@ -8,6 +8,9 @@ import kielce.tu.weaii.telelearn.requests.TeacherUpdateRequest;
 import java.util.List;
 
 public interface TeacherService {
+
+    List<Teacher> getAll();
+
     Teacher getById(Long id);
 
     Teacher add(TeacherRegisterRequest request);
