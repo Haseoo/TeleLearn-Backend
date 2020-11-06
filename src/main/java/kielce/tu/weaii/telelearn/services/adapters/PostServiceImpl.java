@@ -32,6 +32,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final CourseService courseService;
     private final UserServiceDetailsImpl userServiceDetails;
+
     @Override
     public Post getById(Long id) {
         Post post = postRepository.getById(id).orElseThrow(() -> new PostNotFoundException(id));
@@ -42,7 +43,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getCoursePosts(Long courseId) {
         Course course = courseService.getById(courseId);
-        User currentUser =  userServiceDetails.getCurrentUser();
+        User currentUser = userServiceDetails.getCurrentUser();
         UserRole currentUserRole = currentUser.getUserRole();
         if (currentUserRole.equals(UserRole.ADMIN) || currentUserRole.equals(UserRole.TEACHER)) {
             return course.getPosts();
@@ -60,7 +61,7 @@ public class PostServiceImpl implements PostService {
         Course course = courseService.getById(request.getCourseId());
         User currentUser = userServiceDetails.getCurrentUser();
         if (currentUser.getUserRole().equals(UserRole.STUDENT) &&
-            !course.isStudentsAllowedToPost()) {
+                !course.isStudentsAllowedToPost()) {
             throw new AuthorizationException("dodawanie postu", currentUser.getId(), course.getId());
         }
         return postRepository.save(preparePost(request, attachments, course));
@@ -95,8 +96,7 @@ public class PostServiceImpl implements PostService {
         if (currentUser.getUserRole().equals(UserRole.ADMIN)) {
             return;
         }
-        if (isCurrentUserNotCurseOwner(post, currentUser))
-        {
+        if (isCurrentUserNotCurseOwner(post, currentUser)) {
             throw new AuthorizationException("wyświetlanie postów kursu", currentUser.getId(), post.getCourse().getId());
         }
         if (isCurrentStudentInNotAllowedToSeePost(post, currentUser)) {
@@ -108,13 +108,13 @@ public class PostServiceImpl implements PostService {
         return currentUser.getUserRole().equals(UserRole.STUDENT) &&
                 ((!post.getAuthor().getId().equals(currentUser.getId()) &&
                         post.getPostVisibility().equals(PostVisibility.ONLY_TEACHER)) ||
-                post.getCourse().getStudents().stream()
-                        .noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())));
+                        post.getCourse().getStudents().stream()
+                                .noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())));
     }
 
     private boolean isCurrentUserNotCurseOwner(Post post, User currentUser) {
         return currentUser.getUserRole().equals(UserRole.TEACHER) &&
-               !post.getCourse().getOwner().getId().equals(currentUser.getId());
+                !post.getCourse().getOwner().getId().equals(currentUser.getId());
     }
 
     private Post preparePost(PostRequest request, List<MultipartFile> attachments, Course course) throws IOException {
@@ -140,7 +140,8 @@ public class PostServiceImpl implements PostService {
             attachment.setUploadTime(now);
             attachment.setData(file.getBytes());
             attachmentList.add(attachment);
-        } return attachmentList;
+        }
+        return attachmentList;
     }
 
     private void verifyUpdateRequest(PostRequest postRequest, Post post) {
@@ -158,7 +159,7 @@ public class PostServiceImpl implements PostService {
         post.setPostVisibility(postRequest.getPostVisibility());
         post.setCommentingAllowed(postRequest.isCommentingAllowed());
         post.getAttachments().addAll(prepareAttachments(newAttachments, LocalDateTime.now()));
-        for(long attachmentId: postRequest.getAttachmentIdsToDelete()) {
+        for (long attachmentId : postRequest.getAttachmentIdsToDelete()) {
             post.getAttachments().removeIf(attachment -> attachment.getId().equals(attachmentId));
         }
     }

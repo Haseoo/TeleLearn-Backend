@@ -80,9 +80,9 @@ public class CourseController {
 
     @GetMapping(path = "/{id}/post")
     public ResponseEntity<List<PostView>> getCoursePosts(@PathVariable Long id) {
-       return new ResponseEntity<>(postService.getCoursePosts(id).stream()
-               .map(PostView::from)
-               .collect(Collectors.toList()),
-               HttpStatus.OK);
+        return new ResponseEntity<>(postService.getCoursePosts(id).stream()
+                .map(PostView::from)
+                .collect(Collectors.toList()),
+                HttpStatus.OK);
     }
 }

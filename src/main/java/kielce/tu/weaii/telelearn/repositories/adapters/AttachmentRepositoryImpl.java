@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public class AttachmentRepositoryImpl implements AttachmentRepository {
     private final AttachmentJPARepository jpaRepository;
+
     @Override
     public Optional<Attachment> getById(Long id) {
         return jpaRepository.findById(id);

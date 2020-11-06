@@ -8,7 +8,6 @@ import kielce.tu.weaii.telelearn.models.courses.Course;
 import kielce.tu.weaii.telelearn.repositories.ports.TeacherRepository;
 import kielce.tu.weaii.telelearn.requests.TeacherRegisterRequest;
 import kielce.tu.weaii.telelearn.requests.TeacherUpdateRequest;
-import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.services.ports.TeacherService;
 import kielce.tu.weaii.telelearn.services.ports.UserService;
 import lombok.RequiredArgsConstructor;

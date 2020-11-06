@@ -5,7 +5,6 @@ import kielce.tu.weaii.telelearn.models.User;
 import lombok.Data;
 
 import javax.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 

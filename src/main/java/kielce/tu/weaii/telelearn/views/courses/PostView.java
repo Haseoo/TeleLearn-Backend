@@ -1,7 +1,5 @@
 package kielce.tu.weaii.telelearn.views.courses;
 
-import kielce.tu.weaii.telelearn.models.Attachment;
-import kielce.tu.weaii.telelearn.models.courses.Comment;
 import kielce.tu.weaii.telelearn.models.courses.Post;
 import kielce.tu.weaii.telelearn.models.courses.PostVisibility;
 import kielce.tu.weaii.telelearn.views.UserView;

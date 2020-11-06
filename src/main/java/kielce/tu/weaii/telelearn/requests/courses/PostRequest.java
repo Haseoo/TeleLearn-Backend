@@ -1,11 +1,7 @@
 package kielce.tu.weaii.telelearn.requests.courses;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import kielce.tu.weaii.telelearn.models.courses.PostVisibility;
 import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

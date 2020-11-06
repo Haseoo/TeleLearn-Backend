@@ -10,9 +10,14 @@ import java.util.List;
 
 public interface PostService {
     Post getById(Long id);
+
     List<Post> getCoursePosts(Long courseId);
+
     Post addPost(PostRequest request, List<MultipartFile> attachments) throws IOException;
+
     Post updatePost(Long id, PostRequest postRequest, List<MultipartFile> newAttachments) throws IOException;
+
     List<Comment> getComments(Long postId);
+
     void removePost(Long id);
 }
