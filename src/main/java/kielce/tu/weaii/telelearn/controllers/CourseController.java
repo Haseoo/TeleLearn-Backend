@@ -3,9 +3,11 @@ package kielce.tu.weaii.telelearn.controllers;
 import kielce.tu.weaii.telelearn.requests.courses.CourseRequest;
 import kielce.tu.weaii.telelearn.requests.courses.CourseStudentRequest;
 import kielce.tu.weaii.telelearn.services.ports.CourseService;
+import kielce.tu.weaii.telelearn.services.ports.PostService;
 import kielce.tu.weaii.telelearn.views.courses.CourseBriefView;
 import kielce.tu.weaii.telelearn.views.courses.CourseSignUpResponse;
 import kielce.tu.weaii.telelearn.views.courses.CourseView;
+import kielce.tu.weaii.telelearn.views.courses.PostView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +18,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/course")
 public class CourseController {
     private final CourseService courseService;
+    private final PostService postService;
 
     @GetMapping("/{id}")
     public ResponseEntity<CourseView> getById(@PathVariable Long id) {
@@ -71,5 +76,13 @@ public class CourseController {
     @GetMapping(path = "/{id}/brief")
     public ResponseEntity<CourseBriefView> getBriefById(@PathVariable Long id) {
         return new ResponseEntity<>(CourseBriefView.from(courseService.getCourse(id)), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{id}/post")
+    public ResponseEntity<List<PostView>> getCoursePosts(@PathVariable Long id) {
+       return new ResponseEntity<>(postService.getCoursePosts(id).stream()
+               .map(PostView::from)
+               .collect(Collectors.toList()),
+               HttpStatus.OK);
     }
 }

@@ -76,7 +76,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/api/news/get/**",
                         "/api/user/login",
                         "/api/user/student",
-                        "/api/user/teacher")
+                        "/api/user/teacher",
+                        "/api/file")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

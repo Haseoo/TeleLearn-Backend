@@ -26,7 +26,7 @@ public class Course {
     @Column(columnDefinition = "TEXT")
     private String name;
 
-    @Column(columnDefinition = "TEXT")
+    @Lob
     private String welcomePageHtmlContent;
 
     @Column(nullable = false)
@@ -40,4 +40,7 @@ public class Course {
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "course")
     private List<CourseStudent> students;
+
+    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "course")
+    private List<Post> posts;
 }
