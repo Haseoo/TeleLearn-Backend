@@ -2,6 +2,7 @@ package kielce.tu.weaii.telelearn.services.ports;
 
 import kielce.tu.weaii.telelearn.models.courses.Comment;
 import kielce.tu.weaii.telelearn.models.courses.Post;
+import kielce.tu.weaii.telelearn.requests.courses.PostCommentRequest;
 import kielce.tu.weaii.telelearn.requests.courses.PostRequest;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +19,10 @@ public interface PostService {
     Post updatePost(Long id, PostRequest postRequest, List<MultipartFile> newAttachments) throws IOException;
 
     List<Comment> getComments(Long postId);
+
+    List<Comment> addComment(Long postId, PostCommentRequest postCommentRequest);
+
+    void deleteComment(Long id);
 
     void removePost(Long id);
 }

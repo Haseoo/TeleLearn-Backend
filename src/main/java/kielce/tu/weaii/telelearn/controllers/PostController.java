@@ -1,7 +1,9 @@
 package kielce.tu.weaii.telelearn.controllers;
 
+import kielce.tu.weaii.telelearn.requests.courses.PostCommentRequest;
 import kielce.tu.weaii.telelearn.requests.courses.PostRequest;
 import kielce.tu.weaii.telelearn.services.ports.PostService;
+import kielce.tu.weaii.telelearn.views.courses.CommentView;
 import kielce.tu.weaii.telelearn.views.courses.PostView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/post")
@@ -30,7 +33,7 @@ public class PostController {
     public ResponseEntity<Object> addPost(@Valid @ModelAttribute PostRequest request,
                                           @RequestParam(required = false) List<MultipartFile> files) {
         try {
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/get/{id}")
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                     .buildAndExpand(postService.addPost(request, files).getId()).toUri();
             return ResponseEntity.created(location).build();
         } catch (IOException e) {
@@ -50,9 +53,24 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping(path = {"{id}"})
+    @DeleteMapping(path = {"/{id}"})
     public ResponseEntity<Object> deletePost(@PathVariable Long id) {
         postService.removePost(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping(path = "/{id}/comment")
+    public ResponseEntity<List<CommentView>> getPostComments(@PathVariable Long id) {
+        return new ResponseEntity<>(postService.getComments(id).stream()
+                .map(CommentView::from)
+                .collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/{id}/comment")
+    public ResponseEntity<Object> addComment(@PathVariable Long id, @Valid @RequestBody PostCommentRequest request) {
+        postService.addComment(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
 }

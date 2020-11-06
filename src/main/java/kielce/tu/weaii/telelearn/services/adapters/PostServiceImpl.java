@@ -1,7 +1,9 @@
 package kielce.tu.weaii.telelearn.services.adapters;
 
 import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
+import kielce.tu.weaii.telelearn.exceptions.courses.CommentNotFound;
 import kielce.tu.weaii.telelearn.exceptions.courses.MovePostNotPossible;
+import kielce.tu.weaii.telelearn.exceptions.courses.PostCommentingNotAllowed;
 import kielce.tu.weaii.telelearn.exceptions.courses.PostNotFoundException;
 import kielce.tu.weaii.telelearn.models.Attachment;
 import kielce.tu.weaii.telelearn.models.User;
@@ -11,11 +13,13 @@ import kielce.tu.weaii.telelearn.models.courses.Course;
 import kielce.tu.weaii.telelearn.models.courses.Post;
 import kielce.tu.weaii.telelearn.models.courses.PostVisibility;
 import kielce.tu.weaii.telelearn.repositories.ports.PostRepository;
+import kielce.tu.weaii.telelearn.requests.courses.PostCommentRequest;
 import kielce.tu.weaii.telelearn.requests.courses.PostRequest;
 import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.services.ports.CourseService;
 import kielce.tu.weaii.telelearn.services.ports.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +36,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final CourseService courseService;
     private final UserServiceDetailsImpl userServiceDetails;
+    private final JpaRepository<Comment, Long> commentJpaRepository;
 
     @Override
     public Post getById(Long id) {
@@ -82,6 +87,34 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
+    public List<Comment> addComment(Long postId, PostCommentRequest postCommentRequest) {
+        Post post = getById(postId);
+        if (!post.isCommentingAllowed()) {
+            throw new PostCommentingNotAllowed();
+        }
+        Comment comment = new Comment();
+        comment.setAuthor(userServiceDetails.getCurrentUser());
+        comment.setContent(postCommentRequest.getContent());
+        comment.setPost(post);
+        comment.setPublicationTime(LocalDateTime.now());
+        post.getComments().add(comment);
+        return postRepository.save(post).getComments();
+    }
+
+    @Override
+    @Transactional
+    public void deleteComment(Long id) {
+        User currentUser = userServiceDetails.getCurrentUser();
+        Comment comment = commentJpaRepository.findById(id).orElseThrow(() -> new CommentNotFound(id));
+        if (userNotPermittedToDeleteComment(currentUser, comment)) {
+            throw new AuthorizationException("usuwanie komentarza", currentUser.getId(), id);
+        }
+        commentJpaRepository.delete(comment);
+    }
+
+    @Override
+    @Transactional
     public void removePost(Long id) {
         Post post = getById(id);
         User currentUser = userServiceDetails.getCurrentUser();
@@ -168,5 +201,11 @@ public class PostServiceImpl implements PostService {
         return !currentUser.getUserRole().equals(UserRole.ADMIN) ||
                 !currentUser.getUserRole().equals(UserRole.TEACHER) ||
                 !post.getAuthor().getId().equals(currentUser.getId());
+    }
+
+    private boolean userNotPermittedToDeleteComment(User currentUser, Comment comment) {
+        return currentUser.getUserRole().equals(UserRole.TEACHER) &&
+                !comment.getPost().getCourse().getOwner().getId().equals(currentUser.getId()) ||
+                !comment.getAuthor().getId().equals(currentUser.getId());
     }
 }

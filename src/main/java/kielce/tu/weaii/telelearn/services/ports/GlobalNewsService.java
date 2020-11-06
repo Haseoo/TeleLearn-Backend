@@ -11,7 +11,7 @@ public interface GlobalNewsService {
 
     GlobalNews edit(Long id, GlobalNewsRequest request);
 
-    public Page<GlobalNews> getPage(int pageSize, int pageNo);
+    Page<GlobalNews> getPage(int pageSize, int pageNo);
 
     void delete(Long id);
 }

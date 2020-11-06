@@ -8,7 +8,7 @@ import kielce.tu.weaii.telelearn.security.JwtAuthenticationResponse;
 import java.util.List;
 
 public interface UserService {
-    public void checkAvailability(String email);
+    void checkAvailability(String email);
 
     void checkAvailability(String login, String email);
 
