@@ -32,6 +32,5 @@ public class Attachment {
     private byte[] data;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "postId")
     private Post post;
 }

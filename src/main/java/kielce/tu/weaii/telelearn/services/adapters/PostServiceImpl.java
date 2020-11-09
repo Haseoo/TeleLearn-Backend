@@ -203,7 +203,12 @@ public class PostServiceImpl implements PostService {
         post.getAttachments().addAll(prepareAttachments(newAttachments, LocalDateTime.now(), post));
         if (postRequest.getAttachmentIdsToDelete() != null) {
             for (long attachmentId : postRequest.getAttachmentIdsToDelete()) {
-                post.getAttachments().removeIf(attachment -> attachment.getId().equals(attachmentId));
+                post.getAttachments().removeIf(attachment -> {
+                    if (attachment.getId() == null) {
+                        return false;
+                    }
+                    return attachment.getId().equals(attachmentId);
+                });
             }
         }
     }
