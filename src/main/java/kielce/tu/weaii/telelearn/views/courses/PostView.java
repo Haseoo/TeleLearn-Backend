@@ -13,6 +13,7 @@ import static java.util.stream.Collectors.toList;
 @Value
 public class PostView {
     Long id;
+    Long courseId;
     String content;
     UserView author;
     LocalDateTime publicationTime;
@@ -23,6 +24,7 @@ public class PostView {
 
     public static PostView from(Post model) {
         return new PostView(model.getId(),
+                model.getCourse().getId(),
                 model.getContent(),
                 UserView.from(model.getAuthor(), false),
                 model.getPublicationTime(),

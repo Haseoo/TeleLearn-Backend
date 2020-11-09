@@ -1,10 +1,15 @@
 package kielce.tu.weaii.telelearn.models;
 
+import kielce.tu.weaii.telelearn.models.courses.Course;
+import kielce.tu.weaii.telelearn.models.courses.Post;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -28,4 +33,8 @@ public class Attachment {
     @Lob
     @Column(nullable = false)
     private byte[] data;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "postId")
+    private Post post;
 }

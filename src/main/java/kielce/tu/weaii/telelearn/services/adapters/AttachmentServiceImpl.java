@@ -1,0 +1,35 @@
+package kielce.tu.weaii.telelearn.services.adapters;
+
+import kielce.tu.weaii.telelearn.exceptions.AttachmentNotFound;
+import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
+import kielce.tu.weaii.telelearn.models.Attachment;
+import kielce.tu.weaii.telelearn.models.User;
+import kielce.tu.weaii.telelearn.models.UserRole;
+import kielce.tu.weaii.telelearn.repositories.ports.AttachmentRepository;
+import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
+import kielce.tu.weaii.telelearn.services.ports.AttachmentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AttachmentServiceImpl implements AttachmentService {
+    private final AttachmentRepository repository;
+    private final UserServiceDetailsImpl userServiceDetails;
+    @Override
+    public Attachment getById(Long id) {
+        Attachment attachment =  repository.getById(id).orElseThrow(() -> new AttachmentNotFound(id));
+        checkAttachmentAuthorization(id, attachment);
+        return attachment;
+    }
+
+    private void checkAttachmentAuthorization(Long id, Attachment attachment) {
+        User currentUser = userServiceDetails.getCurrentUser();
+        if ((currentUser.getUserRole().equals(UserRole.TEACHER) &&
+                !attachment.getPost().getCourse().getOwner().getId().equals(currentUser.getId())) ||
+            (currentUser.getUserRole().equals(UserRole.STUDENT) &&
+                attachment.getPost().getCourse().getStudents().stream().noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())))) {
+            throw new AuthorizationException("załącznik", currentUser.getId(), id);
+        }
+    }
+}

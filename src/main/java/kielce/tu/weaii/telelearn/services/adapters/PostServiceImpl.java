@@ -12,6 +12,7 @@ import kielce.tu.weaii.telelearn.models.courses.Comment;
 import kielce.tu.weaii.telelearn.models.courses.Course;
 import kielce.tu.weaii.telelearn.models.courses.Post;
 import kielce.tu.weaii.telelearn.models.courses.PostVisibility;
+import kielce.tu.weaii.telelearn.repositories.jpa.CommentJPARepository;
 import kielce.tu.weaii.telelearn.repositories.ports.PostRepository;
 import kielce.tu.weaii.telelearn.requests.courses.PostCommentRequest;
 import kielce.tu.weaii.telelearn.requests.courses.PostRequest;
@@ -27,6 +28,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +38,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final CourseService courseService;
     private final UserServiceDetailsImpl userServiceDetails;
-    private final JpaRepository<Comment, Long> commentJpaRepository;
+    private final CommentJPARepository commentJpaRepository;
 
     @Override
     public Post getById(Long id) {
@@ -51,12 +53,16 @@ public class PostServiceImpl implements PostService {
         User currentUser = userServiceDetails.getCurrentUser();
         UserRole currentUserRole = currentUser.getUserRole();
         if (currentUserRole.equals(UserRole.ADMIN) || currentUserRole.equals(UserRole.TEACHER)) {
-            return course.getPosts();
+            List<Post> posts =  course.getPosts();
+            posts.sort(Comparator.comparing(Post::getPublicationTime).reversed());
+            return posts;
         } else {
-            return course.getPosts().stream()
+            List<Post> posts = course.getPosts().stream()
                     .filter(post -> post.getPostVisibility().equals(PostVisibility.EVERYONE) ||
                             post.getAuthor().getId().equals(currentUser.getId()))
                     .collect(Collectors.toList());
+            posts.sort(Comparator.comparing(Post::getPublicationTime).reversed());
+            return posts;
         }
     }
 
@@ -83,7 +89,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Comment> getComments(Long postId) {
-        return getById(postId).getComments();
+        List<Comment> comments =  getById(postId).getComments();
+        comments.sort(Comparator.comparing(Comment::getPublicationTime).reversed());
+        return comments;
     }
 
     @Override
@@ -158,13 +166,14 @@ public class PostServiceImpl implements PostService {
         post.setPostVisibility(request.getPostVisibility());
         post.setPublicationTime(now);
         post.setCourse(course);
+        post.setCommentingAllowed(request.isCommentingAllowed());
         if (!attachments.isEmpty()) {
-            post.setAttachments(prepareAttachments(attachments, now));
+            post.setAttachments(prepareAttachments(attachments, now, post));
         }
         return post;
     }
 
-    private List<Attachment> prepareAttachments(List<MultipartFile> attachments, LocalDateTime now) throws IOException {
+    private List<Attachment> prepareAttachments(List<MultipartFile> attachments, LocalDateTime now, Post post) throws IOException {
         List<Attachment> attachmentList = new ArrayList<>();
         for (MultipartFile file : attachments) {
             Attachment attachment = new Attachment();
@@ -173,6 +182,7 @@ public class PostServiceImpl implements PostService {
             attachment.setUploadTime(now);
             attachment.setData(file.getBytes());
             attachmentList.add(attachment);
+            attachment.setPost(post);
         }
         return attachmentList;
     }
@@ -191,15 +201,17 @@ public class PostServiceImpl implements PostService {
         post.setContent(postRequest.getContent());
         post.setPostVisibility(postRequest.getPostVisibility());
         post.setCommentingAllowed(postRequest.isCommentingAllowed());
-        post.getAttachments().addAll(prepareAttachments(newAttachments, LocalDateTime.now()));
-        for (long attachmentId : postRequest.getAttachmentIdsToDelete()) {
-            post.getAttachments().removeIf(attachment -> attachment.getId().equals(attachmentId));
+        post.getAttachments().addAll(prepareAttachments(newAttachments, LocalDateTime.now(), post));
+        if (postRequest.getAttachmentIdsToDelete() != null) {
+            for (long attachmentId : postRequest.getAttachmentIdsToDelete()) {
+                post.getAttachments().removeIf(attachment -> attachment.getId().equals(attachmentId));
+            }
         }
     }
 
     private boolean isUserNotPermittedToDelete(Post post, User currentUser) {
-        return !currentUser.getUserRole().equals(UserRole.ADMIN) ||
-                !currentUser.getUserRole().equals(UserRole.TEACHER) ||
+        return !currentUser.getUserRole().equals(UserRole.ADMIN) &&
+                !currentUser.getUserRole().equals(UserRole.TEACHER) &&
                 !post.getAuthor().getId().equals(currentUser.getId());
     }
 
