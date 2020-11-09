@@ -16,9 +16,10 @@ import org.springframework.stereotype.Service;
 public class AttachmentServiceImpl implements AttachmentService {
     private final AttachmentRepository repository;
     private final UserServiceDetailsImpl userServiceDetails;
+
     @Override
     public Attachment getById(Long id) {
-        Attachment attachment =  repository.getById(id).orElseThrow(() -> new AttachmentNotFound(id));
+        Attachment attachment = repository.getById(id).orElseThrow(() -> new AttachmentNotFound(id));
         checkAttachmentAuthorization(id, attachment);
         return attachment;
     }
@@ -27,8 +28,8 @@ public class AttachmentServiceImpl implements AttachmentService {
         User currentUser = userServiceDetails.getCurrentUser();
         if ((currentUser.getUserRole().equals(UserRole.TEACHER) &&
                 !attachment.getPost().getCourse().getOwner().getId().equals(currentUser.getId())) ||
-            (currentUser.getUserRole().equals(UserRole.STUDENT) &&
-                attachment.getPost().getCourse().getStudents().stream().noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())))) {
+                (currentUser.getUserRole().equals(UserRole.STUDENT) &&
+                        attachment.getPost().getCourse().getStudents().stream().noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())))) {
             throw new AuthorizationException("załącznik", currentUser.getId(), id);
         }
     }

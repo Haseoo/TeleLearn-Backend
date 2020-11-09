@@ -20,7 +20,6 @@ import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.services.ports.CourseService;
 import kielce.tu.weaii.telelearn.services.ports.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,7 +52,7 @@ public class PostServiceImpl implements PostService {
         User currentUser = userServiceDetails.getCurrentUser();
         UserRole currentUserRole = currentUser.getUserRole();
         if (currentUserRole.equals(UserRole.ADMIN) || currentUserRole.equals(UserRole.TEACHER)) {
-            List<Post> posts =  course.getPosts();
+            List<Post> posts = course.getPosts();
             posts.sort(Comparator.comparing(Post::getPublicationTime).reversed());
             return posts;
         } else {
@@ -89,7 +88,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Comment> getComments(Long postId) {
-        List<Comment> comments =  getById(postId).getComments();
+        List<Comment> comments = getById(postId).getComments();
         comments.sort(Comparator.comparing(Comment::getPublicationTime).reversed());
         return comments;
     }
