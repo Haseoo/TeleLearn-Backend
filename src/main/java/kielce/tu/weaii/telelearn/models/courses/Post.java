@@ -41,8 +41,7 @@ public class Post {
     @JoinColumn(nullable = false, name = "authorId")
     private User author;
 
-    @OneToMany(fetch = LAZY, cascade = ALL)
-    @JoinColumn(name = "postId")
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "post")
     private List<Attachment> attachments;
 
     @OneToMany(fetch = LAZY, mappedBy = "post", cascade = ALL)

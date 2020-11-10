@@ -43,4 +43,7 @@ public class Course {
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "course")
     private List<Post> posts;
+
+    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "course")
+    private List<Path> paths;
 }

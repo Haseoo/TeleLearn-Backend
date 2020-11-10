@@ -1,6 +1,7 @@
 package kielce.tu.weaii.telelearn.models;
 
 import kielce.tu.weaii.telelearn.models.courses.Post;
+import kielce.tu.weaii.telelearn.models.courses.Task;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -32,5 +33,10 @@ public class Attachment {
     private byte[] data;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "postId")
     private Post post;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "taskId")
+    private Task task;
 }
