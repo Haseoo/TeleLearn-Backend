@@ -28,7 +28,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         User currentUser = userServiceDetails.getCurrentUser();
         if (attachment.getPost() != null &&
                 (currentUser.getUserRole().equals(UserRole.TEACHER) &&
-                    !attachment.getPost().getCourse().getOwner().getId().equals(currentUser.getId())) ||
+                        !attachment.getPost().getCourse().getOwner().getId().equals(currentUser.getId())) ||
                 (currentUser.getUserRole().equals(UserRole.STUDENT) &&
                         attachment.getPost().getCourse().getStudents().stream().noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())))) {
             throw new AuthorizationException("załącznik", currentUser.getId(), id);

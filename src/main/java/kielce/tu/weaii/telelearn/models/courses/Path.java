@@ -3,7 +3,6 @@ package kielce.tu.weaii.telelearn.models.courses;
 import lombok.Data;
 
 import javax.persistence.*;
-
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;

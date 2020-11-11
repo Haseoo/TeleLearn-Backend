@@ -1,7 +1,6 @@
 package kielce.tu.weaii.telelearn.requests.courses;
 
 import lombok.Data;
-import lombok.Getter;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;

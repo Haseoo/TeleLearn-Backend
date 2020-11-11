@@ -17,6 +17,7 @@ public class TaskView {
     LocalDate dueDate;
     Long pathId;
     List<Long> previousTaskIds;
+    List<Long> nextTaskIds;
     List<AttachmentView> attachmentViews;
 
     public static TaskView from(Task model) {
@@ -28,6 +29,7 @@ public class TaskView {
                 model.getDueDate(),
                 model.getPath().getId(),
                 model.getPreviousTasks().stream().map(Task::getId).collect(Collectors.toList()),
+                model.getNextTasks().stream().map(Task::getId).collect(Collectors.toList()),
                 model.getAttachments().stream().map(AttachmentView::form).collect(Collectors.toList()));
     }
 }

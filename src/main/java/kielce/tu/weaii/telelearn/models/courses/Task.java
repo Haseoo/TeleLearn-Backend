@@ -4,7 +4,6 @@ import kielce.tu.weaii.telelearn.models.Attachment;
 import lombok.Data;
 
 import javax.persistence.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -45,7 +44,10 @@ public class Task {
     @JoinTable(name = "TASK_LINKS",
             joinColumns = @JoinColumn(name = "taskId"),
             inverseJoinColumns = @JoinColumn(name = "prevoiusTaskId"))
-    private  List<Task> previousTasks;
+    private List<Task> previousTasks;
+
+    @ManyToMany(mappedBy = "previousTasks")
+    private List<Task> nextTasks;
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "task")
     private List<Attachment> attachments;
