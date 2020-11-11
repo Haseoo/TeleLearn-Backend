@@ -1,6 +1,5 @@
 package kielce.tu.weaii.telelearn.controllers;
 
-import kielce.tu.weaii.telelearn.requests.courses.PostRequest;
 import kielce.tu.weaii.telelearn.requests.courses.TaskRequest;
 import kielce.tu.weaii.telelearn.services.ports.TaskService;
 import kielce.tu.weaii.telelearn.views.courses.TaskView;
@@ -31,7 +30,7 @@ public class TaskController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public ResponseEntity<Object> add(@Valid @ModelAttribute TaskRequest request,
-                                      @RequestParam(required = false) List<MultipartFile> files){
+                                      @RequestParam(required = false) List<MultipartFile> files) {
         try {
             URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                     .buildAndExpand(taskService.add(request, files).getId()).toUri();

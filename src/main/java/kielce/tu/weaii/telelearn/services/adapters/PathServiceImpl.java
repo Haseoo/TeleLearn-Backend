@@ -5,7 +5,6 @@ import kielce.tu.weaii.telelearn.exceptions.courses.PathNotFound;
 import kielce.tu.weaii.telelearn.models.User;
 import kielce.tu.weaii.telelearn.models.courses.Course;
 import kielce.tu.weaii.telelearn.models.courses.Path;
-import kielce.tu.weaii.telelearn.models.courses.Task;
 import kielce.tu.weaii.telelearn.repositories.ports.PathRepository;
 import kielce.tu.weaii.telelearn.requests.courses.PathRequest;
 import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;

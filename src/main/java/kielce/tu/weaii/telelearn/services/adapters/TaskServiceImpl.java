@@ -33,12 +33,12 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task getById(Long id) {
         Task task = taskRepository.getById(id).orElseThrow(() -> new TaskNotFound(id));
-        User currentUser  = userServiceDetails.getCurrentUser();
+        User currentUser = userServiceDetails.getCurrentUser();
         if ((currentUser.getUserRole().equals(UserRole.TEACHER) &&
                 !task.getPath().getCourse().getOwner().getId().equals(currentUser.getId())) ||
-            (currentUser.getUserRole().equals(UserRole.STUDENT) &&
-                task.getPath().getCourse().getStudents().stream()
-                        .noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())))) {
+                (currentUser.getUserRole().equals(UserRole.STUDENT) &&
+                        task.getPath().getCourse().getStudents().stream()
+                                .noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())))) {
             throw new AuthorizationException("zadanie", currentUser.getId(), id);
         }
         return task;
@@ -106,7 +106,7 @@ public class TaskServiceImpl implements TaskService {
             return false;
         }
         boolean hasCycle = false;
-        for(Task previousTask: currentTask.getPreviousTasks()) {
+        for (Task previousTask : currentTask.getPreviousTasks()) {
             if (ids.contains(previousTask.getId())) {
                 return true;
             }
@@ -118,7 +118,7 @@ public class TaskServiceImpl implements TaskService {
 
     private List<Task> getPreviousTasks(TaskRequest request) {
         List<Task> previousTasks = new ArrayList<>();
-        for(Long taskId: request.getPreviousTaskIds()) {
+        for (Long taskId : request.getPreviousTaskIds()) {
             previousTasks.add(getById(taskId));
         }
         return previousTasks;

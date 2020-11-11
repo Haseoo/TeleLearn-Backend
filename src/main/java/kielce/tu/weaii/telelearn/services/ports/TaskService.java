@@ -9,7 +9,10 @@ import java.util.List;
 
 public interface TaskService {
     Task getById(Long id);
+
     Task add(TaskRequest request, List<MultipartFile> attachments) throws IOException;
+
     Task update(Long id, TaskRequest request, List<MultipartFile> attachmentsToUpload) throws IOException;
+
     void delete(Long id);
 }
