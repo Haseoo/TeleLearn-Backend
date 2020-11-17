@@ -35,9 +35,9 @@ public class AttachmentServiceImpl implements AttachmentService {
         }
         if (attachment.getTask() != null &&
                 (currentUser.getUserRole().equals(UserRole.TEACHER) &&
-                        !attachment.getTask().getPath().getCourse().getOwner().getId().equals(currentUser.getId())) ||
+                        !attachment.getTask().getCourse().getOwner().getId().equals(currentUser.getId())) ||
                 (currentUser.getUserRole().equals(UserRole.STUDENT) &&
-                        attachment.getTask().getPath().getCourse().getStudents().stream().noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())))) {
+                        attachment.getTask().getCourse().getStudents().stream().noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())))) {
             throw new AuthorizationException("załącznik", currentUser.getId(), id);
         }
     }

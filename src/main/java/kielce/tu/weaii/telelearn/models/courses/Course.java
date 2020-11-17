@@ -45,5 +45,5 @@ public class Course {
     private List<Post> posts;
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "course")
-    private List<Path> paths;
+    private List<Task> tasks;
 }

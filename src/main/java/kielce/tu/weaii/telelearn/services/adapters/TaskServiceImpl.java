@@ -10,7 +10,7 @@ import kielce.tu.weaii.telelearn.models.courses.Task;
 import kielce.tu.weaii.telelearn.repositories.ports.TaskRepository;
 import kielce.tu.weaii.telelearn.requests.courses.TaskRequest;
 import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
-import kielce.tu.weaii.telelearn.services.ports.PathService;
+import kielce.tu.weaii.telelearn.services.ports.CourseService;
 import kielce.tu.weaii.telelearn.services.ports.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -28,16 +28,16 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserServiceDetailsImpl userServiceDetails;
-    private final PathService pathService;
+    private final CourseService courseService;
 
     @Override
     public Task getById(Long id) {
         Task task = taskRepository.getById(id).orElseThrow(() -> new TaskNotFound(id));
         User currentUser = userServiceDetails.getCurrentUser();
         if ((currentUser.getUserRole().equals(UserRole.TEACHER) &&
-                !task.getPath().getCourse().getOwner().getId().equals(currentUser.getId())) ||
+                !task.getCourse().getOwner().getId().equals(currentUser.getId())) ||
                 (currentUser.getUserRole().equals(UserRole.STUDENT) &&
-                        task.getPath().getCourse().getStudents().stream()
+                        task.getCourse().getStudents().stream()
                                 .noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())))) {
             throw new AuthorizationException("zadanie", currentUser.getId(), id);
         }
@@ -50,7 +50,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = new Task();
         LocalDateTime now = LocalDateTime.now();
         BeanUtils.copyProperties(request, task);
-        task.setPath(pathService.getById(request.getPathId()));
+        task.setCourse(courseService.getById(request.getCourseId()));
         task.setAttachments(prepareAttachments(attachments, now, task));
         task.setPreviousTasks(getPreviousTasks(request));
         checkNewTask(task);
@@ -61,8 +61,8 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public Task update(Long id, TaskRequest request, List<MultipartFile> attachmentsToUpload) throws IOException {
         Task task = getById(id);
-        if (!task.getPath().getId().equals(request.getPathId())) {
-            task.setPath(pathService.getById(request.getPathId()));
+        if (!task.getCourse().getId().equals(request.getCourseId())) {
+            task.setCourse(courseService.getById(request.getCourseId()));
         }
         BeanUtils.copyProperties(request, task);
         task.setPreviousTasks(getPreviousTasks(request));
@@ -75,20 +75,31 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public void delete(Long id) {
-        taskRepository.delete(getById(id));
+        Task task = getById(id);
+        for(Task pTask: task.getPreviousTasks()) {
+            pTask.getPreviousTasks().remove(task);
+            taskRepository.save(pTask);
+        }
+        for(Task nTask: task.getNextTasks()) {
+            nTask.getPreviousTasks().remove(task);
+            taskRepository.save(nTask);
+        }
+        taskRepository.delete(task);
     }
 
 
     private List<Attachment> prepareAttachments(List<MultipartFile> attachments, LocalDateTime now, Task task) throws IOException {
         List<Attachment> attachmentList = new ArrayList<>();
-        for (MultipartFile file : attachments) {
-            Attachment attachment = new Attachment();
-            attachment.setFileName(file.getOriginalFilename());
-            attachment.setFileType(file.getContentType());
-            attachment.setUploadTime(now);
-            attachment.setData(file.getBytes());
-            attachmentList.add(attachment);
-            attachment.setTask(task);
+        if (attachments != null) {
+            for (MultipartFile file : attachments) {
+                Attachment attachment = new Attachment();
+                attachment.setFileName(file.getOriginalFilename());
+                attachment.setFileType(file.getContentType());
+                attachment.setUploadTime(now);
+                attachment.setData(file.getBytes());
+                attachmentList.add(attachment);
+                attachment.setTask(task);
+            }
         }
         return attachmentList;
     }
@@ -112,7 +123,7 @@ public class TaskServiceImpl implements TaskService {
             }
             hasCycle = hasCycle || checkCycle(previousTask, ids);
         }
-        ids.add(currentTask.getId());
+        //ids.add(currentTask.getId());
         return hasCycle;
     }
 

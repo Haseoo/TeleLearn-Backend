@@ -14,11 +14,11 @@ public class PathView {
     Long courseId;
     List<TaskView> taskViews;
 
-    public static PathView from(Path model) {
+    /*public static PathView from(Path model) {
         return new PathView(model.getId(),
                 model.getName(),
                 model.getDescription(),
                 model.getCourse().getId(),
                 model.getTasks().stream().map(TaskView::from).collect(Collectors.toList()));
-    }
+    }*/
 }

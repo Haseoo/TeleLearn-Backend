@@ -24,11 +24,4 @@ public class Path {
     @Column(nullable = false)
     @Lob
     private String description;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "courseId")
-    private Course course;
-
-    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "path")
-    private List<Task> tasks;
 }

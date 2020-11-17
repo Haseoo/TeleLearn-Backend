@@ -19,7 +19,7 @@ import java.net.URI;
 @RequestMapping("/api/path")
 public class PathController {
 
-    private final PathService pathService;
+    /*private final PathService pathService;
 
     @GetMapping(path = "{id}")
     public ResponseEntity<PathView> getById(@PathVariable Long id) {
@@ -45,5 +45,5 @@ public class PathController {
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         pathService.delete(id);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 }

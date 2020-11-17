@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class CourseController {
     private final CourseService courseService;
     private final PostService postService;
-    private final PathService pathService;
 
     @GetMapping("/{id}")
     public ResponseEntity<CourseView> getById(@PathVariable Long id) {
@@ -85,10 +84,10 @@ public class CourseController {
                 HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{id}/path")
-    public ResponseEntity<List<PathBriefView>> getCoursePaths(@PathVariable Long id) {
-        return new ResponseEntity<>(pathService.getCoursePaths(id).stream()
-                .map(PathBriefView::from)
+    @GetMapping(path = "/{id}/task")
+    public ResponseEntity<List<TaskView>> getCourseTasks(@PathVariable Long id) {
+        return new ResponseEntity<>(courseService.getById(id).getTasks().stream()
+                .map(TaskView::from)
                 .collect(Collectors.toList()),
                 HttpStatus.OK);
     }

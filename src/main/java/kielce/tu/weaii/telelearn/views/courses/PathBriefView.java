@@ -10,10 +10,10 @@ public class PathBriefView {
     String description;
     Long courseId;
 
-    public static PathBriefView from(Path model) {
+    /*public static PathBriefView from(Path model) {
         return new PathBriefView(model.getId(),
                 model.getName(),
                 model.getDescription(),
                 model.getCourse().getId());
-    }
+    }*/
 }

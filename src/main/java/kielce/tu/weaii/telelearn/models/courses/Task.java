@@ -23,7 +23,6 @@ public class Task {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
 
-    @Column(nullable = false)
     @Lob
     private String description;
 
@@ -37,10 +36,10 @@ public class Task {
     private LocalDate dueDate;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "pathId")
-    private Path path;
+    @JoinColumn(nullable = false, name = "couseId")
+    private Course course;
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(name = "TASK_LINKS",
             joinColumns = @JoinColumn(name = "taskId"),
             inverseJoinColumns = @JoinColumn(name = "prevoiusTaskId"))

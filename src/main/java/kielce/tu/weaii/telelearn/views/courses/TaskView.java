@@ -15,10 +15,10 @@ public class TaskView {
     int learningTimeHours;
     int learningTimeMinutes;
     LocalDate dueDate;
-    Long pathId;
-    List<Long> previousTaskIds;
-    List<Long> nextTaskIds;
-    List<AttachmentView> attachmentViews;
+    Long courseId;
+    List<TaskBriefView> previousTasks;
+    List<TaskBriefView> nextTasks;
+    List<AttachmentView> attachments;
 
     public static TaskView from(Task model) {
         return new TaskView(model.getId(),
@@ -27,9 +27,9 @@ public class TaskView {
                 model.getLearningTimeHours(),
                 model.getLearningTimeMinutes(),
                 model.getDueDate(),
-                model.getPath().getId(),
-                model.getPreviousTasks().stream().map(Task::getId).collect(Collectors.toList()),
-                model.getNextTasks().stream().map(Task::getId).collect(Collectors.toList()),
+                model.getCourse().getId(),
+                model.getPreviousTasks().stream().map(TaskBriefView::from).collect(Collectors.toList()),
+                model.getNextTasks().stream().map(TaskBriefView::from).collect(Collectors.toList()),
                 model.getAttachments().stream().map(AttachmentView::form).collect(Collectors.toList()));
     }
 }

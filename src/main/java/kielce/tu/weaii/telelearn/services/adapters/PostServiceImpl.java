@@ -166,7 +166,7 @@ public class PostServiceImpl implements PostService {
         post.setPublicationTime(now);
         post.setCourse(course);
         post.setCommentingAllowed(request.isCommentingAllowed());
-        if (!attachments.isEmpty()) {
+        if (attachments != null && !attachments.isEmpty()) {
             post.setAttachments(prepareAttachments(attachments, now, post));
         }
         return post;
