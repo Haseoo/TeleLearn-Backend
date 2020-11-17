@@ -105,14 +105,34 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private void checkNewTask(Task task) {
+        if (checkCycle(task, task.getId())) {
+            throw new PathWouldHaveCycle();
+        }
+    }
+
+    private boolean checkCycle(Task currentTask, Long searchedTaskId) {
+        if (currentTask.getPreviousTasks().isEmpty()) {
+            return false;
+        }
+        boolean hasCycle = false;
+        for (Task previousTask : currentTask.getPreviousTasks()) {
+            if (previousTask.getId().equals(searchedTaskId)) {
+                return true;
+            }
+            hasCycle = hasCycle || checkCycle(previousTask, searchedTaskId);
+        }
+        return hasCycle;
+    }
+
+    /*private void checkNewTask(Task task) {
         List<Long> ids = new ArrayList<>();
         ids.add(task.getId());
         if (checkCycle(task, ids)) {
             throw new PathWouldHaveCycle();
         }
-    }
+    }*/
 
-    private boolean checkCycle(Task currentTask, List<Long> ids) {
+    /*private boolean checkCycle(Task currentTask, List<Long> ids) {
         if (currentTask.getPreviousTasks().isEmpty()) {
             return false;
         }
@@ -125,7 +145,7 @@ public class TaskServiceImpl implements TaskService {
         }
         //ids.add(currentTask.getId());
         return hasCycle;
-    }
+    }*/
 
     private List<Task> getPreviousTasks(TaskRequest request) {
         List<Task> previousTasks = new ArrayList<>();
