@@ -124,29 +124,6 @@ public class TaskServiceImpl implements TaskService {
         return hasCycle;
     }
 
-    /*private void checkNewTask(Task task) {
-        List<Long> ids = new ArrayList<>();
-        ids.add(task.getId());
-        if (checkCycle(task, ids)) {
-            throw new PathWouldHaveCycle();
-        }
-    }*/
-
-    /*private boolean checkCycle(Task currentTask, List<Long> ids) {
-        if (currentTask.getPreviousTasks().isEmpty()) {
-            return false;
-        }
-        boolean hasCycle = false;
-        for (Task previousTask : currentTask.getPreviousTasks()) {
-            if (ids.contains(previousTask.getId())) {
-                return true;
-            }
-            hasCycle = hasCycle || checkCycle(previousTask, ids);
-        }
-        //ids.add(currentTask.getId());
-        return hasCycle;
-    }*/
-
     private List<Task> getPreviousTasks(TaskRequest request) {
         List<Task> previousTasks = new ArrayList<>();
         for (Long taskId : request.getPreviousTaskIds()) {
