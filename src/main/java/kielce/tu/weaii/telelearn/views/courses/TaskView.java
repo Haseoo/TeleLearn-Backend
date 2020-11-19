@@ -1,31 +1,34 @@
 package kielce.tu.weaii.telelearn.views.courses;
 
 import kielce.tu.weaii.telelearn.models.courses.Task;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Value
+@AllArgsConstructor
+@Getter
 public class TaskView {
-    Long id;
-    String name;
-    String description;
-    int learningTimeHours;
-    int learningTimeMinutes;
-    LocalDate dueDate;
-    Long courseId;
-    List<TaskBriefView> previousTasks;
-    List<TaskBriefView> nextTasks;
-    List<AttachmentView> attachments;
+    private final Long id;
+    private final String name;
+    private final String description;
+    private final long learningTimeHours;
+    private final long learningTimeMinutes;
+    private final LocalDate dueDate;
+    private final Long courseId;
+    private final List<TaskBriefView> previousTasks;
+    private final List<TaskBriefView> nextTasks;
+    private final List<AttachmentView> attachments;
+
 
     public static TaskView from(Task model) {
         return new TaskView(model.getId(),
                 model.getName(),
                 model.getDescription(),
-                model.getLearningTimeHours(),
-                model.getLearningTimeMinutes(),
+                model.getLearningTime().toHours(),
+                model.getLearningTime().minusHours(model.getLearningTime().toHours()).toMinutes(),
                 model.getDueDate(),
                 model.getCourse().getId(),
                 model.getPreviousTasks().stream().map(TaskBriefView::from).collect(Collectors.toList()),

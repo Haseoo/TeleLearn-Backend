@@ -1,6 +1,8 @@
 package kielce.tu.weaii.telelearn.models;
 
 import kielce.tu.weaii.telelearn.models.courses.CourseStudent;
+import kielce.tu.weaii.telelearn.models.courses.TaskScheduleRecord;
+import kielce.tu.weaii.telelearn.models.courses.TaskStudent;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,4 +24,10 @@ public class Student extends User {
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "student")
     private List<CourseStudent> courses;
+
+    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "student")
+    private List<TaskStudent> tasks;
+
+    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "student")
+    private List<TaskScheduleRecord> planRecords;
 }

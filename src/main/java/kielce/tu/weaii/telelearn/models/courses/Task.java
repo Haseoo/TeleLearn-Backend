@@ -4,6 +4,7 @@ import kielce.tu.weaii.telelearn.models.Attachment;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,16 +28,13 @@ public class Task {
     private String description;
 
     @Column(nullable = false)
-    private int learningTimeHours;
-
-    @Column(nullable = false)
-    private int learningTimeMinutes;
+    private Duration learningTime;
 
     @Column(nullable = false)
     private LocalDate dueDate;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "couseId")
+    @JoinColumn(nullable = false, name = "courseId")
     private Course course;
 
     @ManyToMany()
@@ -50,4 +48,14 @@ public class Task {
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "task")
     private List<Attachment> attachments;
+
+    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "task")
+    private List<TaskStudent> students;
+
+    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "task")
+    private List<TaskScheduleRecord> planRecords;
+
+    public TaskStudent getStudentRecordOrNull(Long studentId) {
+        return students.stream().filter(entry -> entry.getStudent().getId().equals(studentId)).findAny().orElse(null);
+    }
 }

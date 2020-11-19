@@ -1,8 +1,15 @@
 package kielce.tu.weaii.telelearn.controllers;
 
+import kielce.tu.weaii.telelearn.models.User;
+import kielce.tu.weaii.telelearn.models.UserRole;
+import kielce.tu.weaii.telelearn.models.courses.Task;
+import kielce.tu.weaii.telelearn.requests.courses.TaskProgressPatchRequest;
+import kielce.tu.weaii.telelearn.requests.courses.TaskRepeatPatchRequest;
 import kielce.tu.weaii.telelearn.requests.courses.TaskRequest;
+import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.services.ports.TaskService;
 import kielce.tu.weaii.telelearn.views.courses.TaskView;
+import kielce.tu.weaii.telelearn.views.courses.TaskViewForStudent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +22,18 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/task")
 public class TaskController {
     private final TaskService taskService;
+    private final UserServiceDetailsImpl userServiceDetails;
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<TaskView> getById(@PathVariable Long id) {
-        return new ResponseEntity<>(TaskView.from(taskService.getById(id)), HttpStatus.OK);
+        return new ResponseEntity<>(getTaskViewConverter().apply(taskService.getById(id)), HttpStatus.OK);
     }
 
     @PostMapping
@@ -58,5 +67,25 @@ public class TaskController {
     public ResponseEntity<Object> remove(@PathVariable Long id) {
         taskService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(path = "/{id}/progress")
+    public ResponseEntity<Object> setProgress(@PathVariable Long id, @RequestBody TaskProgressPatchRequest request) {
+        taskService.updateProgress(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(path = "/{id}/repeat")
+    public ResponseEntity<Object> setRepeat(@PathVariable Long id, @RequestBody TaskRepeatPatchRequest request) {
+        taskService.updateTaskRepeat(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    private Function<Task, TaskView> getTaskViewConverter() {
+        User currentUser = userServiceDetails.getCurrentUser();
+        if (currentUser.getUserRole().equals(UserRole.STUDENT)) {
+            return model -> TaskViewForStudent.from(model, currentUser.getId());
+        }
+        return TaskView::from;
     }
 }

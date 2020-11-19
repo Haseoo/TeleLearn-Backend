@@ -22,7 +22,7 @@ public class FileController {
         Attachment attachment = attachmentService.getById(id);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + attachment.getFileName() + "\"")
+                        String.format("attachment; filename=\"%s\"", attachment.getFileName()))
                 .header(HttpHeaders.CONTENT_TYPE, attachment.getFileType())
                 .body(attachment.getData());
     }

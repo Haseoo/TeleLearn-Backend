@@ -1,7 +1,11 @@
 package kielce.tu.weaii.telelearn.controllers;
 
+import kielce.tu.weaii.telelearn.models.User;
+import kielce.tu.weaii.telelearn.models.UserRole;
+import kielce.tu.weaii.telelearn.models.courses.Task;
 import kielce.tu.weaii.telelearn.requests.courses.CourseRequest;
 import kielce.tu.weaii.telelearn.requests.courses.CourseStudentRequest;
+import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.services.ports.CourseService;
 import kielce.tu.weaii.telelearn.services.ports.PostService;
 import kielce.tu.weaii.telelearn.views.courses.*;
@@ -16,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Controller
@@ -24,6 +29,7 @@ import java.util.stream.Collectors;
 public class CourseController {
     private final CourseService courseService;
     private final PostService postService;
+    private final UserServiceDetailsImpl userServiceDetails;
 
     @GetMapping("/{id}")
     public ResponseEntity<CourseView> getById(@PathVariable Long id) {
@@ -86,8 +92,16 @@ public class CourseController {
     @GetMapping(path = "/{id}/task")
     public ResponseEntity<List<TaskView>> getCourseTasks(@PathVariable Long id) {
         return new ResponseEntity<>(courseService.getById(id).getTasks().stream()
-                .map(TaskView::from)
+                .map(getTaskViewConverter())
                 .collect(Collectors.toList()),
                 HttpStatus.OK);
+    }
+
+    private Function<Task, TaskView> getTaskViewConverter() {
+        User currentUser = userServiceDetails.getCurrentUser();
+        if (currentUser.getUserRole().equals(UserRole.STUDENT)) {
+            return (model) -> TaskViewForStudent.from(model, currentUser.getId());
+        }
+        return TaskView::from;
     }
 }
