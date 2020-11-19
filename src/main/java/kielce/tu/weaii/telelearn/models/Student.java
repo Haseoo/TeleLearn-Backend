@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.Duration;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
@@ -19,6 +20,9 @@ import static javax.persistence.CascadeType.ALL;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "STUDENTS")
 public class Student extends User {
+    @Column(nullable = false)
+    private Duration dailyLearningTime;
+
     @Column(columnDefinition = "TEXT")
     private String unit;
 
@@ -30,4 +34,6 @@ public class Student extends User {
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "student")
     private List<TaskScheduleRecord> planRecords;
+
+    public static final Duration DEFAULT_DAILY_LEARNING_TIME = Duration.ofHours(3).plus(Duration.ofMinutes(30));
 }

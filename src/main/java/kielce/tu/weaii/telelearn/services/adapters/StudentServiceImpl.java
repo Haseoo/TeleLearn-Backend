@@ -22,6 +22,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static kielce.tu.weaii.telelearn.models.Student.DEFAULT_DAILY_LEARNING_TIME;
+
 @RequiredArgsConstructor
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -42,6 +44,7 @@ public class StudentServiceImpl implements StudentService {
         model.setPassword(passwordEncoder.encode(String.valueOf(model.getPassword())).toCharArray());
         model.setUserRole(UserRole.STUDENT);
         model.setEnabled(true);
+        model.setDailyLearningTime(DEFAULT_DAILY_LEARNING_TIME);
         return studentRepository.save(model);
     }
 

@@ -22,9 +22,9 @@ public class TaskScheduleView {
         return new TaskScheduleView(model.getId(),
                 model.getDate(),
                 model.getPlannedTime().toHours(),
-                model.getPlannedTime().toMinutes(),
+                model.getPlannedTime().minusHours(model.getPlannedTime().toHours()).toMinutes(),
                 model.getLearningTime().toHours(),
-                model.getLearningTime().toMinutes(),
+                model.getLearningTime().minusHours(model.getLearningTime().toHours()).toMinutes(),
                 StudentView.from(model.getStudent(), false),
                 TaskView.from(model.getTask()));
     }
