@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.Duration;
 
 @Data
-public class TaskSchemeRecord {
+public class TaskStudentSummaryRecord {
     private Task task;
     private Duration totalLearningTime;
     private Duration totalPlannedLearningTime;

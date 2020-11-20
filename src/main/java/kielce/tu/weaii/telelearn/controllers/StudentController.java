@@ -3,12 +3,14 @@ package kielce.tu.weaii.telelearn.controllers;
 import kielce.tu.weaii.telelearn.requests.StudentRegisterRequest;
 import kielce.tu.weaii.telelearn.requests.StudentUpdateRequest;
 import kielce.tu.weaii.telelearn.services.ports.StudentService;
+import kielce.tu.weaii.telelearn.services.ports.TaskScheduleService;
 import kielce.tu.weaii.telelearn.services.ports.TaskService;
 import kielce.tu.weaii.telelearn.services.ports.UserService;
 import kielce.tu.weaii.telelearn.views.StudentView;
 import kielce.tu.weaii.telelearn.views.courses.CourseView;
-import kielce.tu.weaii.telelearn.views.courses.TaskSchemeRecordView;
-import kielce.tu.weaii.telelearn.views.courses.TaskSchemeView;
+import kielce.tu.weaii.telelearn.views.courses.TaskScheduleView;
+import kielce.tu.weaii.telelearn.views.courses.TaskToScheduleRecordView;
+import kielce.tu.weaii.telelearn.views.courses.TasksToScheduleView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,7 @@ public class StudentController {
     private final StudentService studentService;
     private final UserService userService;
     private final TaskService taskService;
+    private final TaskScheduleService taskScheduleService;
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<StudentView> getById(@PathVariable Long id) {
@@ -67,8 +70,13 @@ public class StudentController {
     }
 
     @GetMapping(path = "/{id}/tasks")
-    public ResponseEntity<Map<Object, List<TaskSchemeRecordView>>> getStudentTasks(@PathVariable Long id) {
-        return new ResponseEntity<>(TaskSchemeView.from(taskService.getStudentByTasksFromCurse(id, LocalDate.now().minusDays(1)), id), HttpStatus.OK);
+    public ResponseEntity<Map<Object, List<TaskToScheduleRecordView>>> getStudentTasks(@PathVariable Long id) {
+        return new ResponseEntity<>(TasksToScheduleView.from(taskService.getStudentByTasksFromCurse(id, LocalDate.now()), id), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{id}/schedule")
+    public ResponseEntity<Map<String, List<TaskScheduleView>>> getSchedule(@PathVariable Long id) {
+        return new ResponseEntity<>(TaskScheduleView.form(taskScheduleService.getListForStudent(id)), HttpStatus.OK);
     }
 
 }

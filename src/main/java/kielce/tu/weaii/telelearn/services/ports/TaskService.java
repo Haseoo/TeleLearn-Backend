@@ -4,7 +4,7 @@ import kielce.tu.weaii.telelearn.models.courses.Task;
 import kielce.tu.weaii.telelearn.requests.courses.TaskProgressPatchRequest;
 import kielce.tu.weaii.telelearn.requests.courses.TaskRepeatPatchRequest;
 import kielce.tu.weaii.telelearn.requests.courses.TaskRequest;
-import kielce.tu.weaii.telelearn.servicedata.TaskScheme;
+import kielce.tu.weaii.telelearn.servicedata.TaskStudentSummary;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,5 +24,5 @@ public interface TaskService {
 
     Task updateTaskRepeat(Long id, TaskRepeatPatchRequest request);
 
-    TaskScheme getStudentByTasksFromCurse(Long studentId, LocalDate today);
+    TaskStudentSummary getStudentByTasksFromCurse(Long studentId, LocalDate today);
 }

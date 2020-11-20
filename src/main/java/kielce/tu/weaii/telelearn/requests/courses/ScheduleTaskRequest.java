@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class ScheduleTaskRequest {
     private Long taskId;
     private Long studentId;
-    private Duration declaredTime;
+    private Duration plannedTime;
     private LocalDate date;
 
     @Valid
@@ -28,6 +28,6 @@ public class ScheduleTaskRequest {
         this.taskId = taskId;
         this.studentId = studentId;
         this.date = date;
-        this.declaredTime = Duration.ofHours(hours).plus(Duration.ofMinutes(minutes));
+        this.plannedTime = Duration.ofHours(hours).plus(Duration.ofMinutes(minutes));
     }
 }

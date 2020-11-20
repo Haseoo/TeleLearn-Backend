@@ -15,8 +15,8 @@ import kielce.tu.weaii.telelearn.requests.courses.TaskProgressPatchRequest;
 import kielce.tu.weaii.telelearn.requests.courses.TaskRepeatPatchRequest;
 import kielce.tu.weaii.telelearn.requests.courses.TaskRequest;
 import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
-import kielce.tu.weaii.telelearn.servicedata.TaskScheme;
-import kielce.tu.weaii.telelearn.servicedata.TaskSchemeRecord;
+import kielce.tu.weaii.telelearn.servicedata.TaskStudentSummary;
+import kielce.tu.weaii.telelearn.servicedata.TaskStudentSummaryRecord;
 import kielce.tu.weaii.telelearn.services.ports.CourseService;
 import kielce.tu.weaii.telelearn.services.ports.StudentService;
 import kielce.tu.weaii.telelearn.services.ports.TaskService;
@@ -142,13 +142,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskScheme getStudentByTasksFromCurse(Long studentId, LocalDate today) {
+    public TaskStudentSummary getStudentByTasksFromCurse(Long studentId, LocalDate today) {
         if (!userService.isCurrentUserOrAdmin(studentId)) {
             throw new AuthorizationException("lista zadań użytkownika", userServiceDetails.getCurrentUser().getId(), studentId);
         }
-        TaskScheme taskScheme = new TaskScheme();
+        TaskStudentSummary taskStudentSummary = new TaskStudentSummary();
         List<Task> tasks = taskRepository.getStudentByTasksFromCurse(studentId);
-        taskScheme.setDelayedTasks(
+        taskStudentSummary.setDelayedTasks(
                 tasks.stream()
                         .filter(task -> task.getDueDate().isBefore(today) &&
                                 (task.getStudentRecordOrNull(studentId) == null
@@ -156,13 +156,13 @@ public class TaskServiceImpl implements TaskService {
                         .map(task -> getTaskSchemeRecord(task, studentId, today))
                         .collect(Collectors.toList())
         );
-        taskScheme.setTaskToRepeat(
+        taskStudentSummary.setTaskToRepeat(
                 tasks.stream()
                         .filter(task -> task.getStudentRecordOrNull(studentId) != null && task.getStudentRecordOrNull(studentId).isToRepeat())
                         .map(task -> getTaskSchemeRecord(task, studentId, today))
                         .collect(Collectors.toList())
         );
-        taskScheme.setTasksForDay(
+        taskStudentSummary.setTasksForDay(
                 tasks.stream()
                         .filter(task -> !task.getDueDate().isBefore(today))
                         .filter(task -> task.getStudentRecordOrNull(studentId) == null ||
@@ -171,10 +171,10 @@ public class TaskServiceImpl implements TaskService {
                         .collect(Collectors.groupingBy(record -> record.getTask().getDueDate()))
         );
 
-        return taskScheme;
+        return taskStudentSummary;
     }
 
-    private TaskSchemeRecord getTaskSchemeRecord(Task task, Long studentId, LocalDate today) {
+    private TaskStudentSummaryRecord getTaskSchemeRecord(Task task, Long studentId, LocalDate today) {
         Duration totalLearningTime = task.getPlanRecords().stream()
                 .filter(record -> record.getStudent().getId().equals(studentId))
                 .map(TaskScheduleRecord::getLearningTime)
@@ -184,7 +184,7 @@ public class TaskServiceImpl implements TaskService {
                 .filter(record -> !record.getDate().isBefore(today))
                 .map(TaskScheduleRecord::getPlannedTime)
                 .reduce(Duration.ZERO, Duration::plus);
-        TaskSchemeRecord record = new TaskSchemeRecord();
+        TaskStudentSummaryRecord record = new TaskStudentSummaryRecord();
         record.setTask(task);
         record.setTotalLearningTime(totalLearningTime);
         record.setTotalPlannedLearningTime(totalPlannedLearningTime);

@@ -10,13 +10,13 @@ import javax.validation.constraints.Min;
 import java.time.Duration;
 
 @Getter
-public class TimeSpanPatchRequest {
+public class TimeSpanRequest {
     private Duration timeSpan;
 
     @JsonCreator
     @Valid
-    public TimeSpanPatchRequest(@Min(value = 0, message = "Nieprawidłowa liczba godzin") @JsonProperty(value = "hours", required = true) long hours,
-                                @Range(min = 0, max = 60, message = "Nieprawidłowa liczba minut") @JsonProperty(value = "minutes", required = true) long minutes) {
+    public TimeSpanRequest(@Min(value = 0, message = "Nieprawidłowa liczba godzin") @JsonProperty(value = "hours", required = true) long hours,
+                           @Range(min = 0, max = 60, message = "Nieprawidłowa liczba minut") @JsonProperty(value = "minutes", required = true) long minutes) {
         this.timeSpan = Duration.ofMinutes(minutes).plus(Duration.ofHours(hours));
     }
 }
