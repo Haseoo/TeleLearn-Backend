@@ -1,6 +1,7 @@
 package kielce.tu.weaii.telelearn.views.courses;
 
 import kielce.tu.weaii.telelearn.models.courses.Task;
+import kielce.tu.weaii.telelearn.views.TimeVew;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,14 +9,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @AllArgsConstructor
 @Getter
 public class TaskView {
     private final Long id;
     private final String name;
     private final String description;
-    private final long learningTimeHours;
-    private final long learningTimeMinutes;
+    private final TimeVew learningTime;
     private final LocalDate dueDate;
     private final Long courseId;
     private final List<TaskBriefView> previousTasks;
@@ -27,8 +28,7 @@ public class TaskView {
         return new TaskView(model.getId(),
                 model.getName(),
                 model.getDescription(),
-                model.getLearningTime().toHours(),
-                model.getLearningTime().minusHours(model.getLearningTime().toHours()).toMinutes(),
+                TimeVew.form(model.getLearningTime()),
                 model.getDueDate(),
                 model.getCourse().getId(),
                 model.getPreviousTasks().stream().map(TaskBriefView::from).collect(Collectors.toList()),

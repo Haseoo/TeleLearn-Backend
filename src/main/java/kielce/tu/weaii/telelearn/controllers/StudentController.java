@@ -2,15 +2,9 @@ package kielce.tu.weaii.telelearn.controllers;
 
 import kielce.tu.weaii.telelearn.requests.StudentRegisterRequest;
 import kielce.tu.weaii.telelearn.requests.StudentUpdateRequest;
-import kielce.tu.weaii.telelearn.services.ports.StudentService;
-import kielce.tu.weaii.telelearn.services.ports.TaskScheduleService;
-import kielce.tu.weaii.telelearn.services.ports.TaskService;
-import kielce.tu.weaii.telelearn.services.ports.UserService;
+import kielce.tu.weaii.telelearn.services.ports.*;
 import kielce.tu.weaii.telelearn.views.StudentView;
-import kielce.tu.weaii.telelearn.views.courses.CourseView;
-import kielce.tu.weaii.telelearn.views.courses.TaskScheduleView;
-import kielce.tu.weaii.telelearn.views.courses.TaskToScheduleRecordView;
-import kielce.tu.weaii.telelearn.views.courses.TasksToScheduleView;
+import kielce.tu.weaii.telelearn.views.courses.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +28,18 @@ public class StudentController {
     private final UserService userService;
     private final TaskService taskService;
     private final TaskScheduleService taskScheduleService;
+    private final StudentStatsService studentStatsService;
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<StudentView> getById(@PathVariable Long id) {
         return new ResponseEntity<>(StudentView.from(studentService.getById(id),
                 userService.isCurrentUserOrAdmin(id)), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{id}/stat")
+    @PreAuthorize("hasAnyRole('STUDENT')")
+    public ResponseEntity<StudentStatsView> getStudentStat(@PathVariable Long id) {
+        return new ResponseEntity<>(StudentStatsView.from(studentStatsService.getStudentStat(id, LocalDate.now())), HttpStatus.OK);
     }
 
     @PutMapping(path = "/{id}")
@@ -56,7 +57,7 @@ public class StudentController {
 
     @DeleteMapping(path = "/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> deleteTeacher(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteStudent(@PathVariable Long id) {
         studentService.delete(id);
         return ResponseEntity.noContent().build();
     }

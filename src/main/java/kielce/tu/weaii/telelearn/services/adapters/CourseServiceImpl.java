@@ -4,7 +4,6 @@ import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
 import kielce.tu.weaii.telelearn.exceptions.courses.CourseNotFoundException;
 import kielce.tu.weaii.telelearn.exceptions.courses.StudentAlreadyEnrolled;
 import kielce.tu.weaii.telelearn.exceptions.courses.StudentOnListNotFound;
-import kielce.tu.weaii.telelearn.models.Student;
 import kielce.tu.weaii.telelearn.models.User;
 import kielce.tu.weaii.telelearn.models.UserRole;
 import kielce.tu.weaii.telelearn.models.courses.Course;
@@ -16,6 +15,7 @@ import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.services.ports.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -28,7 +28,9 @@ public class CourseServiceImpl implements CourseService {
     private final TeacherService teacherService;
     private final StudentService studentService;
     private final UserService userService;
-    private final TaskScheduleService taskScheduleService;
+
+    @Autowired
+    private TaskScheduleService taskScheduleService;
 
     @Override
     public Course getById(Long id) {
@@ -72,7 +74,7 @@ public class CourseServiceImpl implements CourseService {
     public void delete(Long id) {
         Course course = getById(id);
         checkCourseAuthorization(id, course.getOwner().getId());
-        for(CourseStudent courseStudent: course.getStudents()) {
+        for (CourseStudent courseStudent : course.getStudents()) {
             signOutStudent(course.getId(), courseStudent.getStudent().getId());
         }
         repository.delete(course);
@@ -107,7 +109,7 @@ public class CourseServiceImpl implements CourseService {
         checkDeletingUserAuthorization(courseId, studentId, course);
         CourseStudent courseStudentEntry = getCourseStudentEntry(courseId, studentId, course);
         course.getStudents().remove(courseStudentEntry);
-        for(Task task: course.getTasks()) {
+        for (Task task : course.getTasks()) {
             task.getStudents().removeIf(entry -> entry.getStudent().getId().equals(studentId));
         }
         taskScheduleService.deleteSchedulesForStudent(studentId);

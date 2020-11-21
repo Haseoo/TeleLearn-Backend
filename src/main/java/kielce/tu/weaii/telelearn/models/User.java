@@ -23,12 +23,24 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+
     private String username;
+    @Column(nullable = false, columnDefinition = "TEXT")
     private char[] password;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String email;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String surname;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private UserRole userRole;
+
+    @Column(nullable = false)
     private boolean enabled;
     @OneToMany(fetch = LAZY, mappedBy = "sender", cascade = ALL)
     private List<Message> sendMessages;

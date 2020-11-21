@@ -14,8 +14,7 @@ public class StudentView {
     UserRole userRole;
     boolean enabled;
     String unit;
-    Long dailyLearningTimeHours;
-    Long dailyLearningTimeMinutes;
+    TimeVew dailyLearning;
 
     public static StudentView from(Student model, boolean loginPermitted) {
         return new StudentView(model.getId(),
@@ -26,7 +25,6 @@ public class StudentView {
                 model.getUserRole(),
                 model.isEnabled(),
                 model.getUnit(),
-                model.getDailyLearningTime().toHours(),
-                model.getDailyLearningTime().minusHours(model.getDailyLearningTime().toHours()).toMinutes());
+                TimeVew.form(model.getDailyLearningTime()));
     }
 }

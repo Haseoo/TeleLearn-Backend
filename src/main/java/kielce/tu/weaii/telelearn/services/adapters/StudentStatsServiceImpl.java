@@ -1,0 +1,141 @@
+package kielce.tu.weaii.telelearn.services.adapters;
+
+import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
+import kielce.tu.weaii.telelearn.models.StudentStatsRecord;
+import kielce.tu.weaii.telelearn.models.courses.Task;
+import kielce.tu.weaii.telelearn.models.courses.TaskScheduleRecord;
+import kielce.tu.weaii.telelearn.repositories.ports.StudentStatsRepository;
+import kielce.tu.weaii.telelearn.repositories.ports.TaskRepository;
+import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
+import kielce.tu.weaii.telelearn.servicedata.StudentStats;
+import kielce.tu.weaii.telelearn.services.ports.StudentStatsService;
+import kielce.tu.weaii.telelearn.services.ports.TaskScheduleService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static kielce.tu.weaii.telelearn.utilities.Constants.WEEK_END_RANGE_DAYS;
+
+@Service
+@RequiredArgsConstructor
+public class StudentStatsServiceImpl implements StudentStatsService {
+    private final StudentStatsRepository studentStatsRepository;
+    private final UserServiceDetailsImpl userServiceDetails;
+    private final TaskRepository taskRepository;
+
+    @Autowired
+    private TaskScheduleService taskScheduleService;
+
+    @Override
+    @Transactional
+    public void recordOrUpdateLearning(TaskScheduleRecord taskScheduleRecord, LocalTime startTime) {
+        StudentStatsRecord record = studentStatsRepository.getByScheduleId(taskScheduleRecord.getId())
+                .orElseGet(() -> getNewRecord(taskScheduleRecord));
+        record.setStartTime(startTime);
+        record.setLearningTime(taskScheduleRecord.getLearningTime());
+        studentStatsRepository.save(record);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRecord(TaskScheduleRecord taskScheduleRecord) {
+        studentStatsRepository.getByScheduleId(taskScheduleRecord.getId())
+                .ifPresent(studentStatsRepository::delete);
+    }
+
+    @Override
+    public StudentStats getStudentStat(Long studentId, LocalDate today) {
+        if (!userServiceDetails.getCurrentUser().getId().equals(studentId)) {
+            throw new AuthorizationException("Statystyki ucznia.", userServiceDetails.getCurrentUser().getId(), studentId);
+        }
+        return getStudentStats(studentId, today);
+    }
+
+    private StudentStats getStudentStats(Long studentId, LocalDate today) {
+        LocalDate filterBeginDate = today.minusDays(LocalDate.now().getDayOfWeek().getValue());
+        LocalDate filterEndDate = filterBeginDate.plusDays(WEEK_END_RANGE_DAYS);
+
+        List<StudentStatsRecord> statsList = studentStatsRepository.getStudentStat(studentId);
+        List<TaskScheduleRecord> studentSchedule = taskScheduleService.getListForStudent(studentId);
+        List<Task> studentTasks = taskRepository.getStudentByTasksFromCurse(studentId);
+        List<StudentStatsRecord> studentStatList = studentStatsRepository.getStudentStat(studentId);
+
+        StudentStats studentStats = new StudentStats();
+
+        studentStats.setAverageLearningTime(getAverageLearningTime(statsList));
+        studentStats.setLearningTimeForWeek(getLearningTime(filterBeginDate, filterEndDate, studentStatList));
+        studentStats.setPlannedTimeForWeek(getPlannedTime(filterBeginDate, filterEndDate, studentSchedule));
+        studentStats.setTaskTimeForWeek(getTaskLearningTime(filterBeginDate, filterEndDate, studentTasks));
+        studentStats.setLearningTimeForCourseTotal(getLearningTimeForCourseTotal(studentStatList));
+        studentStats.setLearningTimeForCourseSevenDays(getLearningTimeForSevenDays(today, studentStatList));
+        studentStats.setHoursLearningStats(getHoursLearningStats(studentStatList));
+
+        return studentStats;
+    }
+
+    private StudentStatsRecord getNewRecord(TaskScheduleRecord taskScheduleRecord) {
+        StudentStatsRecord record = new StudentStatsRecord();
+        record.setCourseId(taskScheduleRecord.getTask().getCourse().getId());
+        record.setScheduleId(taskScheduleRecord.getId());
+        record.setStudent(taskScheduleRecord.getStudent());
+        record.setDate(taskScheduleRecord.getDate());
+        return record;
+    }
+
+    private Duration getAverageLearningTime(List<StudentStatsRecord> records) {
+        long averageMinutes = Math.round(records.stream()
+                .map(StudentStatsRecord::getLearningTime)
+                .mapToLong(Duration::toMinutes)
+                .average().orElse(0.0));
+        return Duration.ofMinutes(averageMinutes);
+    }
+
+    private Duration getTaskLearningTime(LocalDate begin, LocalDate end, List<Task> studentTasks) {
+        return studentTasks.stream()
+                .filter(task -> weekFilter(begin, end, task.getDueDate()))
+                .map(Task::getLearningTime)
+                .reduce(Duration.ZERO, Duration::plus);
+    }
+
+    private Duration getPlannedTime(LocalDate begin, LocalDate end, List<TaskScheduleRecord> studentSchedule) {
+        return studentSchedule.stream()
+                .filter(record -> weekFilter(begin, end, record.getDate()))
+                .map(TaskScheduleRecord::getPlannedTime)
+                .reduce(Duration.ZERO, Duration::plus);
+    }
+
+    private Duration getLearningTime(LocalDate begin, LocalDate end, List<StudentStatsRecord> studentStats) {
+        return studentStats.stream()
+                .filter(record -> weekFilter(begin, end, record.getDate()))
+                .map(StudentStatsRecord::getLearningTime)
+                .reduce(Duration.ZERO, Duration::plus);
+    }
+
+    private Map<Long, Duration> getLearningTimeForCourseTotal(List<StudentStatsRecord> studentStats) {
+        return studentStats.stream()
+                .collect(Collectors.toMap(StudentStatsRecord::getCourseId, StudentStatsRecord::getLearningTime, Duration::plus));
+    }
+
+    private Map<Long, Duration> getLearningTimeForSevenDays(LocalDate today, List<StudentStatsRecord> studentStats) {
+        return studentStats.stream()
+                .filter(schedule -> weekFilter(today.minusDays(WEEK_END_RANGE_DAYS), today.plusDays(WEEK_END_RANGE_DAYS), schedule.getDate()))
+                .collect(Collectors.toMap(StudentStatsRecord::getCourseId, StudentStatsRecord::getLearningTime, Duration::plus));
+    }
+
+    private Map<Integer, Long> getHoursLearningStats(List<StudentStatsRecord> studentStats) {
+        return studentStats.stream()
+                .collect(Collectors.groupingBy(record -> record.getStartTime().getHour(), Collectors.counting()));
+    }
+
+    private boolean weekFilter(LocalDate begin, LocalDate end, LocalDate date) {
+        return date.isBefore(end) && date.isAfter(begin);
+    }
+}

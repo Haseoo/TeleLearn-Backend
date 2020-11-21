@@ -19,7 +19,7 @@ public class RecordLearningRequest {
 
     @JsonCreator
     @Valid
-    public RecordLearningRequest(@NotBlank(message = "Należy podać czas rozpoczęcia.")  @JsonProperty(value = "startTime", required = true) String startTime,
+    public RecordLearningRequest(@NotBlank(message = "Należy podać czas rozpoczęcia.") @JsonProperty(value = "startTime", required = true) String startTime,
                                  @JsonProperty(value = "duration", required = true) TimeSpanRequest duration) {
         this.startTime = LocalTime.parse(startTime, DateTimeFormatter.ofPattern("HH:mm"));
         this.duration = duration;

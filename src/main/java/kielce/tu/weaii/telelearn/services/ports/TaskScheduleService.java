@@ -10,10 +10,16 @@ import java.util.List;
 
 public interface TaskScheduleService {
     TaskScheduleRecord getById(Long id);
+
     List<TaskScheduleRecord> getListForStudent(Long studentId);
+
     TaskScheduleRecord schedule(ScheduleTaskRequest request);
+
     TaskScheduleRecord updatePlannedTime(Long id, TimeSpanRequest request, LocalDate today);
+
     TaskScheduleRecord updateLearningTime(Long id, RecordLearningRequest request, LocalDate today);
+
     void delete(Long id);
+
     void deleteSchedulesForStudent(Long studentId);
 }

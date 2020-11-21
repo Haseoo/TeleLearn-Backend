@@ -11,10 +11,12 @@ import kielce.tu.weaii.telelearn.requests.courses.ScheduleTaskRequest;
 import kielce.tu.weaii.telelearn.requests.courses.TimeSpanRequest;
 import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.services.ports.StudentService;
+import kielce.tu.weaii.telelearn.services.ports.StudentStatsService;
 import kielce.tu.weaii.telelearn.services.ports.TaskScheduleService;
 import kielce.tu.weaii.telelearn.services.ports.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,6 +32,10 @@ public class TaskScheduleServiceImpl implements TaskScheduleService {
     private final UserServiceDetailsImpl userServiceDetails;
     private final TaskService taskService;
     private final StudentService studentService;
+
+    @Autowired
+    private StudentStatsService studentStatsService;
+
     @Override
     public TaskScheduleRecord getById(Long id) {
         TaskScheduleRecord record = repository.getById(id).orElseThrow(ScheduleRecordNotFound::new);
@@ -77,13 +83,17 @@ public class TaskScheduleServiceImpl implements TaskScheduleService {
             throw new UpdateLearningTimeNotPossible();
         }
         record.setLearningTime(request.getDuration().getTimeSpan());
-        return repository.save(record);
+        record = repository.save(record);
+        studentStatsService.recordOrUpdateLearning(record, request.getStartTime());
+        return record;
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        repository.delete(getById(id));
+        TaskScheduleRecord record = getById(id);
+        studentStatsService.deleteRecord(record);
+        repository.delete(record);
     }
 
     @Override
