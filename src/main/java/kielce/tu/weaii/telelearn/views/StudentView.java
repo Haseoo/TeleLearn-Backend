@@ -14,7 +14,7 @@ public class StudentView {
     UserRole userRole;
     boolean enabled;
     String unit;
-    TimeVew dailyLearning;
+    TimeVew dailyLearningTime;
 
     public static StudentView from(Student model, boolean loginPermitted) {
         return new StudentView(model.getId(),

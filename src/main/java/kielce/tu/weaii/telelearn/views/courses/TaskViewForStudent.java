@@ -1,5 +1,6 @@
 package kielce.tu.weaii.telelearn.views.courses;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import kielce.tu.weaii.telelearn.models.courses.Task;
 import kielce.tu.weaii.telelearn.models.courses.TaskStudent;
 import kielce.tu.weaii.telelearn.views.TimeVew;
@@ -29,6 +30,8 @@ public class TaskViewForStudent extends TaskView {
     }
 
     private final int taskCompletion;
+
+    @JsonProperty("isToRepeat")
     private final boolean toRepeat;
 
 
