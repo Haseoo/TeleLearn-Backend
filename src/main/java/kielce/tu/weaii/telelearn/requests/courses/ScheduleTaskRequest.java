@@ -23,7 +23,7 @@ public class ScheduleTaskRequest {
     @Valid
     @JsonCreator
     public ScheduleTaskRequest(@JsonProperty(value = "taskId", required = true) Long taskId,
-                               @JsonProperty(value = "studentId", required = true)Long studentId,
+                               @JsonProperty(value = "studentId", required = true) Long studentId,
                                @JsonProperty(value = "date", required = true) LocalDate date,
                                @Min(value = 0, message = "Nieprawidłowa liczba godzin") @JsonProperty(value = "hours", required = true) long hours,
                                @Range(min = 0, max = 60, message = "Nieprawidłowa liczba minut") @JsonProperty(value = "minutes", required = true) long minutes) {

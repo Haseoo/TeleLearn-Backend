@@ -93,7 +93,7 @@ public class TaskScheduleServiceImpl implements TaskScheduleService {
         if (!record.getDate().isEqual(today)) {
             throw new UpdateLearningTimeNotPossible();
         }
-        for(Task pTask : record.getTask().getPreviousTasks()) {
+        for (Task pTask : record.getTask().getPreviousTasks()) {
             TaskStudent taskStudent = pTask.getStudentRecordOrNull(record.getStudent().getId());
             if (taskStudent == null || taskStudent.getTaskCompletion() != TASK_COMPLETED) {
                 throw new PreviousTaskNotCompleted();

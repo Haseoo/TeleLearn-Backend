@@ -77,7 +77,7 @@ public class CourseServiceImpl implements CourseService {
         Course course = getById(id);
         checkCourseAuthorization(id, course.getOwner().getId());
         List<Long> studentIds = course.getStudents().stream().map(e -> e.getStudent().getId()).collect(Collectors.toList());
-        for (long studentId: studentIds) {
+        for (long studentId : studentIds) {
             signOutStudent(course.getId(), studentId);
         }
         repository.delete(course);
