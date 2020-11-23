@@ -13,7 +13,9 @@ public interface TaskScheduleService {
 
     List<TaskScheduleRecord> getListForStudent(Long studentId);
 
-    TaskScheduleRecord schedule(ScheduleTaskRequest request);
+    List<TaskScheduleRecord> getListForTaskAndStudent(Long studentId, Long taskId);
+
+    TaskScheduleRecord schedule(ScheduleTaskRequest request, LocalDate today);
 
     TaskScheduleRecord updatePlannedTime(Long id, TimeSpanRequest request, LocalDate today);
 

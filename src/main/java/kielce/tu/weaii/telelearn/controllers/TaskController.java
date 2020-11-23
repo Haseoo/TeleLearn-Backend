@@ -3,11 +3,15 @@ package kielce.tu.weaii.telelearn.controllers;
 import kielce.tu.weaii.telelearn.models.User;
 import kielce.tu.weaii.telelearn.models.UserRole;
 import kielce.tu.weaii.telelearn.models.courses.Task;
+import kielce.tu.weaii.telelearn.models.courses.TaskScheduleRecord;
 import kielce.tu.weaii.telelearn.requests.courses.TaskProgressPatchRequest;
 import kielce.tu.weaii.telelearn.requests.courses.TaskRepeatPatchRequest;
 import kielce.tu.weaii.telelearn.requests.courses.TaskRequest;
 import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
+import kielce.tu.weaii.telelearn.services.ports.TaskScheduleService;
 import kielce.tu.weaii.telelearn.services.ports.TaskService;
+import kielce.tu.weaii.telelearn.views.courses.TaskScheduleView;
+import kielce.tu.weaii.telelearn.views.courses.TaskToScheduleRecordView;
 import kielce.tu.weaii.telelearn.views.courses.TaskView;
 import kielce.tu.weaii.telelearn.views.courses.TaskViewForStudent;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -30,10 +35,19 @@ import java.util.function.Function;
 public class TaskController {
     private final TaskService taskService;
     private final UserServiceDetailsImpl userServiceDetails;
+    private final TaskScheduleService taskScheduleService;
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<TaskView> getById(@PathVariable Long id) {
         return new ResponseEntity<>(getTaskViewConverter().apply(taskService.getById(id)), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{id}/schedule")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<List<TaskScheduleView>> getSchedule(@PathVariable Long id) {
+        return new ResponseEntity<>(taskScheduleService.getListForTaskAndStudent(userServiceDetails.getCurrentUser().getId(), id).stream()
+                .map(TaskScheduleView::form)
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @PostMapping

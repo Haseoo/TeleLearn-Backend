@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static kielce.tu.weaii.telelearn.utilities.Constants.TASK_COMPLETED;
+
 @Service
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
@@ -134,7 +136,7 @@ public class TaskServiceImpl implements TaskService {
         }
         Task task = getById(id);
         TaskStudent taskStudent = task.getStudentRecordOrNull(request.getStudentId());
-        if (taskStudent == null || taskStudent.getTaskCompletion() != 100) {
+        if (taskStudent == null || taskStudent.getTaskCompletion() != TASK_COMPLETED) {
             throw new TaskMustBeCompleted();
         }
         taskStudent.setToRepeat(request.getToRepeat());
@@ -152,7 +154,7 @@ public class TaskServiceImpl implements TaskService {
                 tasks.stream()
                         .filter(task -> task.getDueDate().isBefore(today) &&
                                 (task.getStudentRecordOrNull(studentId) == null
-                                        || task.getStudentRecordOrNull(studentId).getTaskCompletion() != 100))
+                                        || task.getStudentRecordOrNull(studentId).getTaskCompletion() != TASK_COMPLETED))
                         .map(task -> getTaskSchemeRecord(task, studentId, today))
                         .collect(Collectors.toList())
         );
@@ -166,7 +168,7 @@ public class TaskServiceImpl implements TaskService {
                 tasks.stream()
                         .filter(task -> !task.getDueDate().isBefore(today))
                         .filter(task -> task.getStudentRecordOrNull(studentId) == null ||
-                                task.getStudentRecordOrNull(studentId).getTaskCompletion() != 100)
+                                task.getStudentRecordOrNull(studentId).getTaskCompletion() != TASK_COMPLETED)
                         .map(task -> getTaskSchemeRecord(task, studentId, today))
                         .collect(Collectors.groupingBy(record -> record.getTask().getDueDate()))
         );

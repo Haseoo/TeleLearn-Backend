@@ -1,10 +1,10 @@
 package kielce.tu.weaii.telelearn.services.adapters;
 
 import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
-import kielce.tu.weaii.telelearn.exceptions.courses.SchedulePlannedTimeUpdateNotPossible;
-import kielce.tu.weaii.telelearn.exceptions.courses.ScheduleRecordNotFound;
-import kielce.tu.weaii.telelearn.exceptions.courses.UpdateLearningTimeNotPossible;
+import kielce.tu.weaii.telelearn.exceptions.courses.*;
+import kielce.tu.weaii.telelearn.models.courses.Task;
 import kielce.tu.weaii.telelearn.models.courses.TaskScheduleRecord;
+import kielce.tu.weaii.telelearn.models.courses.TaskStudent;
 import kielce.tu.weaii.telelearn.repositories.ports.TaskScheduleRepository;
 import kielce.tu.weaii.telelearn.requests.courses.RecordLearningRequest;
 import kielce.tu.weaii.telelearn.requests.courses.ScheduleTaskRequest;
@@ -24,6 +24,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static kielce.tu.weaii.telelearn.utilities.Constants.TASK_COMPLETED;
 
 @Service
 @RequiredArgsConstructor
@@ -54,8 +56,17 @@ public class TaskScheduleServiceImpl implements TaskScheduleService {
     }
 
     @Override
+    public List<TaskScheduleRecord> getListForTaskAndStudent(Long studentId, Long taskId) {
+        List<TaskScheduleRecord> studentSchedule = getListForStudent(studentId);
+        return studentSchedule.stream().filter(record -> record.getTask().getId().equals(taskId)).collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
-    public TaskScheduleRecord schedule(ScheduleTaskRequest request) {
+    public TaskScheduleRecord schedule(ScheduleTaskRequest request, LocalDate today) {
+        if (request.getDate().isBefore(today)) {
+            throw new ScheduleForPastNotPossible();
+        }
         TaskScheduleRecord record = new TaskScheduleRecord();
         BeanUtils.copyProperties(request, record);
         record.setLearningTime(Duration.ZERO);
@@ -81,6 +92,12 @@ public class TaskScheduleServiceImpl implements TaskScheduleService {
         TaskScheduleRecord record = getById(id);
         if (!record.getDate().isEqual(today)) {
             throw new UpdateLearningTimeNotPossible();
+        }
+        for(Task pTask : record.getTask().getPreviousTasks()) {
+            TaskStudent taskStudent = pTask.getStudentRecordOrNull(record.getStudent().getId());
+            if (taskStudent == null || taskStudent.getTaskCompletion() != TASK_COMPLETED) {
+                throw new PreviousTaskNotCompleted();
+            }
         }
         record.setLearningTime(request.getDuration().getTimeSpan());
         record = repository.save(record);

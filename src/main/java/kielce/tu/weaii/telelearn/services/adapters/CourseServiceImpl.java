@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -74,8 +76,9 @@ public class CourseServiceImpl implements CourseService {
     public void delete(Long id) {
         Course course = getById(id);
         checkCourseAuthorization(id, course.getOwner().getId());
-        for (CourseStudent courseStudent : course.getStudents()) {
-            signOutStudent(course.getId(), courseStudent.getStudent().getId());
+        List<Long> studentIds = course.getStudents().stream().map(e -> e.getStudent().getId()).collect(Collectors.toList());
+        for (long studentId: studentIds) {
+            signOutStudent(course.getId(), studentId);
         }
         repository.delete(course);
     }

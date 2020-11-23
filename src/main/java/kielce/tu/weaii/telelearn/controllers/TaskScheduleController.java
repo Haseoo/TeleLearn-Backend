@@ -32,7 +32,7 @@ public class TaskScheduleController {
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<Object> schedule(@RequestBody ScheduleTaskRequest request) {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(taskScheduleService.schedule(request).getId()).toUri();
+                .buildAndExpand(taskScheduleService.schedule(request, LocalDate.now()).getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
