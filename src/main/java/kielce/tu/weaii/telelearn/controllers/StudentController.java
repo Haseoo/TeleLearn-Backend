@@ -3,6 +3,7 @@ package kielce.tu.weaii.telelearn.controllers;
 import kielce.tu.weaii.telelearn.requests.StudentRegisterRequest;
 import kielce.tu.weaii.telelearn.requests.StudentUpdateRequest;
 import kielce.tu.weaii.telelearn.services.ports.*;
+import kielce.tu.weaii.telelearn.views.StudentStatsView;
 import kielce.tu.weaii.telelearn.views.StudentView;
 import kielce.tu.weaii.telelearn.views.courses.*;
 import lombok.RequiredArgsConstructor;

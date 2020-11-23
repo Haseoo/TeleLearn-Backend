@@ -2,8 +2,10 @@ package kielce.tu.weaii.telelearn.services.adapters;
 
 import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
 import kielce.tu.weaii.telelearn.models.StudentStatsRecord;
+import kielce.tu.weaii.telelearn.models.courses.Course;
 import kielce.tu.weaii.telelearn.models.courses.Task;
 import kielce.tu.weaii.telelearn.models.courses.TaskScheduleRecord;
+import kielce.tu.weaii.telelearn.repositories.ports.CourseRepository;
 import kielce.tu.weaii.telelearn.repositories.ports.StudentStatsRepository;
 import kielce.tu.weaii.telelearn.repositories.ports.TaskRepository;
 import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
@@ -30,6 +32,7 @@ public class StudentStatsServiceImpl implements StudentStatsService {
     private final StudentStatsRepository studentStatsRepository;
     private final UserServiceDetailsImpl userServiceDetails;
     private final TaskRepository taskRepository;
+    private final CourseRepository courseRepository;
 
     @Autowired
     private TaskScheduleService taskScheduleService;
@@ -119,15 +122,17 @@ public class StudentStatsServiceImpl implements StudentStatsService {
                 .reduce(Duration.ZERO, Duration::plus);
     }
 
-    private Map<Long, Duration> getLearningTimeForCourseTotal(List<StudentStatsRecord> studentStats) {
+    private Map<Course, Duration> getLearningTimeForCourseTotal(List<StudentStatsRecord> studentStats) {
         return studentStats.stream()
-                .collect(Collectors.toMap(StudentStatsRecord::getCourseId, StudentStatsRecord::getLearningTime, Duration::plus));
+                .collect(Collectors.toMap(record -> courseRepository.getById(record.getCourseId()).orElse(null),
+                        StudentStatsRecord::getLearningTime, Duration::plus));
     }
 
-    private Map<Long, Duration> getLearningTimeForSevenDays(LocalDate today, List<StudentStatsRecord> studentStats) {
+    private Map<Course, Duration> getLearningTimeForSevenDays(LocalDate today, List<StudentStatsRecord> studentStats) {
         return studentStats.stream()
                 .filter(schedule -> weekFilter(today.minusDays(WEEK_END_RANGE_DAYS), today.plusDays(WEEK_END_RANGE_DAYS), schedule.getDate()))
-                .collect(Collectors.toMap(StudentStatsRecord::getCourseId, StudentStatsRecord::getLearningTime, Duration::plus));
+                .collect(Collectors.toMap(record -> courseRepository.getById(record.getCourseId()).orElse(null),
+                        StudentStatsRecord::getLearningTime, Duration::plus));
     }
 
     private Map<Integer, Long> getHoursLearningStats(List<StudentStatsRecord> studentStats) {
