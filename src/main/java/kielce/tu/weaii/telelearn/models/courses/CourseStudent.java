@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Entity
 @Data
 @Table(name = "COURSE_STUDENT")
+@IdClass(CourseStudentId.class)
 public class CourseStudent implements Serializable {
     @Id
     @ManyToOne
