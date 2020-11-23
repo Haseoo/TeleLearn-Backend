@@ -35,5 +35,8 @@ public class Student extends User {
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "student")
     private List<TaskScheduleRecord> planRecords;
 
+    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "student")
+    private List<LearningTime> learningTime;
+
     public static final Duration DEFAULT_DAILY_LEARNING_TIME = Duration.ofHours(3).plus(Duration.ofMinutes(30));
 }

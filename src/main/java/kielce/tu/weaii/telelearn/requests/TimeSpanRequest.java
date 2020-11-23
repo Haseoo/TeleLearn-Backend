@@ -1,4 +1,4 @@
-package kielce.tu.weaii.telelearn.requests.courses;
+package kielce.tu.weaii.telelearn.requests;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,8 +1,8 @@
 package kielce.tu.weaii.telelearn.controllers;
 
+import kielce.tu.weaii.telelearn.requests.TimeSpanRequest;
 import kielce.tu.weaii.telelearn.requests.courses.RecordLearningRequest;
 import kielce.tu.weaii.telelearn.requests.courses.ScheduleTaskRequest;
-import kielce.tu.weaii.telelearn.requests.courses.TimeSpanRequest;
 import kielce.tu.weaii.telelearn.services.ports.TaskScheduleService;
 import kielce.tu.weaii.telelearn.views.courses.TaskScheduleView;
 import lombok.RequiredArgsConstructor;
