@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class GlobalNewsRepositoryImpl extends BasePagingRepositoryImpl<GlobalNews> implements GlobalNewsRepository {
-    private final GlobalNewsJPARepository repository;
+    private final GlobalNewsJPARepository jpaRepository;
 
-    public GlobalNewsRepositoryImpl(GlobalNewsJPARepository repository) {
-        super(repository);
-        this.repository = repository;
+    public GlobalNewsRepositoryImpl(GlobalNewsJPARepository jpaRepository) {
+        super(jpaRepository);
+        this.jpaRepository = jpaRepository;
     }
 }

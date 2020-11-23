@@ -100,7 +100,7 @@ public class CourseController {
     private Function<Task, TaskView> getTaskViewConverter() {
         User currentUser = userServiceDetails.getCurrentUser();
         if (currentUser.getUserRole().equals(UserRole.STUDENT)) {
-            return (model) -> TaskViewForStudent.from(model, currentUser.getId());
+            return model -> TaskViewForStudent.from(model, currentUser.getId());
         }
         return TaskView::from;
     }

@@ -4,6 +4,7 @@ import kielce.tu.weaii.telelearn.models.Attachment;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +16,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @Entity
 @Table(name = "TASKS")
-public class Task {
+public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(insertable = false, nullable = false)
@@ -34,13 +35,13 @@ public class Task {
     private LocalDate dueDate;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "courseId")
+    @JoinColumn(nullable = false, name = "COURSE_ID")
     private Course course;
 
     @ManyToMany()
     @JoinTable(name = "TASK_LINKS",
-            joinColumns = @JoinColumn(name = "taskId"),
-            inverseJoinColumns = @JoinColumn(name = "prevoiusTaskId"))
+            joinColumns = @JoinColumn(name = "TASK_ID"),
+            inverseJoinColumns = @JoinColumn(name = "PREVIOUS_TASK_ID"))
     private List<Task> previousTasks;
 
     @ManyToMany(mappedBy = "previousTasks")

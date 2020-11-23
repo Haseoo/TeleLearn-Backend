@@ -3,6 +3,7 @@ package kielce.tu.weaii.telelearn.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
 
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @Table(name = "LEARNING_TIME")
 @IdClass(LearningTimeId.class)
-public class LearningTime {
+public class LearningTime implements Serializable {
     @Id
     @ManyToOne
     @JoinColumn(name = "STUDENT_ID", referencedColumnName = "id", nullable = false)

@@ -5,6 +5,7 @@ import kielce.tu.weaii.telelearn.models.courses.Task;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
@@ -13,7 +14,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @Entity
 @Table(name = "ATTACHMENTS")
-public class Attachment {
+public class Attachment implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(insertable = false, nullable = false)
@@ -33,10 +34,10 @@ public class Attachment {
     private byte[] data;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "POST_ID")
     private Post post;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "taskId")
+    @JoinColumn(name = "TASK_ID")
     private Task task;
 }

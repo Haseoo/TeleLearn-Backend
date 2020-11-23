@@ -4,6 +4,7 @@ import kielce.tu.weaii.telelearn.models.Teacher;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
@@ -13,14 +14,14 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Data
 @Table(name = "COURSES")
-public class Course {
+public class Course implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(insertable = false, nullable = false)
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "ownerId")
+    @JoinColumn(nullable = false, name = "OWNER_ID")
     private Teacher owner;
 
     @Column(columnDefinition = "TEXT")

@@ -4,6 +4,7 @@ import kielce.tu.weaii.telelearn.models.User;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
@@ -12,7 +13,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @Entity
 @Table(name = "COMMENTS")
-public class Comment {
+public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(insertable = false, nullable = false)
@@ -25,7 +26,7 @@ public class Comment {
     private LocalDateTime publicationTime;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "authorId")
+    @JoinColumn(nullable = false, name = "AUTHOR_ID")
     private User author;
 
     @ManyToOne(fetch = LAZY)

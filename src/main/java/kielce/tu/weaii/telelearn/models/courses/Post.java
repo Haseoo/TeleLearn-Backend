@@ -5,6 +5,7 @@ import kielce.tu.weaii.telelearn.models.User;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @Entity
 @Table(name = "POSTS")
-public class Post {
+public class Post implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(insertable = false, nullable = false)
@@ -34,11 +35,11 @@ public class Post {
     private boolean commentingAllowed;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "courseId")
+    @JoinColumn(nullable = false, name = "COURSE_ID")
     private Course course;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "authorId")
+    @JoinColumn(nullable = false, name = "AUTHOR_ID")
     private User author;
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "post")

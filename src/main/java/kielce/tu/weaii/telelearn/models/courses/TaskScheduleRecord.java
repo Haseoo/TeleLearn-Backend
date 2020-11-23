@@ -4,6 +4,7 @@ import kielce.tu.weaii.telelearn.models.Student;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
 
@@ -13,7 +14,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @Entity
 @Table(name = "TASK_SCHEDULE")
-public class TaskScheduleRecord {
+public class TaskScheduleRecord implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(insertable = false, nullable = false)
@@ -29,10 +30,10 @@ public class TaskScheduleRecord {
     private Duration learningTime;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "studentId")
+    @JoinColumn(nullable = false, name = "STUDENT_ID")
     private Student student;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "taskId")
+    @JoinColumn(nullable = false, name = "TASK_ID")
     private Task task;
 }

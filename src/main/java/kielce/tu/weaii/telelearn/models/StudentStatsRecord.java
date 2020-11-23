@@ -3,6 +3,7 @@ package kielce.tu.weaii.telelearn.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,7 +14,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Data
 @Table(name = "STUDENT_STATS")
-public class StudentStatsRecord {
+public class StudentStatsRecord implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
@@ -34,6 +35,6 @@ public class StudentStatsRecord {
     private Duration learningTime;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "studentId")
+    @JoinColumn(nullable = false, name = "STUDENT_ID")
     private Student student;
 }
