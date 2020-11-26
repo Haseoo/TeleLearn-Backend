@@ -75,7 +75,7 @@ public class StudentController {
     }
 
     @GetMapping(path = "/{id}/tasks")
-    public ResponseEntity<Map<Object, List<TaskToScheduleRecordView>>> getStudentTasks(@PathVariable Long id) {
+    public ResponseEntity<Map<String, List<TaskToScheduleRecordView>>> getStudentTasks(@PathVariable Long id) {
         return new ResponseEntity<>(TasksToScheduleView.from(taskService.getStudentByTasksFromCurse(id, LocalDate.now()), id), HttpStatus.OK);
     }
 

@@ -26,18 +26,18 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     private void checkAttachmentAuthorization(Long id, Attachment attachment) {
         User currentUser = userServiceDetails.getCurrentUser();
-        if (attachment.getPost() != null &&
+        if (attachment.getPost() != null && (
                 (currentUser.getUserRole().equals(UserRole.TEACHER) &&
                         !attachment.getPost().getCourse().getOwner().getId().equals(currentUser.getId())) ||
                 (currentUser.getUserRole().equals(UserRole.STUDENT) &&
-                        attachment.getPost().getCourse().getStudents().stream().noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())))) {
+                        attachment.getPost().getCourse().getStudents().stream().noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId()))))) {
             throw new AuthorizationException("załącznik", currentUser.getId(), id);
         }
-        if (attachment.getTask() != null &&
+        if (attachment.getTask() != null && (
                 (currentUser.getUserRole().equals(UserRole.TEACHER) &&
                         !attachment.getTask().getCourse().getOwner().getId().equals(currentUser.getId())) ||
                 (currentUser.getUserRole().equals(UserRole.STUDENT) &&
-                        attachment.getTask().getCourse().getStudents().stream().noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId())))) {
+                        attachment.getTask().getCourse().getStudents().stream().noneMatch(entry -> entry.getStudent().getId().equals(currentUser.getId()))))) {
             throw new AuthorizationException("załącznik", currentUser.getId(), id);
         }
     }

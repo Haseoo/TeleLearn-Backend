@@ -29,7 +29,7 @@ public class TaskScheduleView {
                 TimeVew.form(model.getPlannedTime()),
                 TimeVew.form(model.getLearningTime()),
                 StudentView.from(model.getStudent(), false),
-                TaskView.from(model.getTask()));
+                TaskViewForStudent.from(model.getTask(), model.getStudent().getId()));
     }
 
     public static Map<String, List<TaskScheduleView>> form(List<TaskScheduleRecord> taskSchedule) {

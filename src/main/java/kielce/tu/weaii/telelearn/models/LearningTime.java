@@ -7,18 +7,20 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
 
+
 @Entity
 @Data
 @Table(name = "LEARNING_TIME")
-@IdClass(LearningTimeId.class)
 public class LearningTime implements Serializable {
-    @Id
+    @EmbeddedId
+    private LearningTimeId id;
+
     @ManyToOne
-    @JoinColumn(name = "STUDENT_ID", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "STUDENT_ID", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @MapsId("studentId")
     private Student student;
 
-    @Id
-    @Column(nullable = false)
+    @Column(nullable = false, insertable = false, updatable = false)
     private LocalDate date;
 
     @Column(nullable = false)

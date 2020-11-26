@@ -13,8 +13,8 @@ import static kielce.tu.weaii.telelearn.utilities.Constants.DATE_FORMATTER_FOR_M
 
 @UtilityClass
 public class TasksToScheduleView {
-    public static Map<Object, List<TaskToScheduleRecordView>> from(TaskStudentSummary scheme, long studentId) {
-        Map<Object, List<TaskToScheduleRecordView>> map = new HashMap<>();
+    public static Map<String, List<TaskToScheduleRecordView>> from(TaskStudentSummary scheme, long studentId) {
+        Map<String, List<TaskToScheduleRecordView>> map = new HashMap<>();
         map.put("delayedTask", scheme.getDelayedTasks().stream().map(record -> TaskToScheduleRecordView.from(record, studentId)).collect(Collectors.toList()));
         map.put("taskToRepeat", scheme.getTaskToRepeat().stream().map(record -> TaskToScheduleRecordView.from(record, studentId)).collect(Collectors.toList()));
         for (LocalDate key : scheme.getTasksForDay().keySet()) {

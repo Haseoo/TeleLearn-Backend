@@ -23,13 +23,16 @@ public class TaskViewForStudent extends TaskView {
                               List<TaskBriefView> nextTasks,
                               List<AttachmentView> attachments,
                               int taskCompletion,
-                              boolean toRepeat) {
+                              boolean toRepeat,
+                              String courseName) {
         super(id, name, description, learningTime, dueDate, courseId, previousTasks, nextTasks, attachments);
         this.taskCompletion = taskCompletion;
         this.toRepeat = toRepeat;
+        this.courseName = courseName;
     }
 
     private final int taskCompletion;
+    private final String courseName;
 
     @JsonProperty("isToRepeat")
     private final boolean toRepeat;
@@ -47,7 +50,8 @@ public class TaskViewForStudent extends TaskView {
                 model.getNextTasks().stream().map(TaskBriefView::from).collect(Collectors.toList()),
                 model.getAttachments().stream().map(AttachmentView::form).collect(Collectors.toList()),
                 (ts != null) ? ts.getTaskCompletion() : 0,
-                (ts != null) && ts.isToRepeat());
+                (ts != null) && ts.isToRepeat(),
+                model.getCourse().getName());
 
     }
 }

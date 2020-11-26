@@ -16,7 +16,7 @@ public class TaskRepeatPatchRequest {
     private Boolean toRepeat;
 
     public TaskRepeatPatchRequest(@JsonProperty(value = "studentId", required = true) Long studentId,
-                                  @JsonProperty(value = "toRepeat", required = true) Boolean toRepeat) {
+                                  @JsonProperty(value = "isToRepeat", required = true) Boolean toRepeat) {
         this.studentId = studentId;
         this.toRepeat = toRepeat;
     }

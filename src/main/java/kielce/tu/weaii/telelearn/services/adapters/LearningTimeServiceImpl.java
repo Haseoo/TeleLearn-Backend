@@ -2,6 +2,7 @@ package kielce.tu.weaii.telelearn.services.adapters;
 
 import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
 import kielce.tu.weaii.telelearn.models.LearningTime;
+import kielce.tu.weaii.telelearn.models.LearningTimeId;
 import kielce.tu.weaii.telelearn.models.Student;
 import kielce.tu.weaii.telelearn.repositories.ports.LearningTimeRepository;
 import kielce.tu.weaii.telelearn.requests.LearningTimeRequest;
@@ -36,7 +37,9 @@ public class LearningTimeServiceImpl implements LearningTimeService {
     public LearningTime setLearningTime(LearningTimeRequest request) {
         checkAuthorization(request.getStudentId());
         LearningTime learningTime = new LearningTime();
-        learningTime.setDate(request.getDate());
+        learningTime.setId(new LearningTimeId());
+        learningTime.getId().setDate(request.getDate());
+        learningTime.getId().setStudentId(request.getStudentId());
         learningTime.setStudent(studentService.getById(request.getStudentId()));
         learningTime.setTime(request.getTime().getTimeSpan());
         return learningTimeRepository.save(learningTime);

@@ -15,7 +15,7 @@ public class LearningTimeView {
         Map<String, TimeVew> map = new HashMap<>();
         map.put("default", TimeVew.form(data.getDefaultLearningTime()));
         for (LearningTime learningTime : data.getLearningTimeList()) {
-            map.put(learningTime.getDate().format(DATE_FORMATTER_FOR_MAP_KEY), TimeVew.form(data.getDefaultLearningTime()));
+            map.put(learningTime.getDate().format(DATE_FORMATTER_FOR_MAP_KEY), TimeVew.form(learningTime.getTime()));
         }
         return map;
     }
