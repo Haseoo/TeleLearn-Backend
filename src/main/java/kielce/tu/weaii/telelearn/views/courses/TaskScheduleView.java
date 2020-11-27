@@ -12,12 +12,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static kielce.tu.weaii.telelearn.utilities.Constants.DATE_FORMATTER_FOR_MAP_KEY;
+import static kielce.tu.weaii.telelearn.utilities.Constants.TIME_FORMATTER;
 
 
 @Value
 public class TaskScheduleView {
     long id;
     LocalDate date;
+    String scheduleTime;
     TimeVew plannedTime;
     TimeVew learningTime;
     StudentView student;
@@ -26,6 +28,7 @@ public class TaskScheduleView {
     public static TaskScheduleView form(TaskScheduleRecord model) {
         return new TaskScheduleView(model.getId(),
                 model.getDate(),
+                (model.getScheduleTime() != null) ? model.getScheduleTime().format(TIME_FORMATTER) : null,
                 TimeVew.form(model.getPlannedTime()),
                 TimeVew.form(model.getLearningTime()),
                 StudentView.from(model.getStudent(), false),

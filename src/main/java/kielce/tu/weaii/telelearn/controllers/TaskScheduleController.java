@@ -3,10 +3,12 @@ package kielce.tu.weaii.telelearn.controllers;
 import kielce.tu.weaii.telelearn.requests.TimeSpanRequest;
 import kielce.tu.weaii.telelearn.requests.courses.RecordLearningRequest;
 import kielce.tu.weaii.telelearn.requests.courses.ScheduleTaskRequest;
+import kielce.tu.weaii.telelearn.requests.courses.ScheduleUpdateRequest;
 import kielce.tu.weaii.telelearn.services.ports.TaskScheduleService;
 import kielce.tu.weaii.telelearn.views.courses.TaskScheduleView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -36,10 +38,10 @@ public class TaskScheduleController {
         return ResponseEntity.created(location).build();
     }
 
-    @PatchMapping(path = "/{id}/planned-time")
+    @PutMapping(path = "/{id}/planned-time")
     @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<Object> patchPlannedTime(@PathVariable Long id, @RequestBody TimeSpanRequest request) {
-        taskScheduleService.updatePlannedTime(id, request, LocalDate.now());
+    public ResponseEntity<Object> updateSchedule(@PathVariable Long id, @RequestBody ScheduleUpdateRequest request) {
+        taskScheduleService.updateSchedule(id, request, LocalDate.now());
         return ResponseEntity.noContent().build();
     }
 

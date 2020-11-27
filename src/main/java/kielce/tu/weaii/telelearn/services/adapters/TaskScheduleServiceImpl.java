@@ -9,6 +9,7 @@ import kielce.tu.weaii.telelearn.repositories.ports.TaskScheduleRepository;
 import kielce.tu.weaii.telelearn.requests.TimeSpanRequest;
 import kielce.tu.weaii.telelearn.requests.courses.RecordLearningRequest;
 import kielce.tu.weaii.telelearn.requests.courses.ScheduleTaskRequest;
+import kielce.tu.weaii.telelearn.requests.courses.ScheduleUpdateRequest;
 import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.services.ports.StudentService;
 import kielce.tu.weaii.telelearn.services.ports.StudentStatsService;
@@ -77,12 +78,13 @@ public class TaskScheduleServiceImpl implements TaskScheduleService {
 
     @Override
     @Transactional
-    public TaskScheduleRecord updatePlannedTime(Long id, TimeSpanRequest request, LocalDate today) {
+    public TaskScheduleRecord updateSchedule(Long id, ScheduleUpdateRequest request, LocalDate today) {
         TaskScheduleRecord record = getById(id);
         if (record.getDate().isBefore(today)) {
             throw new SchedulePlannedTimeUpdateNotPossible();
         }
-        record.setPlannedTime(request.getTimeSpan());
+        record.setPlannedTime(request.getPlannedTime());
+        record.setScheduleTime(request.getScheduleTime());
         return repository.save(record);
     }
 

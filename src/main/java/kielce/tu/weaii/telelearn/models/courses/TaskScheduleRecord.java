@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -22,6 +23,8 @@ public class TaskScheduleRecord implements Serializable {
 
     @Column(nullable = false)
     private LocalDate date;
+
+    private LocalTime scheduleTime;
 
     @Column(nullable = false)
     private Duration plannedTime;

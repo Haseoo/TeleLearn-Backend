@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static kielce.tu.weaii.telelearn.utilities.Constants.TASK_COMPLETED;
+
 @Getter
 public class TaskViewForStudent extends TaskView {
 
@@ -24,11 +26,13 @@ public class TaskViewForStudent extends TaskView {
                               List<AttachmentView> attachments,
                               int taskCompletion,
                               boolean toRepeat,
-                              String courseName) {
+                              String courseName,
+                              boolean learnable) {
         super(id, name, description, learningTime, dueDate, courseId, previousTasks, nextTasks, attachments);
         this.taskCompletion = taskCompletion;
         this.toRepeat = toRepeat;
         this.courseName = courseName;
+        this.learnable = learnable;
     }
 
     private final int taskCompletion;
@@ -36,6 +40,8 @@ public class TaskViewForStudent extends TaskView {
 
     @JsonProperty("isToRepeat")
     private final boolean toRepeat;
+    @JsonProperty("isLearnable")
+    private final boolean learnable;
 
 
     public static TaskViewForStudent from(Task model, Long studentId) {
@@ -51,7 +57,12 @@ public class TaskViewForStudent extends TaskView {
                 model.getAttachments().stream().map(AttachmentView::form).collect(Collectors.toList()),
                 (ts != null) ? ts.getTaskCompletion() : 0,
                 (ts != null) && ts.isToRepeat(),
-                model.getCourse().getName());
+                model.getCourse().getName(),
+                checkLearnable(model, studentId));
+    }
 
+    private static boolean checkLearnable(Task model, Long studentId) {
+        return model.getPreviousTasks().stream().allMatch(task -> task.getStudentRecordOrNull(studentId) != null &&
+                task.getStudentRecordOrNull(studentId).getTaskCompletion() == TASK_COMPLETED);
     }
 }

@@ -9,7 +9,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+
+import static kielce.tu.weaii.telelearn.utilities.Constants.TIME_FORMATTER;
 
 @Valid
 @Getter
@@ -24,7 +25,7 @@ public class RecordLearningRequest {
     @Valid
     public RecordLearningRequest(@NotBlank(message = "Należy podać czas rozpoczęcia.") @JsonProperty(value = "startTime", required = true) String startTime,
                                  @JsonProperty(value = "duration", required = true) TimeSpanRequest duration) {
-        this.startTime = LocalTime.parse(startTime, DateTimeFormatter.ofPattern("HH:mm"));
+        this.startTime = LocalTime.parse(startTime, TIME_FORMATTER);
         this.duration = duration;
     }
 }
