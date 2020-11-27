@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 
@@ -30,7 +31,7 @@ public class TaskScheduleController {
 
     @PostMapping
     @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<Object> schedule(@RequestBody ScheduleTaskRequest request) {
+    public ResponseEntity<Object> schedule(@RequestBody @Valid ScheduleTaskRequest request) {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(taskScheduleService.schedule(request, LocalDate.now()).getId()).toUri();
         return ResponseEntity.created(location).build();
@@ -38,14 +39,14 @@ public class TaskScheduleController {
 
     @PutMapping(path = "/{id}/planned-time")
     @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<Object> updateSchedule(@PathVariable Long id, @RequestBody ScheduleUpdateRequest request) {
+    public ResponseEntity<Object> updateSchedule(@PathVariable Long id, @RequestBody @Valid ScheduleUpdateRequest request) {
         taskScheduleService.updateSchedule(id, request, LocalDate.now());
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping(path = "/{id}/learning-time")
     @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<Object> patchLearningTime(@PathVariable Long id, @RequestBody RecordLearningRequest request) {
+    public ResponseEntity<Object> patchLearningTime(@PathVariable Long id, @RequestBody @Valid RecordLearningRequest request) {
         taskScheduleService.updateLearningTime(id, request, LocalDate.now());
         return ResponseEntity.noContent().build();
     }

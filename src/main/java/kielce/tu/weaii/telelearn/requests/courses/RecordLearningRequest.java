@@ -6,11 +6,11 @@ import kielce.tu.weaii.telelearn.requests.TimeSpanRequest;
 import lombok.Getter;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 
 import static kielce.tu.weaii.telelearn.utilities.Constants.TIME_FORMATTER;
+import static kielce.tu.weaii.telelearn.utilities.Utils.isStringNullOrEmpty;
 
 @Valid
 @Getter
@@ -23,8 +23,11 @@ public class RecordLearningRequest {
 
     @JsonCreator
     @Valid
-    public RecordLearningRequest(@NotBlank(message = "Należy podać czas rozpoczęcia.") @JsonProperty(value = "startTime", required = true) String startTime,
+    public RecordLearningRequest(@JsonProperty(value = "startTime", required = true) String startTime,
                                  @JsonProperty(value = "duration", required = true) TimeSpanRequest duration) {
+        if (isStringNullOrEmpty(startTime)) {
+            throw new IllegalArgumentException("Należy podać czas rozpoczęcia.");
+        }
         this.startTime = LocalTime.parse(startTime, TIME_FORMATTER);
         this.duration = duration;
     }

@@ -2,11 +2,9 @@ package kielce.tu.weaii.telelearn.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.time.Duration;
 
@@ -27,8 +25,14 @@ public class StudentUpdateRequest {
                                 @JsonProperty(value = "name") String name,
                                 @JsonProperty(value = "surname") String surname,
                                 @JsonProperty(value = "unit") String unit,
-                                @Min(value = 0, message = "Nieprawidłowa liczba godzin") @JsonProperty(value = "hours", required = true) long hours,
-                                @Range(min = 0, max = 60, message = "Nieprawidłowa liczba minut") @JsonProperty(value = "minutes", required = true) long minutes) {
+                                @JsonProperty(value = "hours", required = true) long hours,
+                                @JsonProperty(value = "minutes", required = true) long minutes) {
+        if (hours < 0 || hours > 23) {
+            throw new IllegalArgumentException("Nieprawidłowa liczba godzin");
+        }
+        if (minutes < 0 || minutes >= 60) {
+            throw new IllegalArgumentException("Nieprawidłowa liczba minut");
+        }
         this.email = email;
         this.name = name;
         this.surname = surname;

@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import org.hibernate.validator.constraints.Range;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -34,8 +32,14 @@ public class ScheduleTaskRequest {
                                @JsonProperty(value = "studentId", required = true) Long studentId,
                                @JsonProperty(value = "date", required = true) String date,
                                @JsonProperty(value = "startTime") String startTime,
-                               @Min(value = 0, message = "Nieprawidłowa liczba godzin") @JsonProperty(value = "hours", required = true) long hours,
-                               @Range(min = 0, max = 60, message = "Nieprawidłowa liczba minut") @JsonProperty(value = "minutes", required = true) long minutes) {
+                               @JsonProperty(value = "hours", required = true) long hours,
+                               @JsonProperty(value = "minutes", required = true) long minutes) {
+        if (hours < 0 || hours > 23) {
+            throw new IllegalArgumentException("Nieprawidłowa liczba godzin");
+        }
+        if (minutes < 0 || minutes >= 60) {
+            throw new IllegalArgumentException("Nieprawidłowa liczba minut");
+        }
         this.taskId = taskId;
         this.studentId = studentId;
         this.date = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd.MM.yyyy"));

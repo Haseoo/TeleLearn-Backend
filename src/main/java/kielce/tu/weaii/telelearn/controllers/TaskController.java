@@ -82,13 +82,13 @@ public class TaskController {
     }
 
     @PatchMapping(path = "/{id}/progress")
-    public ResponseEntity<Object> setProgress(@PathVariable Long id, @RequestBody TaskProgressPatchRequest request) {
+    public ResponseEntity<Object> setProgress(@PathVariable Long id, @RequestBody @Valid TaskProgressPatchRequest request) {
         taskService.updateProgress(id, request);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping(path = "/{id}/repeat")
-    public ResponseEntity<Object> setRepeat(@PathVariable Long id, @RequestBody TaskRepeatPatchRequest request) {
+    public ResponseEntity<Object> setRepeat(@PathVariable Long id, @RequestBody @Valid TaskRepeatPatchRequest request) {
         taskService.updateTaskRepeat(id, request);
         return ResponseEntity.noContent().build();
     }

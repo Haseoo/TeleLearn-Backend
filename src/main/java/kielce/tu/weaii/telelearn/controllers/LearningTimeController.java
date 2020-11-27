@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class LearningTimeController {
 
     @PutMapping
     @PreAuthorize("hasAnyRole('STUDENT')")
-    public ResponseEntity<Object> setDate(@RequestBody LearningTimeRequest request) {
+    public ResponseEntity<Object> setDate(@Valid @RequestBody LearningTimeRequest request) {
         learningTimeService.setLearningTime(request);
         return ResponseEntity.noContent().build();
     }
