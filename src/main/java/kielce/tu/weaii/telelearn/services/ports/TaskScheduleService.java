@@ -1,7 +1,6 @@
 package kielce.tu.weaii.telelearn.services.ports;
 
 import kielce.tu.weaii.telelearn.models.courses.TaskScheduleRecord;
-import kielce.tu.weaii.telelearn.requests.TimeSpanRequest;
 import kielce.tu.weaii.telelearn.requests.courses.RecordLearningRequest;
 import kielce.tu.weaii.telelearn.requests.courses.ScheduleTaskRequest;
 import kielce.tu.weaii.telelearn.requests.courses.ScheduleUpdateRequest;
