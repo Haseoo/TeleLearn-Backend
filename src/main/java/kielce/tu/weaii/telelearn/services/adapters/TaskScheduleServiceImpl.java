@@ -1,6 +1,7 @@
 package kielce.tu.weaii.telelearn.services.adapters;
 
 import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
+import kielce.tu.weaii.telelearn.exceptions.ScheduleBeyondTheDay;
 import kielce.tu.weaii.telelearn.exceptions.courses.*;
 import kielce.tu.weaii.telelearn.models.courses.Task;
 import kielce.tu.weaii.telelearn.models.courses.TaskScheduleRecord;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,6 +69,7 @@ public class TaskScheduleServiceImpl implements TaskScheduleService {
         if (request.getDate().isBefore(today)) {
             throw new ScheduleForPastNotPossible();
         }
+        checkScheduleTimeAndPlannedTime(request, today);
         TaskScheduleRecord record = new TaskScheduleRecord();
         BeanUtils.copyProperties(request, record);
         record.setLearningTime(Duration.ZERO);
@@ -118,5 +121,12 @@ public class TaskScheduleServiceImpl implements TaskScheduleService {
     @Transactional
     public void deleteSchedulesForStudent(Long studentId) {
         repository.deleteAllStudentRecord(studentId);
+    }
+
+    private void checkScheduleTimeAndPlannedTime(ScheduleTaskRequest request, LocalDate today) {
+        LocalDateTime scheduleTime = today.atTime(request.getScheduleTime());
+        if (scheduleTime.plusMinutes(request.getPlannedTime().toMinutes()).toLocalDate().isAfter(today)) {
+            throw new ScheduleBeyondTheDay();
+        }
     }
 }

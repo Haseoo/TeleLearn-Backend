@@ -19,7 +19,7 @@ public class TaskScheduleRecord implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(insertable = false, nullable = false)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private LocalDate date;
