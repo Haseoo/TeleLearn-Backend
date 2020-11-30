@@ -56,12 +56,11 @@ public class PostServiceImpl implements PostService {
             posts.sort(Comparator.comparing(Post::getPublicationTime).reversed());
             return posts;
         } else {
-            List<Post> posts = course.getPosts().stream()
+           return course.getPosts().stream()
                     .filter(post -> post.getPostVisibility().equals(PostVisibility.EVERYONE) ||
                             post.getAuthor().getId().equals(currentUser.getId()))
+                    .sorted(Comparator.comparing(Post::getPublicationTime).reversed())
                     .collect(Collectors.toList());
-            posts.sort(Comparator.comparing(Post::getPublicationTime).reversed());
-            return posts;
         }
     }
 
