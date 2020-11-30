@@ -52,7 +52,7 @@ public class TaskScheduleView {
     }
 
     private static boolean checkOverlapList(TaskScheduleRecord current, List<TaskScheduleRecord> taskSchedule) {
-        for(TaskScheduleRecord record: taskSchedule) {
+        for (TaskScheduleRecord record : taskSchedule) {
             if (!record.equals(current) && checkOverLap(current, record)) {
                 return true;
             }

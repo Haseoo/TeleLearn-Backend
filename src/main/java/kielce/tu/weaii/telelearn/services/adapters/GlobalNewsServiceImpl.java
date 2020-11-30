@@ -45,7 +45,7 @@ public class GlobalNewsServiceImpl implements GlobalNewsService {
     }
 
     public Page<GlobalNews> getPage(int pageSize, int pageNo) {
-        return repository.getPageSortDesc(pageSize, pageNo, "publicationDate");
+        return repository.getPage(pageSize, pageNo);
     }
 
     @Override
