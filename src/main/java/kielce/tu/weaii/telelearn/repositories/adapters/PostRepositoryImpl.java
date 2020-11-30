@@ -7,10 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class PostRepositoryImpl extends BaseCRUDRepositoryImpl<Post> implements PostRepository {
-    private final PostJPARepository postJPARepository;
-
     public PostRepositoryImpl(PostJPARepository postJPARepository) {
         super(postJPARepository);
-        this.postJPARepository = postJPARepository;
     }
 }

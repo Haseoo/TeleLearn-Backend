@@ -7,10 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class CourseRepositoryImpl extends BaseCRUDRepositoryImpl<Course> implements CourseRepository {
-    private final CourseJPARepository jpaRepository;
-
     public CourseRepositoryImpl(CourseJPARepository jpaRepository) {
         super(jpaRepository);
-        this.jpaRepository = jpaRepository;
     }
 }

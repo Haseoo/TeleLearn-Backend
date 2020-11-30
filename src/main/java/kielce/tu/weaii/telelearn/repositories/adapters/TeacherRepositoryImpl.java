@@ -7,10 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class TeacherRepositoryImpl extends BaseCRUDRepositoryImpl<Teacher> implements TeacherRepository {
-    private final TeacherJPARepository jpaRepository;
-
     public TeacherRepositoryImpl(TeacherJPARepository jpaRepository) {
         super(jpaRepository);
-        this.jpaRepository = jpaRepository;
     }
 }
