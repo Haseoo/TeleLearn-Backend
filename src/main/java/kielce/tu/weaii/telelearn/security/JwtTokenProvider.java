@@ -17,18 +17,18 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${app.jwt.secret}")
+    @Value("${kielce.tu.weaii.telelearn.security.secret}")
     private String jwtSecret;
 
-    @Value("${app.jwtExpirationInMs}")
-    private int jwtExpirationInMs;
+    @Value("${kielce.tu.weaii.telelearn.security.jwtExpirationMs}")
+    private int jwtExpirationTime;
 
     public String generateToken(Authentication authentication) {
 
         User userPrincipal = (User) authentication.getPrincipal();
 
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+        Date expiryDate = new Date(now.getTime() + jwtExpirationTime);
 
         return Jwts.builder()
                 .setSubject(Long.toString(userPrincipal.getId()))

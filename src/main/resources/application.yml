@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 150MB
+server:
+  address: localhost
+  port: 2137
+kielce:
+  tu:
+    weaii:
+      telelearn:
+        security:
+          secret: '{bcrypt}na65fTBcDUJkJgtAgiVdglFrm9sgE8IcMCUmKdOy'
+          jwtExpirationMs: 604800000
