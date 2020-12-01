@@ -24,6 +24,6 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         String.format("attachment; filename=\"%s\"", attachment.getFileName()))
                 .header(HttpHeaders.CONTENT_TYPE, attachment.getFileType())
-                .body(attachment.getData());
+                .body(attachment.getAttachmentData().getData());
     }
 }

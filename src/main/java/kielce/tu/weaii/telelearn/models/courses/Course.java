@@ -27,7 +27,7 @@ public class Course implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String name;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String welcomePageHtmlContent;
 
     @Column(nullable = false)

@@ -10,9 +10,6 @@ spring:
     hibernate:
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
-  h2:
-    console:
-      enabled: true
 logging:
   level:
     org:

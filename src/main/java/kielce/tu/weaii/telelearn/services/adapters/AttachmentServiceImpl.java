@@ -11,6 +11,8 @@ import kielce.tu.weaii.telelearn.services.ports.AttachmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class AttachmentServiceImpl implements AttachmentService {
@@ -18,6 +20,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     private final UserServiceDetailsImpl userServiceDetails;
 
     @Override
+    @Transactional
     public Attachment getById(Long id) {
         Attachment attachment = repository.getById(id).orElseThrow(() -> new AttachmentNotFound(id));
         checkAttachmentAuthorization(id, attachment);

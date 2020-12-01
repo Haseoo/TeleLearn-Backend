@@ -22,9 +22,9 @@ public class GlobalNews implements Serializable {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(nullable = false, name = "AUTHOR_ID")
     private User author;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String brief;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String htmlContent;
     @Column(nullable = false)
     private LocalDateTime publicationDate;

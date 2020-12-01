@@ -3,6 +3,8 @@ package kielce.tu.weaii.telelearn.models;
 import kielce.tu.weaii.telelearn.models.courses.Post;
 import kielce.tu.weaii.telelearn.models.courses.Task;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,9 +13,10 @@ import java.time.LocalDateTime;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Data
 @Entity
 @Table(name = "ATTACHMENTS")
+@Getter
+@Setter
 public class Attachment implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -29,9 +32,9 @@ public class Attachment implements Serializable {
     @Column(nullable = false)
     private LocalDateTime uploadTime;
 
-    @Lob
-    @Column(nullable = false)
-    private byte[] data;
+    @OneToOne(mappedBy = "attachment", cascade = CascadeType.ALL, fetch = LAZY)
+    @PrimaryKeyJoinColumn
+    AttachmentData attachmentData;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "POST_ID")

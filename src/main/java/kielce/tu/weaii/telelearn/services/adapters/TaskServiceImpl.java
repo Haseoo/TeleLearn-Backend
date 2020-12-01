@@ -5,6 +5,7 @@ import kielce.tu.weaii.telelearn.exceptions.courses.PathWouldHaveCycle;
 import kielce.tu.weaii.telelearn.exceptions.courses.TaskMustBeCompleted;
 import kielce.tu.weaii.telelearn.exceptions.courses.TaskNotFound;
 import kielce.tu.weaii.telelearn.models.Attachment;
+import kielce.tu.weaii.telelearn.models.AttachmentData;
 import kielce.tu.weaii.telelearn.models.User;
 import kielce.tu.weaii.telelearn.models.UserRole;
 import kielce.tu.weaii.telelearn.models.courses.Task;
@@ -199,10 +200,13 @@ public class TaskServiceImpl implements TaskService {
         if (attachments != null) {
             for (MultipartFile file : attachments) {
                 Attachment attachment = new Attachment();
+                AttachmentData attachmentData = new AttachmentData();
+                attachmentData.setData(file.getBytes());
+                attachmentData.setAttachment(attachment);
+                attachment.setAttachmentData(attachmentData);
                 attachment.setFileName(file.getOriginalFilename());
                 attachment.setFileType(file.getContentType());
                 attachment.setUploadTime(now);
-                attachment.setData(file.getBytes());
                 attachmentList.add(attachment);
                 attachment.setTask(task);
             }

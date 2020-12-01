@@ -6,6 +6,7 @@ import kielce.tu.weaii.telelearn.exceptions.courses.MovePostNotPossible;
 import kielce.tu.weaii.telelearn.exceptions.courses.PostCommentingNotAllowed;
 import kielce.tu.weaii.telelearn.exceptions.courses.PostNotFoundException;
 import kielce.tu.weaii.telelearn.models.Attachment;
+import kielce.tu.weaii.telelearn.models.AttachmentData;
 import kielce.tu.weaii.telelearn.models.User;
 import kielce.tu.weaii.telelearn.models.UserRole;
 import kielce.tu.weaii.telelearn.models.courses.Comment;
@@ -178,7 +179,10 @@ public class PostServiceImpl implements PostService {
             attachment.setFileName(file.getOriginalFilename());
             attachment.setFileType(file.getContentType());
             attachment.setUploadTime(now);
-            attachment.setData(file.getBytes());
+            AttachmentData attachmentData = new AttachmentData();
+            attachmentData.setData(file.getBytes());
+            attachmentData.setAttachment(attachment);
+            attachment.setAttachmentData(attachmentData);
             attachmentList.add(attachment);
             attachment.setPost(post);
         }

@@ -22,7 +22,7 @@ public class Post implements Serializable {
     @Column(insertable = false, nullable = false)
     private Long id;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @JoinColumn(nullable = false)

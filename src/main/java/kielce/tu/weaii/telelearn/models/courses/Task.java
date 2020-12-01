@@ -25,7 +25,7 @@ public class Task implements Serializable {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = false)

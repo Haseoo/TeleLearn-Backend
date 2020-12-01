@@ -60,6 +60,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Transactional
+    @Override
     public void delete(Long id) {
         teacherRepository.delete(getById(id));
     }
