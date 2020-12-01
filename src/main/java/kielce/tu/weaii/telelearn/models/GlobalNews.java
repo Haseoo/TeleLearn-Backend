@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -19,7 +19,7 @@ public class GlobalNews implements Serializable {
     private Long id;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String title;
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(nullable = false, name = "AUTHOR_ID")
     private User author;
     @Column(columnDefinition = "TEXT")

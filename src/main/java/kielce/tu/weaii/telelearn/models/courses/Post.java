@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -38,7 +39,7 @@ public class Post implements Serializable {
     @JoinColumn(nullable = false, name = "COURSE_ID")
     private Course course;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(nullable = false, name = "AUTHOR_ID")
     private User author;
 
