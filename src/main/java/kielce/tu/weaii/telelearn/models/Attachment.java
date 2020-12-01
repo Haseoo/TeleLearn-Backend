@@ -34,7 +34,7 @@ public class Attachment implements Serializable {
 
     @OneToOne(mappedBy = "attachment", cascade = CascadeType.ALL, fetch = LAZY)
     @PrimaryKeyJoinColumn
-    AttachmentData attachmentData;
+    private AttachmentData attachmentData;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "POST_ID")
