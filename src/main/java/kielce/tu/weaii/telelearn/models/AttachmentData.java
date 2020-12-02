@@ -15,12 +15,11 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Setter
 public class AttachmentData implements Serializable {
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "attachmentId")
+    @JoinColumn(nullable = false, name = "ATTACHMENT_ID")
     private Attachment attachment;
 
     @Column(nullable = false)
