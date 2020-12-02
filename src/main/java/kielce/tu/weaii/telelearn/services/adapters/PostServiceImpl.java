@@ -28,6 +28,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -182,7 +183,7 @@ public class PostServiceImpl implements PostService {
             AttachmentData attachmentData = new AttachmentData();
             attachmentData.setData(file.getBytes());
             attachmentData.setAttachment(attachment);
-            attachment.setAttachmentData(attachmentData);
+            attachment.setAttachmentData(Arrays.asList(attachmentData));
             attachmentList.add(attachment);
             attachment.setPost(post);
         }

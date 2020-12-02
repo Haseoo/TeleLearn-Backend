@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.transaction.Transactional;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/file")
@@ -18,12 +20,13 @@ public class FileController {
     private final AttachmentService attachmentService;
 
     @GetMapping(path = "/{id}")
+    @Transactional
     public ResponseEntity<byte[]> getById(@PathVariable Long id) {
         Attachment attachment = attachmentService.getById(id);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         String.format("attachment; filename=\"%s\"", attachment.getFileName()))
                 .header(HttpHeaders.CONTENT_TYPE, attachment.getFileType())
-                .body(attachment.getAttachmentData().getData());
+                .body(attachment.getAttachmentData().get(0).getData());
     }
 }

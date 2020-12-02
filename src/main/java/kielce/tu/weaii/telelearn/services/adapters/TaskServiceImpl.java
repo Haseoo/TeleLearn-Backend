@@ -33,6 +33,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -203,7 +204,7 @@ public class TaskServiceImpl implements TaskService {
                 AttachmentData attachmentData = new AttachmentData();
                 attachmentData.setData(file.getBytes());
                 attachmentData.setAttachment(attachment);
-                attachment.setAttachmentData(attachmentData);
+                attachment.setAttachmentData(Arrays.asList(attachmentData));
                 attachment.setFileName(file.getOriginalFilename());
                 attachment.setFileType(file.getContentType());
                 attachment.setUploadTime(now);

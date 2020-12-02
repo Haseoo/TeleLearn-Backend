@@ -28,6 +28,7 @@ public class Course implements Serializable {
     private String name;
 
     @Column(columnDefinition = "TEXT")
+    @Basic(fetch = LAZY)
     private String welcomePageHtmlContent;
 
     @Column(nullable = false)

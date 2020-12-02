@@ -2,14 +2,16 @@ package kielce.tu.weaii.telelearn.models;
 
 import kielce.tu.weaii.telelearn.models.courses.Post;
 import kielce.tu.weaii.telelearn.models.courses.Task;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -32,9 +34,9 @@ public class Attachment implements Serializable {
     @Column(nullable = false)
     private LocalDateTime uploadTime;
 
-    @OneToOne(mappedBy = "attachment", cascade = CascadeType.ALL, fetch = LAZY)
-    @PrimaryKeyJoinColumn
-    private AttachmentData attachmentData;
+    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "attachment")
+    @Size(max = 1, min = 1)
+    private List<AttachmentData> attachmentData;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "POST_ID")

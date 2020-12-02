@@ -6,20 +6,25 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Entity
 @Table(name = "ATTACHMENTS_DATA")
 @Getter
 @Setter
 public class AttachmentData implements Serializable {
     @Id
-    @Column(name = "attachmentId")
+    @Column(name = "id")
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "attachmentId")
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(nullable = false, name = "attachmentId")
     private Attachment attachment;
 
     @Column(nullable = false)
+    @Lob
     private byte[] data;
+
 }
