@@ -6,8 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 @Repository
-@Profile("dev")
+@Profile("!prod")
 public interface TaskJPARepositoryDev extends TaskJPARepository {
     @Query("SELECT t FROM Task t INNER JOIN t.course.students s WHERE s.student.id = ?1")
     List<Task> getStudentByTasksFromCurse(Long studentId);
