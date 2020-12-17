@@ -56,7 +56,7 @@ class UserRepositoryTest {
         //given
         User searched = userJPARepository.save(TestData.GetAdmin());
         //when
-        Optional<User> out =  sut.getById(searched.getId());
+        Optional<User> out = sut.getById(searched.getId());
         //then
         Assertions.assertThat(out).isPresent().containsSame(searched);
     }
@@ -104,6 +104,7 @@ class UserRepositoryTest {
         Assertions.assertThat(out.isPresent()).isTrue();
         assertUserEquals(searched, out.get());
     }
+
     @Test
     void should_find_user_by_email() {
         //given

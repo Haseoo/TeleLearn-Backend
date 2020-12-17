@@ -3,7 +3,10 @@ package kielce.tu.weaii.telelearn;
 import kielce.tu.weaii.telelearn.models.*;
 import lombok.experimental.UtilityClass;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -94,5 +97,16 @@ public class TestData {
         attachment.setFileType("Json Partial II Graphical Module Data");
         attachment.setFileName("File");
         return attachment;
+    }
+
+    public StudentStatsRecord getStudentStats(Student student) {
+        StudentStatsRecord studentStatsRecord = new StudentStatsRecord();
+        studentStatsRecord.setScheduleId(1L);
+        studentStatsRecord.setCourseId(1L);
+        studentStatsRecord.setDate(LocalDate.of(2010, 4, 10));
+        studentStatsRecord.setStartTime(LocalTime.of(21, 37));
+        studentStatsRecord.setLearningTime(Duration.ZERO);
+        studentStatsRecord.setStudent(student);
+        return studentStatsRecord;
     }
 }

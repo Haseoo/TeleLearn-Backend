@@ -56,7 +56,7 @@ class AttachmentRepositoryTest {
     void delete() {
         //given
         Attachment toDelete = attachmentJPARepository.saveAndFlush(TestData.getAttachment());
-        Attachment notToDelete  = attachmentJPARepository.saveAndFlush(TestData.getAttachment());
+        Attachment notToDelete = attachmentJPARepository.saveAndFlush(TestData.getAttachment());
         //when
         sut.delete(toDelete);
         //then
