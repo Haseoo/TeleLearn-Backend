@@ -5,6 +5,7 @@ spring:
     username: springuser
     password: springsecret
     initialization-mode: always
+    data: classpath:/testData.sql
   jpa:
     show-sql: false
     hibernate:

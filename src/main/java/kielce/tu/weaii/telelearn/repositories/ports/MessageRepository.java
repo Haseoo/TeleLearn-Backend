@@ -4,7 +4,10 @@ import kielce.tu.weaii.telelearn.models.Message;
 
 import java.util.List;
 
-public interface MessageRepository extends BaseCRUDRepository<Message> {
+public interface MessageRepository {
+
+    Message save(Message message);
+
     List<Message> getUserMessages(Long userId);
 
     List<Message> getConversation(Long user1Id, Long user2Id);

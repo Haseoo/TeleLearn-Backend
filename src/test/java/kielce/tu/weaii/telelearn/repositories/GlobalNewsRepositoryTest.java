@@ -9,6 +9,7 @@ import kielce.tu.weaii.telelearn.repositories.ports.GlobalNewsRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,8 +18,11 @@ import org.springframework.data.domain.Page;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
+import static kielce.tu.weaii.telelearn.Constants.INTEGRATION_TEST;
+
 
 @SpringBootTest
+@Tag(INTEGRATION_TEST)
 class GlobalNewsRepositoryTest {
 
     @Autowired

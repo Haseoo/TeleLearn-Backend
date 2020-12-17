@@ -3,17 +3,19 @@ package kielce.tu.weaii.telelearn.repositories.adapters;
 import kielce.tu.weaii.telelearn.models.Message;
 import kielce.tu.weaii.telelearn.repositories.jpa.MessageJPARepository;
 import kielce.tu.weaii.telelearn.repositories.ports.MessageRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class MessageRepositoryImpl extends BaseCRUDRepositoryImpl<Message> implements MessageRepository {
+@RequiredArgsConstructor
+public class MessageRepositoryImpl  implements MessageRepository {
     private final MessageJPARepository messageJPARepository;
 
-    public MessageRepositoryImpl(MessageJPARepository messageJPARepository) {
-        super(messageJPARepository);
-        this.messageJPARepository = messageJPARepository;
+    @Override
+    public Message save(Message message) {
+        return messageJPARepository.saveAndFlush(message);
     }
 
     @Override
