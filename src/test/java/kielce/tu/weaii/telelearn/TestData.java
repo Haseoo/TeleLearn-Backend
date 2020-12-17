@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @UtilityClass
 public class TestData {
@@ -81,5 +82,17 @@ public class TestData {
         message.setContent("A message!");
         message.setRead(false);
         return message;
+    }
+
+    public Attachment getAttachment() {
+        Attachment attachment = new Attachment();
+        AttachmentData attachmentData = new AttachmentData();
+        attachmentData.setData(new byte[]{0x21, 0x37, 0x4A, 0x50, 0x32, 0x20, 0x47, 0x4d, 0x44});
+        attachmentData.setAttachment(attachment);
+        attachment.setAttachmentData(Arrays.asList(attachmentData));
+        attachment.setUploadTime(LocalDateTime.now());
+        attachment.setFileType("Json Partial II Graphical Module Data");
+        attachment.setFileName("File");
+        return attachment;
     }
 }

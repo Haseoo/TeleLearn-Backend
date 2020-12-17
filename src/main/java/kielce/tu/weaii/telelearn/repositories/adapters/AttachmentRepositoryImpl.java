@@ -19,11 +19,6 @@ public class AttachmentRepositoryImpl implements AttachmentRepository {
     }
 
     @Override
-    public Attachment store(Attachment attachment) {
-        return jpaRepository.saveAndFlush(attachment);
-    }
-
-    @Override
     public void delete(Attachment attachment) {
         jpaRepository.delete(attachment);
     }

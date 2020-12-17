@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 import static kielce.tu.weaii.telelearn.Constants.INTEGRATION_TEST;
@@ -53,14 +52,14 @@ class UserRepositoryTest {
     }
 
     @Test
+    @Transactional
     void should_get_by_id() {
         //given
         User searched = userJPARepository.save(TestData.GetAdmin());
         //when
         Optional<User> out =  sut.getById(searched.getId());
         //then
-        Assertions.assertThat(out.isPresent()).isTrue();
-        assertUserEquals(searched, out.get());
+        Assertions.assertThat(out).isPresent().containsSame(searched);
     }
 
     @Test

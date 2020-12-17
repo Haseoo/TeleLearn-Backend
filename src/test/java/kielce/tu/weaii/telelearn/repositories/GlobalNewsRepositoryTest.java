@@ -66,8 +66,7 @@ class GlobalNewsRepositoryTest {
         GlobalNews searched = newsJpaRepository.save(TestData.getGlobalNews(author));
         //when & then
         Optional<GlobalNews> out = sut.getById(searched.getId());
-        Assertions.assertThat(out.isPresent()).isTrue();
-        Assertions.assertThat(out.get()).isEqualTo(searched);
+        Assertions.assertThat(out).isPresent().containsSame(searched);
     }
 
     @Test
