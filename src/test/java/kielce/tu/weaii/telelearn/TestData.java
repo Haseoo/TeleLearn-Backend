@@ -152,4 +152,29 @@ public class TestData {
 
         return post;
     }
+
+    public Task getTask(Course course) {
+        Task task = new Task();
+        task.setName("name");
+        task.setDescription("description");
+        task.setLearningTime(Duration.ofMinutes(65));
+        task.setDueDate(LocalDate.of(2020, 12, 12));
+        task.setCourse(course);
+        task.setPlanRecords(new ArrayList<>());
+        task.setPreviousTasks(new ArrayList<>());
+        task.setNextTasks(new ArrayList<>());
+        task.setStudents(new ArrayList<>());
+        return task;
+    }
+
+    public TaskScheduleRecord getTaskScheduleRecord(Task task, Student student) {
+        TaskScheduleRecord taskScheduleRecord = new TaskScheduleRecord();
+        taskScheduleRecord.setDate(task.getDueDate());
+        taskScheduleRecord.setScheduleTime(LocalTime.of(12, 12));
+        taskScheduleRecord.setPlannedTime(task.getLearningTime());
+        taskScheduleRecord.setLearningTime(Duration.ZERO);
+        taskScheduleRecord.setStudent(student);
+        taskScheduleRecord.setTask(task);
+        return taskScheduleRecord;
+    }
 }
