@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 import static kielce.tu.weaii.telelearn.Constants.INTEGRATION_TEST;
 
@@ -77,7 +76,6 @@ class StudentStatsRepositoryTest {
         //given
         StudentStatsRecord searched = studentStatsJPARepository.saveAndFlush(TestData.getStudentStats(student));
         //when & then
-        List<StudentStatsRecord> foo = studentStatsJPARepository.findAll();
         Assertions.assertThat(sut.getByScheduleId(searched.getScheduleId())).isPresent().containsSame(searched);
     }
 

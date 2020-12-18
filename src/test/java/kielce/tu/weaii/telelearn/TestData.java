@@ -1,6 +1,7 @@
 package kielce.tu.weaii.telelearn;
 
 import kielce.tu.weaii.telelearn.models.*;
+import kielce.tu.weaii.telelearn.models.courses.*;
 import lombok.experimental.UtilityClass;
 
 import java.time.Duration;
@@ -108,5 +109,47 @@ public class TestData {
         studentStatsRecord.setLearningTime(Duration.ZERO);
         studentStatsRecord.setStudent(student);
         return studentStatsRecord;
+    }
+
+    public Course getCourse(Teacher owner, Student student) {
+        Course course = new Course();
+        course.setOwner(owner);
+        course.setName("Test name");
+        course.setWelcomePageHtmlContent("<br>");
+        course.setPublicCourse(true);
+        course.setAutoAccept(true);
+        course.setStudentsAllowedToPost(true);
+        course.setStudents(new ArrayList<>());
+        course.setPosts(new ArrayList<>());
+        course.setTasks(new ArrayList<>());
+
+        CourseStudent cs = new CourseStudent();
+        cs.setAccepted(true);
+        cs.setStudent(student);
+        cs.setCourse(course);
+        course.getStudents().add(cs);
+
+        return course;
+    }
+
+    public Post getPost(Course course, User author) {
+        Post post = new Post();
+        post.setContent("content");
+        post.setPostVisibility(PostVisibility.EVERYONE);
+        post.setPublicationTime(LocalDateTime.now());
+        post.setCommentingAllowed(true);
+        post.setCourse(course);
+        post.setAuthor(author);
+        post.setAttachments(new ArrayList<>());
+        post.setComments(new ArrayList<>());
+
+        Comment comment = new Comment();
+        comment.setAuthor(author);
+        comment.setContent("comment");
+        comment.setPost(post);
+        comment.setPublicationTime(LocalDateTime.now());
+        post.getComments().add(comment);
+
+        return post;
     }
 }
