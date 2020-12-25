@@ -2,7 +2,7 @@ package kielce.tu.weaii.telelearn.services.adapters;
 
 import kielce.tu.weaii.telelearn.exceptions.ArticleNotFound;
 import kielce.tu.weaii.telelearn.models.GlobalNews;
-import kielce.tu.weaii.telelearn.repositories.adapters.GlobalNewsRepositoryImpl;
+import kielce.tu.weaii.telelearn.repositories.ports.GlobalNewsRepository;
 import kielce.tu.weaii.telelearn.requests.GlobalNewsRequest;
 import kielce.tu.weaii.telelearn.services.ports.GlobalNewsService;
 import kielce.tu.weaii.telelearn.services.ports.UserService;
@@ -16,7 +16,7 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 public class GlobalNewsServiceImpl implements GlobalNewsService {
-    private final GlobalNewsRepositoryImpl repository;
+    private final GlobalNewsRepository repository;
     private final UserService userService;
 
     @Override

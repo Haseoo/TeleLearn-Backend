@@ -2,6 +2,7 @@ package kielce.tu.weaii.telelearn;
 
 import kielce.tu.weaii.telelearn.models.*;
 import kielce.tu.weaii.telelearn.models.courses.*;
+import kielce.tu.weaii.telelearn.requests.GlobalNewsRequest;
 import lombok.experimental.UtilityClass;
 
 import java.time.Duration;
@@ -176,5 +177,9 @@ public class TestData {
         taskScheduleRecord.setStudent(student);
         taskScheduleRecord.setTask(task);
         return taskScheduleRecord;
+    }
+
+    public GlobalNewsRequest getGlobalNewsRequest() {
+        return new GlobalNewsRequest("title", 1L, "brief", "<br>brrr", LocalDateTime.now());
     }
 }
