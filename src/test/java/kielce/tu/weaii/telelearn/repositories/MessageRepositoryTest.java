@@ -65,7 +65,7 @@ class MessageRepositoryTest {
     @Transactional
     void should_return_user_messages() {
         //given
-        User other = TestData.GetAdmin();
+        User other = TestData.getAdmin();
         other.setId(null);
         other = userJPARepository.saveAndFlush(other);
         Message message1 = messageJPARepository.saveAndFlush(TestData.getMessage(user1, user2));
@@ -82,7 +82,7 @@ class MessageRepositoryTest {
     @Transactional
     void should_return_conversation() {
         //given
-        User other = TestData.GetAdmin();
+        User other = TestData.getAdmin();
         other.setId(null);
         other = userJPARepository.saveAndFlush(other);
         Message message1 = messageJPARepository.saveAndFlush(TestData.getMessage(user1, user2));

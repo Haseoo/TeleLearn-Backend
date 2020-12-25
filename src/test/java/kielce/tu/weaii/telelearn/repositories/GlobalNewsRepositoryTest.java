@@ -95,7 +95,7 @@ class GlobalNewsRepositoryTest {
     }
 
     private User getAdminAuthor() {
-        User author = TestData.GetAdmin();
+        User author = TestData.getAdmin();
         author = userJPARepository.saveAndFlush(author);
         return author;
     }

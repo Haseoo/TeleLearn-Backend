@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 @UtilityClass
 public class TestData {
-    public User GetAdmin() {
+    public User getAdmin() {
         User user = new User();
         user.setId(1L);
         user.setUsername("Admin");

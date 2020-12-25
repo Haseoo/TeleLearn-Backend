@@ -30,7 +30,6 @@ class GlobalNewsServiceImplTest {
 
     @Mock
     private GlobalNewsRepository globalNewsRepository;
-
     @Mock
     private UserService userService;
 
@@ -41,7 +40,7 @@ class GlobalNewsServiceImplTest {
     void should_ask_and_return_news_by_id() {
         //given
         final Long id = 1L;
-        GlobalNews globalNews = TestData.getGlobalNews(TestData.GetAdmin());
+        GlobalNews globalNews = TestData.getGlobalNews(TestData.getAdmin());
         when(globalNewsRepository.getById(id)).thenReturn(Optional.of(globalNews));
         //when
         GlobalNews out = sut.getById(id);
@@ -64,7 +63,7 @@ class GlobalNewsServiceImplTest {
         //given
         final GlobalNewsRequest request = TestData.getGlobalNewsRequest();
         ArgumentCaptor<GlobalNews> entityToSave = ArgumentCaptor.forClass(GlobalNews.class);
-        when(userService.getById(request.getAuthorId())).thenReturn(TestData.GetAdmin());
+        when(userService.getById(request.getAuthorId())).thenReturn(TestData.getAdmin());
         //when
         sut.add(request);
         //then
@@ -81,10 +80,10 @@ class GlobalNewsServiceImplTest {
         //given
         final GlobalNewsRequest request = TestData.getGlobalNewsRequest();
         final Long idToEdit = 1L;
-        GlobalNews mock = TestData.getGlobalNews(TestData.GetAdmin());
+        GlobalNews mock = TestData.getGlobalNews(TestData.getAdmin());
         mock.getAuthor().setId(2L);
         ArgumentCaptor<GlobalNews> entityToSave = ArgumentCaptor.forClass(GlobalNews.class);
-        when(userService.getById(request.getAuthorId())).thenReturn(TestData.GetAdmin());
+        when(userService.getById(request.getAuthorId())).thenReturn(TestData.getAdmin());
         when(globalNewsRepository.getById(idToEdit)).thenReturn(Optional.of(mock));
         //when
         sut.edit(idToEdit, request);
@@ -102,7 +101,7 @@ class GlobalNewsServiceImplTest {
         //given
         final GlobalNewsRequest request = TestData.getGlobalNewsRequest();
         final Long idToEdit = 1L;
-        GlobalNews mock = TestData.getGlobalNews(TestData.GetAdmin());
+        GlobalNews mock = TestData.getGlobalNews(TestData.getAdmin());
         when(globalNewsRepository.getById(idToEdit)).thenReturn(Optional.of(mock));
         //when
         sut.edit(idToEdit, request);
@@ -115,7 +114,7 @@ class GlobalNewsServiceImplTest {
     void should_ask_for_and_return_page() {
         //given
         final int pageNo = 1, pageSize = 1;
-        Page<GlobalNews> mock = new PageImpl<>(Arrays.asList(TestData.getGlobalNews(TestData.GetAdmin())));
+        Page<GlobalNews> mock = new PageImpl<>(Arrays.asList(TestData.getGlobalNews(TestData.getAdmin())));
         when(globalNewsRepository.getPage(pageSize, pageNo)).thenReturn(mock);
         //when
         Page<GlobalNews> out = sut.getPage(pageSize, pageNo);
@@ -128,7 +127,7 @@ class GlobalNewsServiceImplTest {
     void should_ask_for_delete_news() {
         //given
         final Long id = 1L;
-        GlobalNews globalNews = TestData.getGlobalNews(TestData.GetAdmin());
+        GlobalNews globalNews = TestData.getGlobalNews(TestData.getAdmin());
         ArgumentCaptor<GlobalNews> requestedEntity = ArgumentCaptor.forClass(GlobalNews.class);
         when(globalNewsRepository.getById(id)).thenReturn(Optional.of(globalNews));
         //when

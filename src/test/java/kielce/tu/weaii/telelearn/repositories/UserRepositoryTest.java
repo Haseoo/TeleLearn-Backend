@@ -41,7 +41,7 @@ class UserRepositoryTest {
     @Transactional
     void should_save_user() {
         //given
-        User in = TestData.GetAdmin();
+        User in = TestData.getAdmin();
         //when
         User out = sut.save(in);
         in.setId(out.getId());
@@ -54,7 +54,7 @@ class UserRepositoryTest {
     @Transactional
     void should_get_by_id() {
         //given
-        User searched = userJPARepository.save(TestData.GetAdmin());
+        User searched = userJPARepository.save(TestData.getAdmin());
         //when
         Optional<User> out = sut.getById(searched.getId());
         //then
@@ -64,8 +64,8 @@ class UserRepositoryTest {
     @Test
     void should_delete_user() {
         //given
-        User user = userJPARepository.save(TestData.GetAdmin());
-        userJPARepository.save(TestData.GetAdmin());
+        User user = userJPARepository.save(TestData.getAdmin());
+        userJPARepository.save(TestData.getAdmin());
         //when
         sut.delete(user);
         //then
@@ -76,8 +76,8 @@ class UserRepositoryTest {
     @Transactional
     void should_return_all_users() {
         //given
-        User user1 = userJPARepository.save(TestData.GetAdmin());
-        User user2 = userJPARepository.save(TestData.GetAdmin());
+        User user1 = userJPARepository.save(TestData.getAdmin());
+        User user2 = userJPARepository.save(TestData.getAdmin());
         //when & then
         Assertions.assertThat(sut.getAll()).contains(user1, user2);
     }
@@ -86,7 +86,7 @@ class UserRepositoryTest {
     @Test
     void should_find_user_by_login_when_searching_by_login_or_email() {
         //given
-        User searched = userJPARepository.save(TestData.GetAdmin());
+        User searched = userJPARepository.save(TestData.getAdmin());
         //when
         Optional<User> out = sut.getUserByLoginOrEmail(searched.getUsername());
         //then
@@ -97,7 +97,7 @@ class UserRepositoryTest {
     @Test
     void should_find_user_by_email_when_searching_by_login_or_email() {
         //given
-        User searched = userJPARepository.save(TestData.GetAdmin());
+        User searched = userJPARepository.save(TestData.getAdmin());
         //when
         Optional<User> out = sut.getUserByLoginOrEmail(searched.getEmail());
         //then
@@ -108,7 +108,7 @@ class UserRepositoryTest {
     @Test
     void should_find_user_by_email() {
         //given
-        User searched = userJPARepository.save(TestData.GetAdmin());
+        User searched = userJPARepository.save(TestData.getAdmin());
         //when
         Optional<User> out = sut.getUserByEmail(searched.getEmail());
         //then
@@ -119,7 +119,7 @@ class UserRepositoryTest {
     @Test
     void should_find_user_by_login() {
         //given
-        User searched = userJPARepository.save(TestData.GetAdmin());
+        User searched = userJPARepository.save(TestData.getAdmin());
         //when
         Optional<User> out = sut.getUserByLogin(searched.getUsername());
         //then
