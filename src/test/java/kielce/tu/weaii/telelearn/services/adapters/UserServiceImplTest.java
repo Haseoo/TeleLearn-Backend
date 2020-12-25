@@ -188,6 +188,7 @@ class UserServiceImplTest {
         //when & then
         Assertions.assertThatThrownBy(() -> sut.getById(id)).isInstanceOf(UserNotFoundException.class);
     }
+
     @Test
     void should_save_and_return_user_with_changed_password() {
         //given
