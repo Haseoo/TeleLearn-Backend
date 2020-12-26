@@ -2,7 +2,7 @@ package kielce.tu.weaii.telelearn;
 
 import kielce.tu.weaii.telelearn.models.*;
 import kielce.tu.weaii.telelearn.models.courses.*;
-import kielce.tu.weaii.telelearn.requests.GlobalNewsRequest;
+import kielce.tu.weaii.telelearn.requests.*;
 import lombok.experimental.UtilityClass;
 
 import java.time.Duration;
@@ -180,6 +180,46 @@ public class TestData {
     }
 
     public GlobalNewsRequest getGlobalNewsRequest() {
-        return new GlobalNewsRequest("title", 1L, "brief", "<br>brrr", LocalDateTime.now());
+        return new GlobalNewsRequest("title",
+                1L,
+                "brief",
+                "<br>brrr",
+                LocalDateTime.now());
+    }
+
+    public TeacherRegisterRequest getTeacherRegisterRequest() {
+        return new TeacherRegisterRequest("teacher",
+                "brrrr".toCharArray(),
+                "test@t.t",
+                "name",
+                "surname",
+                "unit",
+                "titile");
+    }
+
+    public TeacherUpdateRequest getTeacherUpdateRequest() {
+        return new TeacherUpdateRequest("new@email",
+                "newName",
+                "newSurname",
+                "newUnit",
+                "newTitle");
+    }
+
+    public StudentRegisterRequest getStudentRegisterRequest() {
+        return new StudentRegisterRequest("student",
+                "brrrr".toCharArray(),
+                "test@s.s",
+                "name",
+                "surname",
+                "unit");
+    }
+
+    public StudentUpdateRequest getStudentUpdateRequest() {
+        return new StudentUpdateRequest("new@email",
+                "newName",
+                "newSurname",
+                "newUnit",
+                12,
+                24);
     }
 }
