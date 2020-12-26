@@ -79,7 +79,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @Transactional
+   // @Transactional
     public Post updatePost(Long id, PostRequest postRequest, List<MultipartFile> newAttachments) throws IOException {
         Post post = getById(id);
         verifyUpdateRequest(postRequest, post);
@@ -204,7 +204,6 @@ public class PostServiceImpl implements PostService {
         post.setContent(postRequest.getContent());
         post.setPostVisibility(postRequest.getPostVisibility());
         post.setCommentingAllowed(postRequest.isCommentingAllowed());
-        post.getAttachments().addAll(prepareAttachments(newAttachments, LocalDateTime.now(), post));
         if (postRequest.getAttachmentIdsToDelete() != null) {
             for (long attachmentId : postRequest.getAttachmentIdsToDelete()) {
                 post.getAttachments().removeIf(attachment -> {
@@ -215,6 +214,7 @@ public class PostServiceImpl implements PostService {
                 });
             }
         }
+        post.getAttachments().addAll(prepareAttachments(newAttachments, LocalDateTime.now(), post));
     }
 
     private boolean isUserNotPermittedToDelete(Post post, User currentUser) {

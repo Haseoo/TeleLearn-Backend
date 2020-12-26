@@ -63,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackOn = IOException.class)
     public Task add(TaskRequest request, List<MultipartFile> attachments) throws IOException {
         Task task = new Task();
         LocalDateTime now = LocalDateTime.now();
@@ -77,7 +77,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public Task update(Long id, TaskRequest request, List<MultipartFile> attachmentsToUpload) throws IOException {
         Task task = getById(id);
         if (!task.getCourse().getId().equals(request.getCourseId())) {
@@ -108,7 +108,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    @Transactional
+   // @Transactional
     public Task updateProgress(Long id, TaskProgressPatchRequest request) {
         if (!request.getStudentId().equals(userServiceDetails.getCurrentUser().getId())) {
             throw new AuthorizationException("Aktualizacja postępu zadania.", userServiceDetails.getCurrentUser().getId(), request.getStudentId());
@@ -131,7 +131,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public Task updateTaskRepeat(Long id, TaskRepeatPatchRequest request) {
         if (!request.getStudentId().equals(userServiceDetails.getCurrentUser().getId())) {
             throw new AuthorizationException("Ustawanie zadania do powtórzenia.", userServiceDetails.getCurrentUser().getId(), request.getStudentId());

@@ -46,7 +46,7 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherRepository.save(model);
     }
 
-    @Transactional
+   // @Transactional
     public Teacher update(Long id, TeacherUpdateRequest request) {
         if (!userService.isCurrentUserOrAdmin(id)) {
             throw new AuthorizationException("użytkownik", null, id);

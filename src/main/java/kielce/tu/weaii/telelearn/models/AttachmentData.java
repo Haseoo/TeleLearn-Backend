@@ -18,7 +18,7 @@ public class AttachmentData implements Serializable {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(nullable = false, name = "ATTACHMENT_ID")
     private Attachment attachment;
 

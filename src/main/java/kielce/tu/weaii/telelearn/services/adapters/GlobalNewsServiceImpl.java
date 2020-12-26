@@ -34,7 +34,7 @@ public class GlobalNewsServiceImpl implements GlobalNewsService {
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public GlobalNews edit(Long id, GlobalNewsRequest request) {
         GlobalNews globalNews = getById(id);
         BeanUtils.copyProperties(request, globalNews);
@@ -49,6 +49,7 @@ public class GlobalNewsServiceImpl implements GlobalNewsService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         repository.delete(getById(id));
     }
