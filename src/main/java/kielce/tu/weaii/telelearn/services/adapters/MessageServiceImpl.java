@@ -51,6 +51,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public List<Message> getConversation(Long participant1Id, Long participant2Id) {
+        User currentUser = userDetailsService.getCurrentUser();
+        if (!currentUser.getId().equals(participant1Id) && !currentUser.getId().equals(participant2Id)) {
+            throw new AuthorizationException("konwersacja", participant1Id, participant2Id);
+        }
         messageRepository.setConversationAsRead(participant1Id, participant2Id);
         return messageRepository.getConversation(participant1Id, participant2Id);
     }

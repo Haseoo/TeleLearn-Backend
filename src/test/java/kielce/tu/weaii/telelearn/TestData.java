@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -221,5 +222,11 @@ public class TestData {
                 "newUnit",
                 12,
                 24);
+    }
+
+    public LearningTimeRequest getLearningTimeRequest(long subjectId, LocalDate date) {
+        return new LearningTimeRequest(subjectId,
+                date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
+                new TimeSpanRequest(0, 0));
     }
 }
