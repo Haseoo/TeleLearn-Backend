@@ -14,6 +14,7 @@ import kielce.tu.weaii.telelearn.requests.courses.CourseRequest;
 import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.services.ports.*;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ public class CourseServiceImpl implements CourseService {
     private final UserService userService;
 
     @Autowired
+    @Setter
     private TaskScheduleService taskScheduleService;
 
     @Override
@@ -68,7 +70,7 @@ public class CourseServiceImpl implements CourseService {
         if (!request.getOwnerId().equals(course.getOwner().getId())) {
             course.setOwner(teacherService.getById(request.getOwnerId()));
         }
-        return course;
+        return repository.save(course);
     }
 
     @Override
@@ -153,6 +155,7 @@ public class CourseServiceImpl implements CourseService {
         courseStudent.setCourse(course);
         courseStudent.setAccepted(course.isAutoAccept());
         course.getStudents().add(courseStudent);
+        repository.save(course);
         return courseStudent;
     }
 

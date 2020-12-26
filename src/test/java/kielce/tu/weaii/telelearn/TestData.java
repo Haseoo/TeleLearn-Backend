@@ -3,6 +3,7 @@ package kielce.tu.weaii.telelearn;
 import kielce.tu.weaii.telelearn.models.*;
 import kielce.tu.weaii.telelearn.models.courses.*;
 import kielce.tu.weaii.telelearn.requests.*;
+import kielce.tu.weaii.telelearn.requests.courses.CourseRequest;
 import lombok.experimental.UtilityClass;
 
 import java.time.Duration;
@@ -228,5 +229,14 @@ public class TestData {
         return new LearningTimeRequest(subjectId,
                 date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
                 new TimeSpanRequest(0, 0));
+    }
+
+    public CourseRequest getCourseRequest(Long ownerId) {
+        return new CourseRequest(ownerId,
+                "name",
+                "umHello",
+                false,
+                false,
+                false);
     }
 }
