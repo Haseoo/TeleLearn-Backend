@@ -75,7 +75,6 @@ class MessageRepositoryTest {
         Assertions.assertThat(sut.getUserMessages(user1.getId()))
                 .contains(message1, message2)
                 .doesNotContain(message3);
-
     }
 
     @Test

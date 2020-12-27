@@ -4,6 +4,7 @@ import kielce.tu.weaii.telelearn.models.*;
 import kielce.tu.weaii.telelearn.models.courses.*;
 import kielce.tu.weaii.telelearn.requests.*;
 import kielce.tu.weaii.telelearn.requests.courses.CourseRequest;
+import kielce.tu.weaii.telelearn.requests.courses.ScheduleTaskRequest;
 import lombok.experimental.UtilityClass;
 
 import java.time.Duration;
@@ -238,5 +239,21 @@ public class TestData {
                 false,
                 false,
                 false);
+    }
+
+    public TaskScheduleRecord getTaskScheduleRecordService(Student student) {
+        TaskScheduleRecord taskScheduleRecord = new TaskScheduleRecord();
+        Course course = TestData.getCourse(TestData.getTeacher(), student);
+        taskScheduleRecord.setTask(TestData.getTask(course));
+        taskScheduleRecord.setLearningTime(Duration.ofMinutes(75));
+        taskScheduleRecord.setScheduleTime(LocalTime.of(11, 12));
+        taskScheduleRecord.setPlannedTime(Duration.ofMinutes(80));
+        taskScheduleRecord.setDate(LocalDate.of(2020, 12, 21));
+        taskScheduleRecord.setStudent(student);
+        return taskScheduleRecord;
+    }
+
+    public ScheduleTaskRequest getScheduleTaskRequest(Long taskId, Long studentId) {
+        return new ScheduleTaskRequest(taskId, studentId, "20.12.2020", "11:12", 1, 10);
     }
 }

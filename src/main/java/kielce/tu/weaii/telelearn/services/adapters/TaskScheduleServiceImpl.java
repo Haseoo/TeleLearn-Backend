@@ -16,6 +16,7 @@ import kielce.tu.weaii.telelearn.services.ports.StudentStatsService;
 import kielce.tu.weaii.telelearn.services.ports.TaskScheduleService;
 import kielce.tu.weaii.telelearn.services.ports.TaskService;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class TaskScheduleServiceImpl implements TaskScheduleService {
     private final StudentService studentService;
 
     @Autowired
+    @Setter
     private StudentStatsService studentStatsService;
 
     @Override
