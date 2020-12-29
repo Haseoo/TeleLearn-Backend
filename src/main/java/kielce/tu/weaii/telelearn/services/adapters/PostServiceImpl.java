@@ -79,7 +79,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-   // @Transactional
+    @Transactional
     public Post updatePost(Long id, PostRequest postRequest, List<MultipartFile> newAttachments) throws IOException {
         Post post = getById(id);
         verifyUpdateRequest(postRequest, post);
@@ -132,7 +132,7 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(post);
     }
 
-    void checkPostAuthorization(Post post) {
+    private void checkPostAuthorization(Post post) {
         User currentUser = userServiceDetails.getCurrentUser();
         if (currentUser.getUserRole().equals(UserRole.ADMIN)) {
             return;

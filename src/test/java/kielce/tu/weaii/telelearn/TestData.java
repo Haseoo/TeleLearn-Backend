@@ -4,8 +4,10 @@ import kielce.tu.weaii.telelearn.models.*;
 import kielce.tu.weaii.telelearn.models.courses.*;
 import kielce.tu.weaii.telelearn.requests.*;
 import kielce.tu.weaii.telelearn.requests.courses.CourseRequest;
+import kielce.tu.weaii.telelearn.requests.courses.PostRequest;
 import kielce.tu.weaii.telelearn.requests.courses.ScheduleTaskRequest;
 import lombok.experimental.UtilityClass;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -255,5 +257,19 @@ public class TestData {
 
     public ScheduleTaskRequest getScheduleTaskRequest(Long taskId, Long studentId) {
         return new ScheduleTaskRequest(taskId, studentId, "20.12.2020", "11:12", 1, 10);
+    }
+
+    public MultipartFile getMultipartFile() {
+        return new MultipartFileMock(new byte[]{0x21, 0x37, 0x4, 0x20, 0x5});
+    }
+
+    public PostRequest getPostRequest(Long courseId) {
+        PostRequest postRequest = new PostRequest();
+        postRequest.setCourseId(courseId);
+        postRequest.setCommentingAllowed(true);
+        postRequest.setContent("content");
+        postRequest.setPostVisibility(PostVisibility.EVERYONE);
+        postRequest.setAttachmentIdsToDelete(new ArrayList<>());
+        return postRequest;
     }
 }
