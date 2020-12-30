@@ -12,7 +12,9 @@ import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.servicedata.StudentStats;
 import kielce.tu.weaii.telelearn.services.ports.StudentStatsService;
 import kielce.tu.weaii.telelearn.services.ports.TaskScheduleService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,7 @@ public class StudentStatsServiceImpl implements StudentStatsService {
     private final CourseRepository courseRepository;
 
     @Autowired
+    @Setter
     private TaskScheduleService taskScheduleService;
 
     @Override
@@ -63,7 +66,8 @@ public class StudentStatsServiceImpl implements StudentStatsService {
     }
 
     private StudentStats getStudentStats(Long studentId, LocalDate today) {
-        LocalDate filterBeginDate = today.minusDays(LocalDate.now().getDayOfWeek().getValue());
+        //LocalDate filterBeginDate = today.minusDays(LocalDate.now().getDayOfWeek().getValue());
+        LocalDate filterBeginDate = today.minusDays(today.getDayOfWeek().getValue());
         LocalDate filterEndDate = filterBeginDate.plusDays(WEEK_END_RANGE_DAYS);
 
         List<StudentStatsRecord> statsList = studentStatsRepository.getStudentStat(studentId);
