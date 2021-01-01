@@ -6,6 +6,7 @@ import kielce.tu.weaii.telelearn.requests.*;
 import kielce.tu.weaii.telelearn.requests.courses.CourseRequest;
 import kielce.tu.weaii.telelearn.requests.courses.PostRequest;
 import kielce.tu.weaii.telelearn.requests.courses.ScheduleTaskRequest;
+import kielce.tu.weaii.telelearn.requests.courses.TaskRequest;
 import lombok.experimental.UtilityClass;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -115,6 +116,19 @@ public class TestData {
         studentStatsRecord.setLearningTime(Duration.ZERO);
         studentStatsRecord.setStudent(student);
         return studentStatsRecord;
+    }
+
+    public TaskRequest getTaskRequest(Long courseId) {
+        TaskRequest taskRequest = new TaskRequest();
+        taskRequest.setCourseId(courseId);
+        taskRequest.setDueDate(LocalDate.of(2020, 12, 28));
+        taskRequest.setAttachmentIdsToDelete(new ArrayList<>());
+        taskRequest.setDescription("test description");
+        taskRequest.setLearningTimeHours(1);
+        taskRequest.setLearningTimeMinutes(10);
+        taskRequest.setName("test name");
+        taskRequest.setPreviousTaskIds(new ArrayList<>());
+        return taskRequest;
     }
 
     public Course getCourse(Teacher owner, Student student) {

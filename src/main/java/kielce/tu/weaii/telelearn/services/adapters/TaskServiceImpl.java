@@ -77,7 +77,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    //@Transactional
+    @Transactional(rollbackOn = IOException.class)
     public Task update(Long id, TaskRequest request, List<MultipartFile> attachmentsToUpload) throws IOException {
         Task task = getById(id);
         if (!task.getCourse().getId().equals(request.getCourseId())) {
@@ -97,12 +97,10 @@ public class TaskServiceImpl implements TaskService {
     public void delete(Long id) {
         Task task = getById(id);
         for (Task pTask : task.getPreviousTasks()) {
-            pTask.getPreviousTasks().remove(task);
-            taskRepository.save(pTask);
+            pTask.getNextTasks().remove(task);
         }
         for (Task nTask : task.getNextTasks()) {
             nTask.getPreviousTasks().remove(task);
-            taskRepository.save(nTask);
         }
         taskRepository.delete(task);
     }

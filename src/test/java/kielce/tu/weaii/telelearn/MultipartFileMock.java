@@ -48,7 +48,7 @@ public class MultipartFileMock implements MultipartFile {
     }
 
     @Override
-    public byte[] getBytes() throws IOException {
+    public byte[] getBytes() {
         return content;
     }
 
