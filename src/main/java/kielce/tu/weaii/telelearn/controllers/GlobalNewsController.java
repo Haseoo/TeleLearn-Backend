@@ -2,6 +2,7 @@ package kielce.tu.weaii.telelearn.controllers;
 
 import kielce.tu.weaii.telelearn.requests.GlobalNewsRequest;
 import kielce.tu.weaii.telelearn.services.adapters.GlobalNewsServiceImpl;
+import kielce.tu.weaii.telelearn.services.ports.GlobalNewsService;
 import kielce.tu.weaii.telelearn.services.ports.UserService;
 import kielce.tu.weaii.telelearn.views.GlobalNewsView;
 import kielce.tu.weaii.telelearn.views.PageView;
@@ -19,9 +20,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/news")
 public class GlobalNewsController {
-    private final GlobalNewsServiceImpl globalNewsService;
-    private final UserService userService;
-    private int i = 0;
+    private final GlobalNewsService globalNewsService;
 
     @GetMapping(path = "/get/{id}")
     public ResponseEntity<GlobalNewsView> getById(@PathVariable Long id) {

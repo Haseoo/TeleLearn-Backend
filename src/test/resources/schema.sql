@@ -1,4 +1,4 @@
-create table USERS
+CREATE TABLE IF NOT EXISTS USERS
 (
     ID        IDENTITY primary key,
     EMAIL     TEXT    not null,
@@ -10,7 +10,7 @@ create table USERS
     USERNAME  VARCHAR(255)
 );
 
-create table TEACHERS
+CREATE TABLE IF NOT EXISTS TEACHERS
 (
     ID    IDENTITY not null primary key,
     TITLE TEXT,
@@ -19,7 +19,7 @@ create table TEACHERS
     constraint TEACHER_USER_FK foreign key (ID) references USERS (ID)
 );
 
-create table STUDENTS
+CREATE TABLE IF NOT EXISTS STUDENTS
 (
     ID                  IDENTITY primary key,
     DAILY_LEARNING_TIME BIGINT not null,
@@ -28,7 +28,7 @@ create table STUDENTS
     constraint STUDENT_USER_FK foreign key (ID) references USERS (ID)
 );
 
-create table STUDENT_STATS
+CREATE TABLE IF NOT EXISTS STUDENT_STATS
 (
     ID            IDENTITY primary key,
     COURSE_ID     BIGINT not null,
@@ -41,7 +41,7 @@ create table STUDENT_STATS
     constraint STUDENT_STAT_FK foreign key (STUDENT_ID) references STUDENTS (ID)
 );
 
-create table MESSAGES
+CREATE TABLE IF NOT EXISTS MESSAGES
 (
     ID          IDENTITY primary key,
     CONTENT     TEXT      not null,
@@ -54,7 +54,7 @@ create table MESSAGES
     constraint MESSAGE_RECEIVER_FK foreign key (RECEIVER_ID) references USERS (ID)
 );
 
-create table LEARNING_TIME
+CREATE TABLE IF NOT EXISTS LEARNING_TIME
 (
     DATE       DATE   not null,
     STUDENT_ID BIGINT not null,
@@ -64,7 +64,7 @@ create table LEARNING_TIME
     constraint LEARNING_TIME_STUDENT_FK foreign key (STUDENT_ID) references STUDENTS (ID)
 );
 
-create table GLOBAL_NEWS
+CREATE TABLE IF NOT EXISTS GLOBAL_NEWS
 (
     ID               IDENTITY primary key,
     BRIEF            TEXT,
@@ -76,7 +76,7 @@ create table GLOBAL_NEWS
     constraint NEWS_AUTHOR_FK foreign key (AUTHOR_ID) references USERS (ID)
 );
 
-create table COURSES
+CREATE TABLE IF NOT EXISTS COURSES
 (
     ID                        IDENTITY primary key,
     AUTO_ACCEPT               BOOLEAN not null,
@@ -89,7 +89,7 @@ create table COURSES
     constraint COURSE_TEACHER_FK foreign key (OWNER_ID) references TEACHERS (ID)
 );
 
-create table COURSE_STUDENT
+CREATE TABLE IF NOT EXISTS COURSE_STUDENT
 (
     ACCEPTED   BOOLEAN not null,
     STUDENT_ID BIGINT  not null,
@@ -100,7 +100,7 @@ create table COURSE_STUDENT
     constraint CS_COURSE_FK foreign key (COURSE_ID) references COURSES (ID)
 );
 
-create table POSTS
+CREATE TABLE IF NOT EXISTS POSTS
 (
     ID                 IDENTITY primary key,
     COMMENTING_ALLOWED BOOLEAN not null,
@@ -114,7 +114,7 @@ create table POSTS
     constraint POST_COURSE_FK foreign key (COURSE_ID) references COURSES (ID)
 );
 
-create table COMMENTS
+CREATE TABLE IF NOT EXISTS COMMENTS
 (
     ID               IDENTITY primary key,
     CONTENT          TEXT   not null,
@@ -126,7 +126,7 @@ create table COMMENTS
     constraint COMMENT_AUTHOR_FK foreign key (AUTHOR_ID) references USERS (ID)
 );
 
-create table TASKS
+CREATE TABLE IF NOT EXISTS TASKS
 (
     ID            IDENTITY primary key,
     DESCRIPTION   TEXT,
@@ -138,7 +138,7 @@ create table TASKS
     constraint TASK_COURSE_FK foreign key (COURSE_ID) references COURSES (ID)
 );
 
-create table TASK_LINKS
+CREATE TABLE IF NOT EXISTS TASK_LINKS
 (
     TASK_ID          BIGINT not null,
     PREVIOUS_TASK_ID BIGINT not null,
@@ -148,7 +148,7 @@ create table TASK_LINKS
     constraint PREV_TASK_LINK_FK foreign key (PREVIOUS_TASK_ID) references TASKS (ID)
 );
 
-create table TASK_SCHEDULE
+CREATE TABLE IF NOT EXISTS TASK_SCHEDULE
 (
     ID            IDENTITY primary key,
     DATE          DATE   not null,
@@ -163,7 +163,7 @@ create table TASK_SCHEDULE
 );
 
 
-create table TASK_STUDENT
+CREATE TABLE IF NOT EXISTS TASK_STUDENT
 (
     TASK_COMPLETION INTEGER not null,
     TO_REPEAT       BOOLEAN not null,
@@ -175,7 +175,7 @@ create table TASK_STUDENT
     constraint TS_TASK_FK foreign key (TASK_ID) references TASKS (ID)
 );
 
-create table ATTACHMENTS
+CREATE TABLE IF NOT EXISTS ATTACHMENTS
 (
     ID          IDENTITY primary key,
     FILE_NAME   TEXT      not null,
@@ -188,7 +188,7 @@ create table ATTACHMENTS
     constraint ATTACHMENT_TASK_FK foreign key (TASK_ID) references TASKS (ID)
 );
 
-create table ATTACHMENTS_DATA
+CREATE TABLE IF NOT EXISTS ATTACHMENTS_DATA
 (
     ID            IDENTITY primary key,
     ATTACHMENT_ID BIGINT,
@@ -196,13 +196,13 @@ create table ATTACHMENTS_DATA
     constraint ATTACHMENT_DATA_FK foreign key (ATTACHMENT_ID) references ATTACHMENTS (ID)
 );
 
-CREATE TABLE USERS_PASSWORD_CHANGE
+CREATE TABLE IF NOT EXISTS USERS_PASSWORD_CHANGE
 (
     USER_ID     BIGINT    NOT NULL,
     CHANGE_TIME TIMESTAMP NOT NULL
 );
 
-CREATE TABLE DUMMY
+CREATE TABLE IF NOT EXISTS DUMMY
 (
     DUMMY BIGINT
 );
