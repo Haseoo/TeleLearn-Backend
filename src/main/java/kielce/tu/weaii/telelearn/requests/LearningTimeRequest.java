@@ -1,6 +1,7 @@
 package kielce.tu.weaii.telelearn.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.validation.Valid;
@@ -10,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 @Valid
 @Getter
+@EqualsAndHashCode
 public class LearningTimeRequest {
     @NotNull(message = "Należy określić ucznia.")
     private Long studentId;

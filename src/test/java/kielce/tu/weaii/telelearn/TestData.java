@@ -7,6 +7,8 @@ import kielce.tu.weaii.telelearn.requests.courses.CourseRequest;
 import kielce.tu.weaii.telelearn.requests.courses.PostRequest;
 import kielce.tu.weaii.telelearn.requests.courses.ScheduleTaskRequest;
 import kielce.tu.weaii.telelearn.requests.courses.TaskRequest;
+import kielce.tu.weaii.telelearn.servicedata.ConversationInfo;
+import kielce.tu.weaii.telelearn.servicedata.LearningTimeData;
 import lombok.experimental.UtilityClass;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +19,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @UtilityClass
 public class TestData {
@@ -102,7 +105,7 @@ public class TestData {
         attachmentData.setAttachment(attachment);
         attachment.setAttachmentData(Arrays.asList(attachmentData));
         attachment.setUploadTime(LocalDateTime.now());
-        attachment.setFileType("Json Partial II Graphical Module Data");
+        attachment.setFileType("JsonPartialII/GraphicalModuleData");
         attachment.setFileName("File");
         return attachment;
     }
@@ -285,5 +288,25 @@ public class TestData {
         postRequest.setPostVisibility(PostVisibility.EVERYONE);
         postRequest.setAttachmentIdsToDelete(new ArrayList<>());
         return postRequest;
+    }
+
+    public ConversationInfo getConversationInfo(User user) {
+        return new ConversationInfo(user, 12L, 2L, LocalDateTime.of(2015, 4, 2, 21, 37));
+    }
+
+    public LearningTimeData getLearningTimeData() {
+        LearningTimeData learningTimeData = new LearningTimeData();
+        learningTimeData.setDefaultLearningTime(Duration.ofHours(1));
+        List<LearningTime> lt = new ArrayList<>();
+        LearningTime lt1 = new LearningTime();
+        lt1.setDate(LocalDate.now());
+        lt1.setTime(Duration.ofMinutes(65));
+        LearningTime lt2 = new LearningTime();
+        lt2.setTime(Duration.ofMinutes(75));
+        lt2.setDate(LocalDate.now().plusDays(1));
+        lt.add(lt1);
+        lt.add(lt2);
+        learningTimeData.setLearningTimeList(lt);
+        return learningTimeData;
     }
 }
