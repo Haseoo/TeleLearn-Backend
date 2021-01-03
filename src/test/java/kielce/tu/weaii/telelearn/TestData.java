@@ -7,8 +7,7 @@ import kielce.tu.weaii.telelearn.requests.courses.CourseRequest;
 import kielce.tu.weaii.telelearn.requests.courses.PostRequest;
 import kielce.tu.weaii.telelearn.requests.courses.ScheduleTaskRequest;
 import kielce.tu.weaii.telelearn.requests.courses.TaskRequest;
-import kielce.tu.weaii.telelearn.servicedata.ConversationInfo;
-import kielce.tu.weaii.telelearn.servicedata.LearningTimeData;
+import kielce.tu.weaii.telelearn.servicedata.*;
 import lombok.experimental.UtilityClass;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,9 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @UtilityClass
 public class TestData {
@@ -187,6 +184,7 @@ public class TestData {
         task.setPreviousTasks(new ArrayList<>());
         task.setNextTasks(new ArrayList<>());
         task.setStudents(new ArrayList<>());
+        task.setAttachments(new ArrayList<>());
         return task;
     }
 
@@ -308,5 +306,105 @@ public class TestData {
         lt.add(lt2);
         learningTimeData.setLearningTimeList(lt);
         return learningTimeData;
+    }
+
+    public TaskStudentSummary getTaskStudentSummary(LocalDate today) {
+        TaskStudentSummary taskStudentSummary = new TaskStudentSummary();
+        Student student = getStudent();
+        Course course = getCourse(getTeacher(), student);
+        Task delayed = TestData.getTask(course);
+        delayed.setDueDate(today.minusDays(1));
+
+        Task toRepeat = TestData.getTask(course);
+        toRepeat.setDueDate(today.minusDays(1));
+        TaskStudent ts = new TaskStudent();
+        ts.setToRepeat(true);
+        ts.setTaskCompletion(100);
+        ts.setStudent(student);
+        ts.setTask(toRepeat);
+        TaskStudentId tsId = new TaskStudentId();
+        tsId.setStudent(student);
+        tsId.setTask(toRepeat);
+        toRepeat.getStudents().add(ts);
+
+        Task task = TestData.getTask(course);
+        task.setDueDate(today);
+
+        TaskStudentSummaryRecord delayedRecord = new TaskStudentSummaryRecord();
+        delayedRecord.setTask(delayed);
+        delayedRecord.setTotalLearningTime(Duration.ofMinutes(15));
+        delayedRecord.setTotalPlannedLearningTime(Duration.ofMinutes(65));
+
+        TaskStudentSummaryRecord toRepeatRecord = new TaskStudentSummaryRecord();
+        toRepeatRecord.setTask(toRepeat);
+        toRepeatRecord.setTotalPlannedLearningTime(Duration.ofMinutes(40));
+        toRepeatRecord.setTotalLearningTime(Duration.ofMinutes(40));
+
+        TaskStudentSummaryRecord taskRecord = new TaskStudentSummaryRecord();
+        taskRecord.setTask(task);
+        taskRecord.setTotalLearningTime(Duration.ZERO);
+        taskRecord.setTotalPlannedLearningTime(Duration.ZERO);
+
+        Map<LocalDate, List<TaskStudentSummaryRecord>> taskMap = new HashMap<>();
+        taskMap.put(task.getDueDate(), Arrays.asList(taskRecord));
+
+        taskStudentSummary.setTaskToRepeat(Arrays.asList(toRepeatRecord));
+        taskStudentSummary.setDelayedTasks(Arrays.asList(delayedRecord));
+        taskStudentSummary.setTasksForDay(taskMap);
+        return taskStudentSummary;
+    }
+
+    public TaskScheduleRecord getTaskScheduleRecord(LocalDate today) {
+        TaskScheduleRecord taskScheduleRecord = new TaskScheduleRecord();
+        Student student = getStudent();
+        Course course = getCourse(getTeacher(), student);
+
+        Task task = TestData.getTask(course);
+        task.setDueDate(today);
+        TaskStudent ts = new TaskStudent();
+        ts.setToRepeat(false);
+        ts.setTaskCompletion(50);
+        ts.setStudent(student);
+        ts.setTask(task);
+        TaskStudentId tsId = new TaskStudentId();
+        tsId.setStudent(student);
+        tsId.setTask(task);
+        task.getStudents().add(ts);
+
+        taskScheduleRecord.setId(5L);
+        taskScheduleRecord.setStudent(student);
+        taskScheduleRecord.setDate(today);
+        taskScheduleRecord.setPlannedTime(Duration.ofMinutes(30));
+        taskScheduleRecord.setLearningTime(Duration.ZERO);
+        taskScheduleRecord.setScheduleTime(LocalTime.of(12, 12));
+        taskScheduleRecord.setTask(task);
+
+        return taskScheduleRecord;
+    }
+
+    public StudentStats getStudentStats() {
+        StudentStats studentStats = new StudentStats();
+        studentStats.setPlannedTimeForWeek(Duration.ofMinutes(130));
+        studentStats.setLearningTimeForWeek(Duration.ofMinutes(45));
+        studentStats.setAverageLearningTime(Duration.ofMinutes(20));
+        studentStats.setTaskTimeForWeek(Duration.ofMinutes(77));
+
+        Course course = TestData.getCourse(TestData.getTeacher(), TestData.getStudent());
+        course.setStudents(new ArrayList<>());
+        Map<Course, Duration> sevenDays = new HashMap<>();
+        sevenDays.put(course, Duration.ofMinutes(15));
+        studentStats.setLearningTimeForCourseSevenDays(sevenDays);
+
+        Map<Course, Duration> allDays = new HashMap<>();
+        allDays.put(course, Duration.ofMinutes(15));
+        allDays.put(null, Duration.ofMinutes(40));
+        studentStats.setLearningTimeForCourseTotal(allDays);
+
+        Map<Integer, Long> hoursMap = new HashMap<>();
+        hoursMap.put(11, 5L);
+        hoursMap.put(12, 7L);
+        studentStats.setHoursLearningStats(hoursMap);
+
+        return studentStats;
     }
 }

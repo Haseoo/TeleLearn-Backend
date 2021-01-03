@@ -1,6 +1,7 @@
 package kielce.tu.weaii.telelearn.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.validation.annotation.Validated;
 
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 
 @Validated
 @Getter
+@EqualsAndHashCode
 public class TeacherUpdateRequest {
     @NotBlank(message = "Email nie może być pusty")
     @Email(message = "Podaj poprawny email")

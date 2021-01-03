@@ -2,6 +2,7 @@ package kielce.tu.weaii.telelearn.requests.courses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import kielce.tu.weaii.telelearn.requests.TimeSpanRequest;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.validation.Valid;
@@ -14,6 +15,7 @@ import static kielce.tu.weaii.telelearn.utilities.Utils.isStringNullOrEmpty;
 
 @Getter
 @Valid
+@EqualsAndHashCode
 public class ScheduleUpdateRequest {
     @Valid
     @NotNull(message = "Należy określić czas.")

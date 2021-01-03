@@ -18,7 +18,7 @@ import static kielce.tu.weaii.telelearn.utilities.Constants.TIME_FORMATTER;
 
 @Value
 public class TaskScheduleView {
-    long id;
+    Long id;
     LocalDate date;
     String scheduleTime;
     String endScheduleTime;

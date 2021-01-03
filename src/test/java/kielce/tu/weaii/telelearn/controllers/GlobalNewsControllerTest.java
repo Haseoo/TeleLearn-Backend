@@ -2,6 +2,7 @@ package kielce.tu.weaii.telelearn.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kielce.tu.weaii.telelearn.TestData;
+import kielce.tu.weaii.telelearn.exceptions.ArticleNotFound;
 import kielce.tu.weaii.telelearn.exceptions.NotFoundException;
 import kielce.tu.weaii.telelearn.models.GlobalNews;
 import kielce.tu.weaii.telelearn.requests.GlobalNewsRequest;
@@ -56,7 +57,7 @@ class GlobalNewsControllerTest {
     void should_ask_for_article_with_id_and_return_404_when_it_doesnt_exist() throws Exception {
         //given
         final Long id = 1L;
-        when(globalNewsService.getById(id)).thenThrow(new NotFoundException("article"));
+        when(globalNewsService.getById(id)).thenThrow(new ArticleNotFound(id));
         //when & then
         mockMvc.perform(get("/api/news/get/" + id))
                 .andExpect(status().isNotFound());
@@ -92,7 +93,7 @@ class GlobalNewsControllerTest {
     void should_ask_for_delete_and_return_404_when_article_doesnt_exist() throws Exception {
         //given
         final long id = 1L;
-        doThrow(new NotFoundException("article")).when(globalNewsService).delete(id);
+        doThrow(new ArticleNotFound(id)).when(globalNewsService).delete(id);
         //when & then
         mockMvc.perform(delete("/api/news/" + id))
                 .andExpect(status().isNotFound());

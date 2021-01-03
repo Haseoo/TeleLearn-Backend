@@ -1,6 +1,7 @@
 package kielce.tu.weaii.telelearn.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.validation.annotation.Validated;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 @Validated
 @Getter
+@EqualsAndHashCode
 public class TeacherRegisterRequest {
     @NotBlank(message = "Login nie może być pusty")
     private String username;

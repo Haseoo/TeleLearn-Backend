@@ -1,6 +1,8 @@
 package kielce.tu.weaii.telelearn.requests;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.validation.annotation.Validated;
 
@@ -10,6 +12,7 @@ import java.time.Duration;
 
 @Validated
 @Getter
+@EqualsAndHashCode
 public class StudentUpdateRequest {
     @NotBlank(message = "Email nie może być pusty")
     @Email(message = "Podaj poprawny email")
@@ -19,6 +22,7 @@ public class StudentUpdateRequest {
     @NotBlank(message = "Nazwisko nie może być puste")
     private String surname;
     private String unit;
+    @JsonIgnore
     private Duration dailyLearningTime;
 
     public StudentUpdateRequest(@JsonProperty(value = "email") String email,
@@ -38,5 +42,15 @@ public class StudentUpdateRequest {
         this.surname = surname;
         this.unit = unit;
         this.dailyLearningTime = Duration.ofHours(hours).plus(Duration.ofMinutes(minutes));
+    }
+
+    @JsonProperty
+    public long getHours() {
+        return dailyLearningTime.toHours();
+    }
+
+    @JsonProperty
+    public long getMinutes() {
+        return dailyLearningTime.minusHours(getHours()).toMinutes();
     }
 }
