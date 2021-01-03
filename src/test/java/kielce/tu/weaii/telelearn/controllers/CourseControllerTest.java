@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kielce.tu.weaii.telelearn.TestData;
 import kielce.tu.weaii.telelearn.exceptions.AuthorizationException;
 import kielce.tu.weaii.telelearn.exceptions.courses.CourseNotFoundException;
+import kielce.tu.weaii.telelearn.exceptions.courses.StudentAlreadyEnrolled;
+import kielce.tu.weaii.telelearn.exceptions.courses.StudentOnListNotFound;
 import kielce.tu.weaii.telelearn.models.courses.Course;
 import kielce.tu.weaii.telelearn.models.courses.Post;
 import kielce.tu.weaii.telelearn.models.courses.Task;
@@ -104,6 +106,20 @@ class CourseControllerTest {
     }
 
     @Test
+    void should_ask_to_sign_up_student_and_return_400_when_student_already_on_list() throws Exception {
+        //given
+        final Long id = 1L;
+        CourseStudentRequest request = new CourseStudentRequest(5L);
+        when(courseService.signUpStudent(anyLong(), anyLong())).thenThrow(new StudentAlreadyEnrolled());
+        //when
+        mockMvc.perform(put("/api/course/" + id + "/sign-up")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+        verify(courseService).signUpStudent(eq(id), eq(request.getStudentId()));
+    }
+
+    @Test
     void should_accept_student_and_return_204() throws Exception {
         //given
         final Long id = 1L;
@@ -117,6 +133,20 @@ class CourseControllerTest {
     }
 
     @Test
+    void should_accept_student_and_return_404_when_student_is_not_on_list() throws Exception {
+        //given
+        final Long id = 1L;
+        CourseStudentRequest request = new CourseStudentRequest(5L);
+        doThrow(new StudentOnListNotFound(id, 5L)).when(courseService).acceptStudent(anyLong(), anyLong());
+        //when
+        mockMvc.perform(put("/api/course/" + id + "/accept-student")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound());
+        verify(courseService).acceptStudent(eq(id), eq(request.getStudentId()));
+    }
+
+    @Test
     void should_sign_out_student_and_return_204() throws Exception {
         //given
         final Long id = 1L;
@@ -126,6 +156,20 @@ class CourseControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isNoContent());
+        verify(courseService).signOutStudent(eq(id), eq(request.getStudentId()));
+    }
+
+    @Test
+    void should_sign_out_student_and_return_404_when_student_is_not_on_list() throws Exception {
+        //given
+        final Long id = 1L;
+        CourseStudentRequest request = new CourseStudentRequest(5L);
+        doThrow(new StudentOnListNotFound(id, 5L)).when(courseService).signOutStudent(anyLong(), anyLong());
+        //when
+        mockMvc.perform(put("/api/course/" + id + "/sign-out")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound());
         verify(courseService).signOutStudent(eq(id), eq(request.getStudentId()));
     }
 
