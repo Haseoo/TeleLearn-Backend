@@ -38,11 +38,11 @@ public class Attachment implements Serializable {
     @Size(max = 1, min = 1)
     private List<AttachmentData> attachmentData;
 
-    @ManyToOne(fetch = LAZY, cascade = ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "POST_ID")
     private Post post;
 
-    @ManyToOne(fetch = LAZY, cascade = ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "TASK_ID")
     private Task task;
 }

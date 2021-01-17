@@ -6,6 +6,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-            url: jdbc:postgresql://localhost/telelearndb
-            username: spring
-            password: springsecret
+    url: jdbc:postgresql://localhost/telelearndb
+    username: spring
+    password: springsecret

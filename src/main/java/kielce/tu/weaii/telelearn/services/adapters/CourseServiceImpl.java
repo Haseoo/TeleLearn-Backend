@@ -61,7 +61,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-   // @Transactional
+    // @Transactional
     public Course update(Long id, CourseRequest request) {
         checkAuthorization(request);
         Course course = getById(id);
@@ -86,7 +86,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-   // @Transactional
+    // @Transactional
     public boolean signUpStudent(Long courseId, Long studentId) {
         checkUserAuthorization(studentId);
         Course course = getCourse(courseId);
@@ -98,7 +98,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    //@Transactional
     public void acceptStudent(Long courseId, Long studentId) {
         Course course = getCourse(courseId);
         checkCourseAuthorization(courseId, course.getOwner().getId());
@@ -108,7 +107,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    //@Transactional
     public void signOutStudent(Long courseId, Long studentId) {
         Course course = getCourse(courseId);
         checkDeletingUserAuthorization(courseId, studentId, course);

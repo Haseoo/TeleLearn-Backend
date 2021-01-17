@@ -296,9 +296,4 @@ class CourseServiceImplTest {
         //when & then
         Assertions.assertThatThrownBy(() -> sut.acceptStudent(course.getId(), student.getId())).isInstanceOf(AuthorizationException.class);
     }
-
-
-    @Test
-    void signOutStudent() {
-    }
 }

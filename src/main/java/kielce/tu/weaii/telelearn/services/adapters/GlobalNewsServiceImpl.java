@@ -34,7 +34,6 @@ public class GlobalNewsServiceImpl implements GlobalNewsService {
     }
 
     @Override
-    //@Transactional
     public GlobalNews edit(Long id, GlobalNewsRequest request) {
         GlobalNews globalNews = getById(id);
         BeanUtils.copyProperties(request, globalNews);

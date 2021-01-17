@@ -81,7 +81,6 @@ public class TaskScheduleServiceImpl implements TaskScheduleService {
     }
 
     @Override
-    //@Transactional
     public TaskScheduleRecord updateSchedule(Long id, ScheduleUpdateRequest request, LocalDate today) {
         TaskScheduleRecord record = getById(id);
         if (record.getDate().isBefore(today)) {

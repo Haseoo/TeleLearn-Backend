@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 @Profile("!prod")
 public interface TaskJPARepositoryDev extends TaskJPARepository {
-    @Query("SELECT t FROM Task t INNER JOIN t.course.students s WHERE s.student.id = ?1")
+    @Query("SELECT t FROM Task t INNER JOIN t.course.students s WHERE s.student.id = ?1 AND s.accepted = true")
     List<Task> getStudentByTasksFromCurse(Long studentId);
 }

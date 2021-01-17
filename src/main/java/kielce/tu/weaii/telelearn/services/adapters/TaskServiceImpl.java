@@ -72,7 +72,7 @@ public class TaskServiceImpl implements TaskService {
         task.setLearningTime(Duration.ofMinutes(request.getLearningTimeMinutes()).plus(Duration.ofHours(request.getLearningTimeHours())));
         task.setAttachments(prepareAttachments(attachments, now, task));
         task.setPreviousTasks(getPreviousTasks(request));
-        checkNewTask(task);
+        checkTask(task);
         return taskRepository.save(task);
     }
 
@@ -80,13 +80,10 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(rollbackOn = IOException.class)
     public Task update(Long id, TaskRequest request, List<MultipartFile> attachmentsToUpload) throws IOException {
         Task task = getById(id);
-        if (!task.getCourse().getId().equals(request.getCourseId())) {
-            task.setCourse(courseService.getById(request.getCourseId()));
-        }
         BeanUtils.copyProperties(request, task);
         task.setLearningTime(Duration.ofMinutes(request.getLearningTimeMinutes()).plus(Duration.ofHours(request.getLearningTimeHours())));
         task.setPreviousTasks(getPreviousTasks(request));
-        checkNewTask(task);
+        checkTask(task);
         deleteAttachments(request, task);
         task.getAttachments().addAll(prepareAttachments(attachmentsToUpload, LocalDateTime.now(), task));
         return taskRepository.save(task);
@@ -106,7 +103,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-   // @Transactional
+    // @Transactional
     public Task updateProgress(Long id, TaskProgressPatchRequest request) {
         if (!request.getStudentId().equals(userServiceDetails.getCurrentUser().getId())) {
             throw new AuthorizationException("Aktualizacja postępu zadania.", userServiceDetails.getCurrentUser().getId(), request.getStudentId());
@@ -129,7 +126,6 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    //@Transactional
     public Task updateTaskRepeat(Long id, TaskRepeatPatchRequest request) {
         if (!request.getStudentId().equals(userServiceDetails.getCurrentUser().getId())) {
             throw new AuthorizationException("Ustawanie zadania do powtórzenia.", userServiceDetails.getCurrentUser().getId(), request.getStudentId());
@@ -213,7 +209,7 @@ public class TaskServiceImpl implements TaskService {
         return attachmentList;
     }
 
-    private void checkNewTask(Task task) {
+    private void checkTask(Task task) {
         if (checkCycle(task, task.getId())) {
             throw new PathWouldHaveCycle();
         }

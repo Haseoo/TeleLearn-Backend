@@ -12,7 +12,6 @@ import kielce.tu.weaii.telelearn.security.UserServiceDetailsImpl;
 import kielce.tu.weaii.telelearn.servicedata.StudentStats;
 import kielce.tu.weaii.telelearn.services.ports.StudentStatsService;
 import kielce.tu.weaii.telelearn.services.ports.TaskScheduleService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,18 +65,16 @@ public class StudentStatsServiceImpl implements StudentStatsService {
     }
 
     private StudentStats getStudentStats(Long studentId, LocalDate today) {
-        //LocalDate filterBeginDate = today.minusDays(LocalDate.now().getDayOfWeek().getValue());
         LocalDate filterBeginDate = today.minusDays(today.getDayOfWeek().getValue());
         LocalDate filterEndDate = filterBeginDate.plusDays(WEEK_END_RANGE_DAYS);
 
-        List<StudentStatsRecord> statsList = studentStatsRepository.getStudentStat(studentId);
         List<TaskScheduleRecord> studentSchedule = taskScheduleService.getListForStudent(studentId);
         List<Task> studentTasks = taskRepository.getStudentByTasksFromCurse(studentId);
         List<StudentStatsRecord> studentStatList = studentStatsRepository.getStudentStat(studentId);
 
         StudentStats studentStats = new StudentStats();
 
-        studentStats.setAverageLearningTime(getAverageLearningTime(statsList));
+        studentStats.setAverageLearningTime(getAverageLearningTime(studentStatList));
         studentStats.setLearningTimeForWeek(getLearningTime(filterBeginDate, filterEndDate, studentStatList));
         studentStats.setPlannedTimeForWeek(getPlannedTime(filterBeginDate, filterEndDate, studentSchedule));
         studentStats.setTaskTimeForWeek(getTaskLearningTime(filterBeginDate, filterEndDate, studentTasks));
@@ -134,7 +131,7 @@ public class StudentStatsServiceImpl implements StudentStatsService {
 
     private Map<Course, Duration> getLearningTimeForSevenDays(LocalDate today, List<StudentStatsRecord> studentStats) {
         return studentStats.stream()
-                .filter(schedule -> weekFilter(today.minusDays(WEEK_END_RANGE_DAYS), today.plusDays(WEEK_END_RANGE_DAYS), schedule.getDate()))
+                .filter(schedule -> weekFilter(today.minusDays(WEEK_END_RANGE_DAYS), today.plusDays(1), schedule.getDate()))
                 .collect(Collectors.toMap(record -> courseRepository.getById(record.getCourseId()).orElse(null),
                         StudentStatsRecord::getLearningTime, Duration::plus));
     }

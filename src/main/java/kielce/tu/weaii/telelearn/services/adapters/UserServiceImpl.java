@@ -77,7 +77,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    //@Transactional
     public User updatePassword(Long id, UserPasswordPatchRequest request) {
         User user = getById(id);
         if (!passwordEncoder.matches(String.valueOf(request.getOldPassword()), user.getPassword())) {

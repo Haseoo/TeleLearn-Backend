@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class MessageRepositoryImpl  implements MessageRepository {
+public class MessageRepositoryImpl implements MessageRepository {
     private final MessageJPARepository messageJPARepository;
 
     @Override
