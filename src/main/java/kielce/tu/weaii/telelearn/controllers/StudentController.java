@@ -3,7 +3,6 @@ package kielce.tu.weaii.telelearn.controllers;
 import kielce.tu.weaii.telelearn.requests.StudentRegisterRequest;
 import kielce.tu.weaii.telelearn.requests.StudentUpdateRequest;
 import kielce.tu.weaii.telelearn.services.ports.*;
-import kielce.tu.weaii.telelearn.views.StudentStatsView;
 import kielce.tu.weaii.telelearn.views.StudentView;
 import kielce.tu.weaii.telelearn.views.courses.CourseView;
 import kielce.tu.weaii.telelearn.views.courses.TaskScheduleView;
@@ -11,6 +10,7 @@ import kielce.tu.weaii.telelearn.views.courses.TaskToScheduleRecordView;
 import kielce.tu.weaii.telelearn.views.courses.TasksToScheduleView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +32,7 @@ public class StudentController {
     private final UserService userService;
     private final TaskService taskService;
     private final TaskScheduleService taskScheduleService;
-    private final StudentStatsService studentStatsService;
+    private final StudentStatJsonCreator studentStatJsonCreator;
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<StudentView> getById(@PathVariable Long id) {
@@ -40,10 +40,10 @@ public class StudentController {
                 userService.isCurrentUserOrAdmin(id)), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{id}/stat")
+    @GetMapping(path = "/{id}/stat", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('STUDENT')")
-    public ResponseEntity<StudentStatsView> getStudentStat(@PathVariable Long id) {
-        return new ResponseEntity<>(StudentStatsView.from(studentStatsService.getStudentStat(id, LocalDate.now())), HttpStatus.OK);
+    public ResponseEntity<String> getStudentStat(@PathVariable Long id) {
+        return new ResponseEntity<>(studentStatJsonCreator.getStudentStatJson(id, LocalDate.now()), HttpStatus.OK);
     }
 
     @PutMapping(path = "/{id}")
