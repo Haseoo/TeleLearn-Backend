@@ -21,6 +21,7 @@ public class BeanConfiguration {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
+                        .allowCredentials(true)
                         .exposedHeaders("Location")
                         .allowedOrigins("*");
             }

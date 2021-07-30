@@ -11,12 +11,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
-import static kielce.tu.weaii.telelearn.security.Constants.AUTH_HEADER;
-import static kielce.tu.weaii.telelearn.security.Constants.BEARER_TOKEN_BEGIN;
+import static kielce.tu.weaii.telelearn.security.Constants.AUTH_COOKIE;
 
 @RequiredArgsConstructor
 @Component
@@ -42,10 +43,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTH_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_TOKEN_BEGIN)) {
-            return bearerToken.substring(7);
-        }
-        return null;
+        return request.getCookies() != null ? Arrays.stream(request.getCookies())
+                .filter(c -> c.getName().equals(AUTH_COOKIE))
+                .map(Cookie::getValue)
+                .findAny().orElse("") : "";
     }
 }

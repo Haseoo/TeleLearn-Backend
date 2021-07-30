@@ -75,6 +75,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/h2-console/**",
                         "/api/news/get/**",
                         "/api/user/login",
+                        "/api/user/logout",
                         "/api/user/student",
                         "/api/user/teacher",
                         "/api/file")

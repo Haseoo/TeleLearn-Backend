@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Arrays;
 
 import static kielce.tu.weaii.telelearn.Constants.INTEGRATION_TEST;
+import static kielce.tu.weaii.telelearn.security.Constants.AUTH_COOKIE;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -62,13 +63,14 @@ class UserControllerTest {
         verify(userService).getUserByLoginOrEmail(request.getUserName());
         Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);
         Assertions.assertThat(mvcResult.getResponse().getContentAsString())
-                .contains("Bearer")
-                .contains("mockToken")
                 .contains(mockUser.getUsername())
                 .contains(mockUser.getId().toString())
                 .contains(mockUser.getName())
                 .contains(mockUser.getSurname())
                 .contains("TEACHER");
+        Assertions.assertThat(mvcResult.getResponse().getCookies())
+                .anyMatch(cookie -> cookie.getName().equals(AUTH_COOKIE) &&
+                        cookie.getValue().equals("mockToken"));
     }
 
     @Test

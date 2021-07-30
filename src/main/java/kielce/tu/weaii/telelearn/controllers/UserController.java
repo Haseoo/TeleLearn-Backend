@@ -10,10 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static kielce.tu.weaii.telelearn.security.Constants.AUTH_COOKIE;
 import static org.springframework.http.HttpStatus.OK;
 
 @RequiredArgsConstructor
@@ -23,9 +26,24 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(path = "/login")
-    public ResponseEntity<Object> login(@RequestBody @Valid LoginRequest loginRequest) {
-        return new ResponseEntity<>(UserLoginResponse.of(userService.getJwt(loginRequest),
-                userService.getUserByLoginOrEmail(loginRequest.getUserName())), OK);
+    public ResponseEntity<Object> login(@RequestBody @Valid LoginRequest loginRequest,
+                                        HttpServletResponse response) {
+        Cookie cookie = new Cookie(AUTH_COOKIE, userService.getJwt(loginRequest).getAccessToken());
+        cookie.setHttpOnly(true);
+        cookie.setPath("/api");
+        cookie.setMaxAge(-1);
+        response.addCookie(cookie);
+        return new ResponseEntity<>(UserLoginResponse.of(userService.getUserByLoginOrEmail(loginRequest.getUserName())), OK);
+    }
+
+    @DeleteMapping(path = "logout")
+    public ResponseEntity<Object> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie(AUTH_COOKIE, null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/api");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
