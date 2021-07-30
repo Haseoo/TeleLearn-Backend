@@ -366,66 +366,66 @@ BEGIN
 
 
     SELECT
-           c.id as COURSE_ID,
-           c.name as COURSE_NAME,
-           st.learning_time,
-           st.date
+        c.id as COURSE_ID,
+        c.name as COURSE_NAME,
+        st.learning_time,
+        st.date
     INTO courseRecords
     FROM STUDENT_STATS st
              JOIN COURSES c ON st.COURSE_ID = c.ID;
 
     SELECT
         JSONB_BUILD_OBJECT
-        (
-            'course', r.COURSE_NAME,
-            'learningTime', GET_TIME_FROM_DURATION(SUM(r.learning_time)::BIGINT)
-        )
+            (
+                'course', r.COURSE_NAME,
+                'learningTime', GET_TIME_FROM_DURATION(SUM(r.learning_time)::BIGINT)
+            )
     INTO courseGrouped
     FROM courseRecords r
     GROUP BY r.COURSE_ID, r.COURSE_NAME;
 
     SELECT
         JSONB_BUILD_OBJECT
-        (
-            'course', r.COURSE_NAME,
-            'learningTime', GET_TIME_FROM_DURATION(SUM(r.learning_time)::BIGINT)
-        )
+            (
+                'course', r.COURSE_NAME,
+                'learningTime', GET_TIME_FROM_DURATION(SUM(r.learning_time)::BIGINT)
+            )
     INTO courseSevenDays
     FROM courseRecords r
     WHERE
-        r.date > sevenDaysBeginDate AND
-        r.date <= today
+            r.date > sevenDaysBeginDate AND
+            r.date <= today
     GROUP BY r.COURSE_ID, r.COURSE_NAME;
 
     RETURN
         JSONB_BUILD_OBJECT
             (
                 'taskTimeForWeek', (
-                    SELECT GET_TIME_FROM_DURATION(COALESCE(avg(st.learning_time)::BIGINT, 0))
-                    FROM GET_STUDENT_TASK(studentId) st
-                    WHERE
-                            st.DUE_DATE > weekBeginDate AND
-                            st.DUE_DATE < weekEndDate
-                ),
+            SELECT GET_TIME_FROM_DURATION(COALESCE(avg(st.learning_time)::BIGINT, 0))
+            FROM GET_STUDENT_TASK(studentId) st
+            WHERE
+                    st.DUE_DATE > weekBeginDate AND
+                    st.DUE_DATE < weekEndDate
+        ),
                 'plannedTimeForWeek', GET_TIME_FROM_DURATION(plannedTimeForWeek),
                 'learningTimeForWeek', GET_TIME_FROM_DURATION(learningTimeForWeek),
-                'learningTimeForCourseSevenDays', courseSevenDays,
-                'learningTimeForCourseTotal', courseGrouped,
-                'hoursLearningStats', (
-                    SELECT JSONB_AGG(
-                                   JSONB_BUILD_OBJECT(
-                                           'hour', nested.HOUR,
-                                           'LearningTimes', nested.LEARNING_TIMES
-                                       )
-                               )
-                    FROM (
-                             SELECT EXTRACT(HOUR FROM st.START_TIME) AS HOUR,
-                                    COUNT(*) AS LEARNING_TIMES
-                             FROM STUDENT_STATS st
-                             WHERE st.STUDENT_ID = studentId
-                             GROUP BY EXTRACT(HOUR FROM st.START_TIME)
-                         ) nested
-                ),
+                'learningTimeForCourseSevenDays', JSONB_AGG(courseSevenDays),
+                'learningTimeForCourseTotal', JSONB_AGG(courseGrouped),
+                'hoursLearningStats', COALESCE((
+                                                   SELECT JSONB_AGG(
+                                                                  JSONB_BUILD_OBJECT(
+                                                                          'hour', nested.HOUR,
+                                                                          'learningTimes', nested.LEARNING_TIMES
+                                                                      )
+                                                              )
+                                                   FROM (
+                                                            SELECT EXTRACT(HOUR FROM st.START_TIME) AS HOUR,
+                                                                   COUNT(*) AS LEARNING_TIMES
+                                                            FROM STUDENT_STATS st
+                                                            WHERE st.STUDENT_ID = studentId
+                                                            GROUP BY EXTRACT(HOUR FROM st.START_TIME)
+                                                        ) nested
+                                               ), '{}'::jsonb),
                 'averageLearningTime', (
                     SELECT GET_TIME_FROM_DURATION(COALESCE(AVG(st.learning_time)::BIGINT, 0))
                     FROM STUDENT_STATS st
